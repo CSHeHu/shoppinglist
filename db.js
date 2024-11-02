@@ -19,7 +19,7 @@ async function connectToDB() {
 
     // Wait for connection, use database test
     await mongoose.connect(mongodbUri);
-
+    
     // Hydrate a user model with instance values
     const test = new SLI({
         name: "Kurkku",
@@ -39,6 +39,7 @@ async function connectToDB() {
     // Fetch and print all model instances
     const listitems = await SLI.find();
     console.log(listitems);
+    
 }
 
 module.exports = connectToDB;
