@@ -10,7 +10,9 @@ const usersRouter = require('./routes/users');
 const app = express();
 const { MongoClient } = require("mongodb");
 const mongoose = require('mongoose');
+const { Schema } = mongoose;
 
+//.env setup
 require('dotenv').config()
 const mongodbUri = process.env.MONGODB_URI;
 
@@ -43,12 +45,44 @@ app.use(function(err, req, res, next) {
   res.render('error');
 });
 
-mongoose.connect(mongodbUri, { useNewUrlParser: true, useUnifiedTopology: true })
-    .then(() => {
-        console.log("Connected to MongoDB successfully!");
-    })
-    .catch(err => {
-        console.error("MongoDB connection error:", err);
+
+// Define the listitem schema
+const shoppingListItemSchema = new Schema({
+    name: String,
+    amount: Number,
+});
+
+// Define the listitem model
+const SLI = mongoose.model('Shoppinglist item', shoppingListItemSchema);
+
+// Start the application
+main().catch(err => console.log(err));
+
+async function main() {
+
+    // Wait for connection, use database test
+    await mongoose.connect(mongodbUri);
+
+    // Hydrate a user model with instance values
+    const test = new SLI({
+        name: "Kurkku",
+        amount: 5000
     });
+
+    const test2 = new SLI({
+        name: "Porkkana",
+        amount: 5000
+    });
+
+    // Persist the model instance in the database
+    test.save();
+    test2.save();
+    console.log("Saved");
+
+    // Fetch and print all model instances
+    const listitems = await SLI.find();
+    console.log(listitems);
+}
+
 
 module.exports = app;
