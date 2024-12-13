@@ -22,5 +22,35 @@ router.get('/', async function(req, res, next) {
   }
 });
 
+
+
+router.post('/', async function(req, res, next) {
+  try {
+    const { name, amount } = req.body;
+
+    // Make a POST request to the dataroutes API
+    const response = await fetch('http://localhost:3000/data', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ name, amount }),
+    });
+
+    if (response.ok) {
+        res.redirect('/');
+    } else {
+        const error = await response.json();
+        res.render('error', { message: error.error || 'Failed to add item' });
+    }
+
+
+  } catch (err) {
+    next(err);  
+  }
+});
+
+
+
 module.exports = router;
 
