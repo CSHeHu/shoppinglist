@@ -7,8 +7,9 @@ router.get('/', async (req, res, next) => {
     try {
         const db = await connectToDB(); 
         const collection = await db.collection('shoppinglistitemsdbs');
-        const data = await collection.find().toArray();  
-        res.json(data);
+        const data = await collection.find().toArray(); 
+        res.status(200).json(data);
+
     } catch (err) {
         next(err);  
         
@@ -31,7 +32,7 @@ router.post('/', async (req, res, next) => {
     if (result){
         res.status(201).json({ message: 'Item added sucessfully'});
     }
-}
+  }
 
 
   catch (err) {
@@ -40,4 +41,19 @@ router.post('/', async (req, res, next) => {
 
 });
   
+router.delete('/', async (req, res, next) => {
+    try {
+        const db = await connectToDB(); 
+        const collection = await db.collection('shoppinglistitemsdbs');
+        const result = await collection.deleteMany( {} ); 
+
+        if (result){
+          res.status(200).json({ message: 'Items deleted successfully'})
+        }
+
+    } catch (err) {
+        next(err);  
+        
+    }
+});
 module.exports = router;

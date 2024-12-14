@@ -3,6 +3,10 @@ document.getElementById("addToListForm").addEventListener("submit", event => {
     submitForm();
 });
 
+document.getElementById("addToListReset").addEventListener("click", event => {
+  event.preventDefault();
+  resetForm();
+})
 
 async function submitForm(){
     const name = document.getElementById('addToListInput').value.trim();
@@ -16,17 +20,42 @@ async function submitForm(){
            },
            body: JSON.stringify({ name, amount}), 
         });
-
-
-        if (response.ok) {
-        window.location.reload();  // Reload the page to reflect the changes
-      } else {
-        const error = await response.json();
-        alert('Error: ' + (error.message || 'Failed to add item'));
-      }
+        
+        if (response.ok){
+          console.log('Waiting for 2 seconds before reloading...');
+          // Wait for 2 seconds before reloading the page
+          await new Promise(resolve => setTimeout(resolve, 2000));
+          window.location.reload();}
     }
+    
     
     catch (err){
         console.error('Error:', err)
     }
+}
+
+async function resetForm(){
+  try{
+    const response = await fetch('/', {
+      method: 'DELETE',
+      headers: {
+        'Content-Type': 'application/json'
+      }
+    });
+
+
+    if (response.ok){
+      console.log('Waiting for 2 seconds before reloading...');
+      // Wait for 2 seconds before reloading the page
+      await new Promise(resolve => setTimeout(resolve, 2000));
+      window.location.reload();}
+
+
+
+
+  }
+  catch (err) {
+    console.error('Error:', err)
+  }
+  
 }
