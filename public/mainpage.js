@@ -1,3 +1,4 @@
+
 document.getElementById("addToListForm").addEventListener("submit", event => {
     event.preventDefault();
     submitForm();
@@ -20,14 +21,9 @@ async function submitForm(){
            },
            body: JSON.stringify({ name, amount}), 
         });
-        
-        if (response.ok){
-          console.log('Waiting for 2 seconds before reloading...');
-          // Wait for 2 seconds before reloading the page
-          await new Promise(resolve => setTimeout(resolve, 2000));
-          window.location.reload();}
-    }
     
+        updateList();
+      }
     
     catch (err){
         console.error('Error:', err)
@@ -42,20 +38,31 @@ async function resetForm(){
         'Content-Type': 'application/json'
       }
     });
-
-
-    if (response.ok){
-      console.log('Waiting for 2 seconds before reloading...');
-      // Wait for 2 seconds before reloading the page
-      await new Promise(resolve => setTimeout(resolve, 2000));
-      window.location.reload();}
-
-
-
-
+    updateList();
   }
+  
   catch (err) {
     console.error('Error:', err)
   }
   
+}
+
+async function updateList(){
+  const response = await fetch('http://localhost:3000/data');
+  const data = await response.json();
+
+  // Clear the old list
+  const SLContainer = document.getElementById("SLContainer");
+  SLContainer.innerHTML = '';
+  // Update the list with new items
+  if (data && data.length > 0){
+    data.forEach(item => {
+      const listItem = document.createElement('li');
+      listItem.textContent = `${item.name} - ${item.amount}`;
+      SLContainer.appendChild(listItem);
+    })
+
+  }
+
+
 }

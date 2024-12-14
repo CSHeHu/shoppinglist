@@ -1,16 +1,14 @@
 var express = require('express');
 var router = express.Router();
 
+require('dotenv').config();
+const ApiURI = process.env.API_SERVER; 
 
 router.get('/', async function(req, res, next) {
   try {
   
-    const response = await fetch('http://localhost:3000/data');  
+    const response = await fetch(`${ApiURI}/data`);  
     const data = await response.json();  
-    /*    
-    // Log the fetched data
-    console.log("Fetched data from /data:", data);
-    */
     
     res.render('index', 
       { title: 'Shopping List', 
@@ -29,7 +27,7 @@ router.post('/', async function(req, res, next) {
     const { name, amount } = req.body;
 
     // Make a POST request to the dataroutes API
-    const response = await fetch('http://localhost:3000/data', {
+    const response = await fetch(`${ApiURI}/data`, {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
@@ -52,7 +50,7 @@ router.post('/', async function(req, res, next) {
 router.delete('/', async function(req, res, next) {
   try {
 
-    const response = await fetch('http://localhost:3000/data', {
+    const response = await fetch(`${ApiURI}/data`, {
         method: 'DELETE',
         headers: {
             'Content-Type': 'application/json'
