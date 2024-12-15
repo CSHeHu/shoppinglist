@@ -10,7 +10,9 @@ document.getElementById("addToListReset").addEventListener("click", event => {
 })
 
 document.getElementById("SLContainer").addEventListener("click", event => {
-  toggleItem(event);
+  if (event.target && event.target.tagName === 'LI') {
+    toggleItem(event);
+  }
 })
 
 async function submitForm(){
@@ -62,18 +64,25 @@ async function updateList(){
   if (data && data.length > 0){
     data.forEach(item => {
       const listItem = document.createElement('li');
+      listItem.setAttribute("id", item._id);
      
+      // finished
       if (item.finished){
       listItem.className = "finished"
-      listItem.textContent = `${item.name} - ${item.amount}`;
-      listItem.setAttribute("id", item._id);
+      }
+      
+      // name
+      const nameSpan = document.createElement("span");
+      nameSpan.textContent = item.name;
+      listItem.appendChild(nameSpan);
+
+      // amount
+      const amountSpan = document.createElement("span");
+      amountSpan.textContent = item.amount;
+      listItem.appendChild(amountSpan);
+      
       SLContainer.appendChild(listItem);
 
-      } else {
-      listItem.textContent = `${item.name} - ${item.amount}`;
-      listItem.setAttribute("id", item._id);
-      SLContainer.appendChild(listItem);
-      }
     })
   }
 }

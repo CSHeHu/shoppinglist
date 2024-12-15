@@ -29,12 +29,25 @@ header {
   margin: 1em;
 }
 
-h1 {
-  font-size: 2em;
+
+#SLContainer{
+  background-color: grey;
+}
+
+li{
+  padding: 0.2em;
 }
 
 li.finished{
   text-decoration: line-through;
+}
+
+h1 {
+  font-size: 2em;
+}
+
+span{
+  padding:0.2em;
 }
 
 /* Extra small devices (phones, 600px and down) */
