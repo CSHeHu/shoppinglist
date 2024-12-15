@@ -66,10 +66,12 @@ async function updateList(){
       if (item.finished){
       listItem.className = "finished"
       listItem.textContent = `${item.name} - ${item.amount}`;
+      listItem.setAttribute("id", item._id);
       SLContainer.appendChild(listItem);
 
       } else {
       listItem.textContent = `${item.name} - ${item.amount}`;
+      listItem.setAttribute("id", item._id);
       SLContainer.appendChild(listItem);
       }
     })
