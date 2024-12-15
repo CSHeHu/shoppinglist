@@ -74,11 +74,13 @@ async function updateList(){
       // name
       const nameSpan = document.createElement("span");
       nameSpan.textContent = item.name;
+      nameSpan.className = "name";
       listItem.appendChild(nameSpan);
 
       // amount
       const amountSpan = document.createElement("span");
       amountSpan.textContent = item.amount;
+      amountSpan.className = "amount";
       listItem.appendChild(amountSpan);
       
       SLContainer.appendChild(listItem);
