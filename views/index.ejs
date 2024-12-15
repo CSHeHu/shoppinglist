@@ -16,7 +16,7 @@
     <% if (data && data.length > 0){ %>
       <ul>
         <% data.forEach(item => { %>
-          <% if (data.finished) { %>
+          <% if (item.finished) { %>
             <li class="finished"><%=item.name%> - <%=item.amount%></li>  
           <% } else { %>
             <li><%=item.name%> - <%=item.amount%></li>

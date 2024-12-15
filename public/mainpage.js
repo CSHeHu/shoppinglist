@@ -58,11 +58,16 @@ async function updateList(){
   if (data && data.length > 0){
     data.forEach(item => {
       const listItem = document.createElement('li');
+     
+      if (item.finished){
+      listItem.className = "finished"
       listItem.textContent = `${item.name} - ${item.amount}`;
       SLContainer.appendChild(listItem);
+
+      } else {
+      listItem.textContent = `${item.name} - ${item.amount}`;
+      SLContainer.appendChild(listItem);
+      }
     })
-
   }
-
-
 }
