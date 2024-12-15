@@ -16,7 +16,11 @@
     <% if (data && data.length > 0){ %>
       <ul>
         <% data.forEach(item => { %>
-          <li><%=item.name%> - <%=item.amount%></li>
+          <% if (data.finished) { %>
+            <li class="finished"><%=item.name%> - <%=item.amount%></li>  
+          <% } else { %>
+            <li><%=item.name%> - <%=item.amount%></li>
+          <% } %>
         <% }); %>
       </ul>
     <% } %> 

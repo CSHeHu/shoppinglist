@@ -33,6 +33,10 @@ h1 {
   font-size: 2em;
 }
 
+li.finished{
+  text-decoration: line-through;
+}
+
 /* Extra small devices (phones, 600px and down) */
 @media only screen and (max-width: 600px) {...}
 
