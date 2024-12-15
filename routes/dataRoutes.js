@@ -18,7 +18,7 @@ router.get('/', async (req, res, next) => {
 
 router.post('/', async (req, res, next) => {
   try{
-    const { name, amount } = req.body;    
+    const { name, amount, finished } = req.body;    
 
     if (!name || !amount) {
       return res.status(400).json({ error: 'Name and amount are required'});
@@ -27,7 +27,7 @@ router.post('/', async (req, res, next) => {
     const db = await connectToDB(); 
     const collection = await db.collection('shoppinglistitemsdbs');
   
-    const result = await collection.insertOne({ name, amount});
+    const result = await collection.insertOne({ name, amount, finished});
 
     if (result){
         res.status(201).json({ message: 'Item added sucessfully'});

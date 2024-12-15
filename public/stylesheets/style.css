@@ -12,6 +12,8 @@ a{
   color:black;
 }
 
+/* rules */
+
 body {
   display: flex;
   flex-direction: column;
@@ -25,6 +27,10 @@ header {
   flex-direction: column;
   align-items: center;
   margin: 1em;
+}
+
+h1 {
+  font-size: 2em;
 }
 
 /* Extra small devices (phones, 600px and down) */

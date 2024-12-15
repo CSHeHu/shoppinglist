@@ -12,14 +12,14 @@ document.getElementById("addToListReset").addEventListener("click", event => {
 async function submitForm(){
     const name = document.getElementById('addToListInput').value.trim();
     const amount = document.getElementById('addAmountToListInput').value.trim();
-
+    const finished = false;
     try{
         const response = await fetch('/', {
            method: 'POST',
            headers: {
             'Content-Type': 'application/json',
            },
-           body: JSON.stringify({ name, amount}), 
+           body: JSON.stringify({ name, amount, finished}), 
         });
     
         updateList();
