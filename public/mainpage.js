@@ -9,6 +9,10 @@ document.getElementById("addToListReset").addEventListener("click", event => {
   resetForm();
 })
 
+document.getElementById("SLContainer").addEventListener("click", event => {
+  toggleItem(event);
+})
+
 async function submitForm(){
     const name = document.getElementById('addToListInput').value.trim();
     const amount = document.getElementById('addAmountToListInput').value.trim();
@@ -70,4 +74,14 @@ async function updateList(){
       }
     })
   }
+}
+
+async function toggleItem(event){
+  const listItem = event.target;
+  if (listItem.className !== "finished"){
+    listItem.className = "finished";
+  } else {
+    listItem.className = "";
+  }
+  // Needs db updating
 }
