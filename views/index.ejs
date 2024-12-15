@@ -17,9 +17,9 @@
       <ul>
         <% data.forEach(item => { %>
           <% if (item.finished) { %>
-            <li class="finished"><%=item.name%> - <%=item.amount%></li>  
+            <li id=<%= item._id %> class="finished"><%=item.name%> - <%=item.amount%></li>  
           <% } else { %>
-            <li><%=item.name%> - <%=item.amount%></li>
+            <li id=<%= item._id %>> <%=item.name%> - <%=item.amount%></li>
           <% } %>
         <% }); %>
       </ul>
