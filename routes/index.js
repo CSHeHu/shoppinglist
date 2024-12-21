@@ -21,30 +21,6 @@ router.get('/', async function(req, res, next) {
 });
 
 
-router.post('/', async function(req, res, next) {
-  try {
-    const { name, amount, finished } = req.body;
-
-    // Make a POST request to the dataroutes API
-    const response = await fetch(`${ApiURI}/data`, {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ name, amount, finished }),
-    });
-
-    if (response.ok) {
-      res.status(201).json({ message: 'Item added successfully' });  
-    } else {
-      res.status(500).json({ message: 'Failed to add items' });
-    }
-
-  } catch (err) {
-    next(err);  
-  }
-});
-
 
 module.exports = router;
 

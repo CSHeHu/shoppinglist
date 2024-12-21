@@ -18,7 +18,7 @@ async function submitForm(){
     const amount = document.getElementById('addAmountToListInput').value;
     const finished = false;
     try{
-        const response = await fetch('/', {
+        const response = await fetch('/data', {
            method: 'POST',
            headers: {
             'Content-Type': 'application/json',
