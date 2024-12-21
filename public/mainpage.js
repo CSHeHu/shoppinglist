@@ -13,6 +13,15 @@ document.getElementById("SLContainer").addEventListener("click", event => {
  toggleItem(event);
 })
 
+const listInputFields = document.querySelectorAll("#SLContainer input");
+
+document.getElementById("SLContainer").addEventListener("focusout", event => {
+  if (event.target.tagName === "INPUT") { 
+    updateOneElement(event);
+  }
+});
+
+
 async function submitForm(){
     const name = document.getElementById('addToListInput').value;
     const amount = document.getElementById('addAmountToListInput').value;
@@ -100,18 +109,14 @@ async function toggleItem(event){
   } else {
     listItem.classList.remove("finished");
   }
-  updateOneElement(event);
 }
 
 async function updateOneElement(event){
-  const listItem = event.target;
-
+  const listItem = event.target.parentElement;
   const _id = listItem.getAttribute("id");
   const name = listItem.children[0].value; 
   const amount = listItem.children[1].value;
   const finished = listItem.classList.contains("finished");
-
-  console.log(_id, name, amount, finished);
   
   try{
         const response = await fetch('/data', {
@@ -122,7 +127,7 @@ async function updateOneElement(event){
            body: JSON.stringify({ _id, name, amount, finished}), 
         });
         
-        updateList();
+        //updateList();
       }
     
     catch (err){

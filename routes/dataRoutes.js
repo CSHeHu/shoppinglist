@@ -49,8 +49,6 @@ router.patch('/', async (req, res, next) => {
   try{
     const { _id, name, amount, finished } = req.body;    
 
-    console.log('Received data:', _id, name, amount, finished);
-
     if (!_id || !name || !amount) {
       return res.status(400).json({ error: 'Id, Name and amount are required'});
     }
@@ -69,17 +67,15 @@ router.patch('/', async (req, res, next) => {
     );
 
     if (result.matchedCount === 0){
-      console.log("0 vaihdettu")  
       return res.status(404).json({ message: 'Item not found'});
     }
 
     if (result.modifiedCount > 0){
-      console.log("some modified");
       return res.status(200).json({ message: 'Item updated successfully'})
     }
 
     else {
-      console.log("none above");
+      return res.status(200).json({ message: 'No changes were made'});
     }
   }
 
