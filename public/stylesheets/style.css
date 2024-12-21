@@ -39,8 +39,9 @@ li{
 }
 
 li.finished{
-  text-decoration: line-through;
+  background-color: red; 
 }
+
 
 h1 {
   font-size: 2em;
@@ -48,6 +49,11 @@ h1 {
 
 span{
   padding:0.2em;
+}
+
+input{
+  width: 20%;
+  padding: 0.2em;
 }
 
 /* Extra small devices (phones, 600px and down) */

@@ -10,9 +10,7 @@ document.getElementById("addToListReset").addEventListener("click", event => {
 })
 
 document.getElementById("SLContainer").addEventListener("click", event => {
-  if (event.target && event.target.tagName === 'LI') {
-    toggleItem(event);
-  }
+ toggleItem(event);
 })
 
 async function submitForm(){
@@ -90,11 +88,13 @@ async function updateList(){
 }
 
 async function toggleItem(event){
-  const listItem = event.target;
-  if (listItem.className !== "finished"){
-    listItem.className = "finished";
+  const listItem = event.target.closest('li');
+  if (!listItem) return;
+
+  // Toggle the "finished" class on the <li> element
+  if (!listItem.classList.contains("finished")) {
+    listItem.classList.add("finished");
   } else {
-    listItem.className = "";
+    listItem.classList.remove("finished");
   }
-  // Needs db updating
 }
