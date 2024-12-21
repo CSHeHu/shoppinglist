@@ -41,7 +41,7 @@ li{
   display: flex;
 }
 
-li.finished{
+li.finished button#collected {
   background-color: red; 
 }
 

@@ -10,8 +10,10 @@ document.getElementById("addToListReset").addEventListener("click", event => {
 })
 
 document.getElementById("SLContainer").addEventListener("click", event => {
- toggleItem(event);
-})
+  if (event.target.tagName === 'BUTTON' && event.target.id === 'collected') {
+    toggleItem(event);
+  }
+});
 
 const listInputFields = document.querySelectorAll("#SLContainer input");
 
@@ -100,7 +102,7 @@ async function updateList(){
 }
 
 async function toggleItem(event){
-  const listItem = event.target;
+  const listItem = event.target.parentElement;
   if (!listItem) return;
 
   // Toggle the "finished" class on the <li> element
@@ -109,6 +111,7 @@ async function toggleItem(event){
   } else {
     listItem.classList.remove("finished");
   }
+  updateOneElement(event);
 }
 
 async function updateOneElement(event){
