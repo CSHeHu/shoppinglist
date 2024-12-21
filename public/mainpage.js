@@ -94,6 +94,20 @@ async function updateList(){
       amountInput.className = "amount";
       amountInput.value = item.amount;
       listItem.appendChild(amountInput);
+
+      // collected button
+      const collectedButton = document.createElement("button");
+      collectedButton.type = "button";
+      collectedButton.id = "collected";
+      collectedButton.textContent = "Collected";
+      listItem.appendChild(collectedButton);
+
+      // delete button
+      const deleteButton = document.createElement("button");
+      deleteButton.type = "button";
+      deleteButton.id = "delete";
+      deleteButton.textContent = "Delete";
+      listItem.appendChild(deleteButton);
       
       SLContainer.appendChild(listItem);
 
