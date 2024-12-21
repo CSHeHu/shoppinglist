@@ -18,13 +18,13 @@
         <% data.forEach(item => { %>
           <% if (item.finished) { %>
             <li id=<%= item._id %> class="finished">
-              <input type="name" class="name" value= <%= item.name %> >
-              <input type="number" class="amount" value= <%= item.amount %> >
+              <input type="name" class="name" value="<%= item.name %>">
+              <input type="number" class="amount" value="<%= item.amount %>">
             </li>  
           <% } else { %>
             <li id=<%= item._id %> class=""> 
-              <input type="name" class="name" value= <%= item.name %> >
-              <input type="number" class="amount" value= <%= item.amount %> >
+              <input type="name" class="name" value="<%= item.name %>">
+              <input type="number" class="amount" value="<%= item.amount %>" >
             </li>
           <% } %>
         <% }); %>

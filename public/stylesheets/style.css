@@ -32,10 +32,11 @@ header {
 
 #SLContainer{
   background-color: grey;
+  margin: 1em;
 }
 
 li{
-  padding: 0.2em;
+  display: flex;
 }
 
 li.finished{
@@ -47,13 +48,8 @@ h1 {
   font-size: 2em;
 }
 
-span{
-  padding:0.2em;
-}
-
 input{
-  width: 20%;
-  padding: 0.2em;
+  width: 30%;
 }
 
 /* Extra small devices (phones, 600px and down) */

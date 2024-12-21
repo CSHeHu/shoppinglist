@@ -1,5 +1,6 @@
 const express = require('express');
 const connectToDB = require('../models/db');
+const { ObjectId } = require('mongodb');
 const router = express.Router();
 
 // API endpoint to fetch shopping list items in JSON format
@@ -8,13 +9,16 @@ router.get('/', async (req, res, next) => {
         const db = await connectToDB(); 
         const collection = await db.collection('shoppinglistitemsdbs');
         const data = await collection.find().toArray(); 
-        res.status(200).json(data);
+        return res.status(200).json(data);
 
     } catch (err) {
         next(err);  
         
     }
 });
+
+
+
 
 router.post('/', async (req, res, next) => {
   try{
@@ -30,7 +34,7 @@ router.post('/', async (req, res, next) => {
     const result = await collection.insertOne({ name, amount, finished});
 
     if (result){
-        res.status(201).json({ message: 'Item added sucessfully'});
+        return res.status(201).json({ message: 'Item added sucessfully'});
     }
   }
 
@@ -41,6 +45,52 @@ router.post('/', async (req, res, next) => {
 
 });
   
+router.patch('/', async (req, res, next) => {
+  try{
+    const { _id, name, amount, finished } = req.body;    
+
+    console.log('Received data:', _id, name, amount, finished);
+
+    if (!_id || !name || !amount) {
+      return res.status(400).json({ error: 'Id, Name and amount are required'});
+    }
+
+    const db = await connectToDB(); 
+    const collection = await db.collection('shoppinglistitemsdbs');
+    const objectId = new ObjectId(_id);
+
+    if (!ObjectId.isValid(objectId)){
+      console.log('Invalid objectid: ', objectId);
+    }
+
+    const result = await collection.updateOne(
+      {_id: objectId},
+      {$set: {name: name, amount: amount, finished: finished}}
+    );
+
+    if (result.matchedCount === 0){
+      console.log("0 vaihdettu")  
+      return res.status(404).json({ message: 'Item not found'});
+    }
+
+    if (result.modifiedCount > 0){
+      console.log("some modified");
+      return res.status(200).json({ message: 'Item updated successfully'})
+    }
+
+    else {
+      console.log("none above");
+    }
+  }
+
+
+  catch (err) {
+    next(err);  
+  }
+
+});
+
+
 router.delete('/', async (req, res, next) => {
     try {
         const db = await connectToDB(); 
@@ -48,7 +98,7 @@ router.delete('/', async (req, res, next) => {
         const result = await collection.deleteMany( {} ); 
 
         if (result){
-          res.status(200).json({ message: 'Items deleted successfully'})
+          return res.status(200).json({ message: 'Items deleted successfully'})
         }
 
     } catch (err) {

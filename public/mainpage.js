@@ -14,8 +14,8 @@ document.getElementById("SLContainer").addEventListener("click", event => {
 })
 
 async function submitForm(){
-    const name = document.getElementById('addToListInput').value.trim();
-    const amount = document.getElementById('addAmountToListInput').value.trim();
+    const name = document.getElementById('addToListInput').value;
+    const amount = document.getElementById('addAmountToListInput').value;
     const finished = false;
     try{
         const response = await fetch('/', {
@@ -36,7 +36,7 @@ async function submitForm(){
 
 async function resetForm(){
   try{
-    const response = await fetch('/', {
+    const response = await fetch('/data', {
       method: 'DELETE',
       headers: {
         'Content-Type': 'application/json'
@@ -52,8 +52,9 @@ async function resetForm(){
 }
 
 async function updateList(){
-  const response = await fetch('http://localhost:3000/data');
+  const response = await fetch('/data');
   const data = await response.json();
+
 
   // Clear the old list
   const SLContainer = document.getElementById("SLContainer");
@@ -61,7 +62,7 @@ async function updateList(){
   // Update the list with new items
   if (data && data.length > 0){
     data.forEach(item => {
-      const listItem = document.createElement('li');
+      const listItem = document.createElement('LI');
       listItem.setAttribute("id", item._id);
      
       // finished
@@ -70,16 +71,18 @@ async function updateList(){
       }
       
       // name
-      const nameSpan = document.createElement("span");
-      nameSpan.textContent = item.name;
-      nameSpan.className = "name";
-      listItem.appendChild(nameSpan);
+      const nameInput = document.createElement("input");
+      nameInput.type = "text";
+      nameInput.className = "name";
+      nameInput.value = item.name;
+      listItem.appendChild(nameInput);
 
       // amount
-      const amountSpan = document.createElement("span");
-      amountSpan.textContent = item.amount;
-      amountSpan.className = "amount";
-      listItem.appendChild(amountSpan);
+      const amountInput = document.createElement("input");
+      amountInput.type = "number";
+      amountInput.className = "amount";
+      amountInput.value = item.amount;
+      listItem.appendChild(amountInput);
       
       SLContainer.appendChild(listItem);
 
@@ -88,7 +91,7 @@ async function updateList(){
 }
 
 async function toggleItem(event){
-  const listItem = event.target.closest('li');
+  const listItem = event.target;
   if (!listItem) return;
 
   // Toggle the "finished" class on the <li> element
@@ -97,4 +100,33 @@ async function toggleItem(event){
   } else {
     listItem.classList.remove("finished");
   }
+  updateOneElement(event);
+}
+
+async function updateOneElement(event){
+  const listItem = event.target;
+
+  const _id = listItem.getAttribute("id");
+  const name = listItem.children[0].value; 
+  const amount = listItem.children[1].value;
+  const finished = listItem.classList.contains("finished");
+
+  console.log(_id, name, amount, finished);
+  
+  try{
+        const response = await fetch('/data', {
+           method: 'PATCH',
+           headers: {
+            'Content-Type': 'application/json',
+           },
+           body: JSON.stringify({ _id, name, amount, finished}), 
+        });
+        
+        updateList();
+      }
+    
+    catch (err){
+        console.error('Error:', err)
+    }
+  
 }

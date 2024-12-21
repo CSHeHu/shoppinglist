@@ -21,7 +21,6 @@ router.get('/', async function(req, res, next) {
 });
 
 
-
 router.post('/', async function(req, res, next) {
   try {
     const { name, amount, finished } = req.body;
@@ -39,28 +38,6 @@ router.post('/', async function(req, res, next) {
       res.status(201).json({ message: 'Item added successfully' });  
     } else {
       res.status(500).json({ message: 'Failed to add items' });
-    }
-
-  } catch (err) {
-    next(err);  
-  }
-});
-
-
-router.delete('/', async function(req, res, next) {
-  try {
-
-    const response = await fetch(`${ApiURI}/data`, {
-        method: 'DELETE',
-        headers: {
-            'Content-Type': 'application/json'
-        }        
-    });
-
-    if (response.ok) {
-      res.status(200).json({ message: 'Items deleted successfully' });  // Don't redirect
-    } else {
-      res.status(500).json({ message: 'Failed to delete items' });
     }
 
   } catch (err) {
