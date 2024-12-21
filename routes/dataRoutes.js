@@ -102,4 +102,40 @@ router.delete('/', async (req, res, next) => {
         
     }
 });
+
+
+router.delete('/:_id', async (req, res, next) => {
+  try {
+    const { _id } = req.params;
+    console.log(_id);
+    if (!_id){
+      return res.status(400).json({ message: 'Id is required'});
+    }
+
+      const db = await connectToDB(); 
+      const collection = await db.collection('shoppinglistitemsdbs');
+
+    const objectId = new ObjectId(_id);
+    if (!ObjectId.isValid(objectId)){
+      console.log('Invalid objectid: ', objectId);
+    }
+
+    const result = await collection.deleteOne( {_id: objectId});
+    
+    if (result.deletedCount === 0){
+      return res.status(404).json({ message: 'Item not found'});
+    }
+    else {
+      return res.status(200).json({ message: 'Item deleted successfully'});
+    }
+
+  }
+  catch (err){
+    next(err);
+  }
+
+});
+
+
+
 module.exports = router;

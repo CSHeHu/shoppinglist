@@ -13,6 +13,11 @@ document.getElementById("SLContainer").addEventListener("click", event => {
   if (event.target.tagName === 'BUTTON' && event.target.id === 'collected') {
     toggleItem(event);
   }
+  if (event.target.tagName === 'BUTTON' && event.target.id === 'delete'){
+    const listItem = event.target.closest('li');
+    const _id = listItem.getAttribute("id");
+    deleteOneElement(_id);
+  }
 });
 
 const listInputFields = document.querySelectorAll("#SLContainer input");
@@ -143,8 +148,28 @@ async function updateOneElement(event){
            },
            body: JSON.stringify({ _id, name, amount, finished}), 
         });
-        
-        //updateList();
+      }
+    
+    catch (err){
+        console.error('Error:', err)
+    }
+  
+}
+
+
+async function deleteOneElement(_id){
+  try{
+        const response = await fetch(`/data/${_id}`, {
+           method: 'DELETE',
+        });
+   
+        if (response.ok){
+          updateList();
+        }
+        else{
+          console.log("Error deleting element");
+        }
+   
       }
     
     catch (err){
