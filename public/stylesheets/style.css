@@ -33,6 +33,8 @@ header {
 #SLContainer{
   background-color: grey;
   margin: 1em;
+  width: 90%;
+
 }
 
 li{
@@ -48,9 +50,14 @@ h1 {
   font-size: 2em;
 }
 
-input{
-  width: 30%;
+input.name{
+  width: 60%;
 }
+
+input.amount{
+  width:20%;
+}
+
 
 /* Extra small devices (phones, 600px and down) */
 @media only screen and (max-width: 600px) {...}
