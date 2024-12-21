@@ -20,13 +20,18 @@
             <li id=<%= item._id %> class="finished">
               <input type="name" class="name" value="<%= item.name %>">
               <input type="number" class="amount" value="<%= item.amount %>">
+              <button type="button">Collected</button>
+              <button type="button">Delete</button>
             </li>  
           <% } else { %>
             <li id=<%= item._id %> class=""> 
               <input type="name" class="name" value="<%= item.name %>">
               <input type="number" class="amount" value="<%= item.amount %>" >
+              <button type="button">Collected</button>
+              <button type="button">Delete</button>
             </li>
           <% } %>
+
         <% }); %>
       </ul>
     <% } %> 
