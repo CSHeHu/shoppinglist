@@ -8,9 +8,17 @@ const logger = require('morgan');
 const indexRouter = require('./routes/index');
 const usersRouter = require('./routes/users');
 const dataRouter = require('./routes/dataRoutes');
+const rateLimit = require('express-rate-limit');
 
 const app = express();
 
+
+const limiter = rateLimit({
+  windowMs: 15 * 60 * 1000, // 15 minutes
+  max: 100, // Limit each IP to 100 requests per window
+});
+
+app.use(limiter);
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
