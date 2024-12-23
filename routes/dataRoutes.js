@@ -3,6 +3,8 @@ const connectToDB = require('../models/db');
 const { ObjectId } = require('mongodb');
 const router = express.Router();
 
+const validateItem = require('../models/validate');
+
 // API endpoint to fetch shopping list items in JSON format
 router.get('/', async (req, res, next) => {
     try {
@@ -20,13 +22,9 @@ router.get('/', async (req, res, next) => {
 
 
 
-router.post('/', async (req, res, next) => {
+router.post('/', validateItem, async (req, res, next) => {
   try{
     const { name, amount, finished } = req.body;    
-
-    if (!name || !amount) {
-      return res.status(400).json({ error: 'Name and amount are required'});
-    }
 
     const db = await connectToDB(); 
     const collection = await db.collection('shoppinglistitemsdbs');
