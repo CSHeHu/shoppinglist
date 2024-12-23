@@ -43,13 +43,9 @@ router.post('/', validateItem, async (req, res, next) => {
 
 });
   
-router.patch('/', async (req, res, next) => {
+router.patch('/',validateItem ,async (req, res, next) => {
   try{
     const { _id, name, amount, finished } = req.body;    
-
-    if (!_id || !name || !amount) {
-      return res.status(400).json({ error: 'Id, Name and amount are required'});
-    }
 
     const db = await connectToDB(); 
     const collection = await db.collection('shoppinglistitemsdbs');
