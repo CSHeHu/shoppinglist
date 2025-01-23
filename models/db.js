@@ -14,12 +14,16 @@ const connectToDB = async () => {
 
     try {
         await client.connect();
-        console.log("Connected to MongoDB successfully");
         dbInstance = client.db(process.env.MONGODB_DB); 
+        
+        if (!dbInstance){
+            throw new Error("Failed to connect to server"); 
+        }
+
+        console.log("Connected to MongoDB successfully");
         return dbInstance;
     } catch (err) {
-        console.error("Error connecting to MongoDB:", err);
-        throw err; // Throw error if connection fails
+        throw new Error("Database connection error");
     }
 };
 
