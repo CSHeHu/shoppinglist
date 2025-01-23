@@ -30,23 +30,19 @@ router.get('/', async (req, res, next) => {
 
 
 router.post('/', validateItem, async (req, res, next) => {
-  try{
-    const { name, amount, finished } = req.body;    
+    try{
+        const { name, amount, finished } = req.body;    
+        const db = await connectToDB(); 
+        const collection = await db.collection('shoppinglistitemsdbs');
+      
+        const result = await collection.insertOne({ name, amount, finished});
 
-    const db = await connectToDB(); 
-    const collection = await db.collection('shoppinglistitemsdbs');
-  
-    const result = await collection.insertOne({ name, amount, finished});
-
-    if (result){
-        return res.status(201).json({ message: 'Item added sucessfully'});
+        if (result){
+            return res.status(201).json({ message: 'Item added sucessfully'});
+        }
+    } catch (err) {
+        next(err);  
     }
-  }
-
-
-  catch (err) {
-    next(err);  
-  }
 
 });
   

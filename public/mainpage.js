@@ -41,7 +41,15 @@ async function submitForm(){
            },
            body: JSON.stringify({ name, amount, finished}), 
         });
-    
+  
+        // for testing with errors
+        if (!response.ok) {
+            // If response status is not 2xx, throw an error to handle
+            const errorHtml = await response.text(); // Get the HTML response
+            document.body.innerHTML = errorHtml; // Replace the page content with the error
+            return;
+        }
+
         updateList();
       }
     
