@@ -8,12 +8,19 @@ const validateItem = require('../models/validate');
 // API endpoint to fetch shopping list items in JSON format
 router.get('/', async (req, res, next) => {
     try {
-        const db = await connectToDB(); 
+        const db = await connectToDB();
+        if (!db){
+            const error = new Error("Failed to connect to database");
+            error.status = 500;
+            throw error;
+        }
+
         const collection = await db.collection('shoppinglistitemsdbs');
         const data = await collection.find().toArray(); 
         return res.status(200).json(data);
 
     } catch (err) {
+        console.log("Error in /data get")
         next(err);  
         
     }
