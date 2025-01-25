@@ -44,8 +44,8 @@ async function submitForm(){
   
         // for testing with errors
         if (!response.ok) {
-            const errorHtml = await response.text(); 
-            document.body.innerHTML = errorHtml; 
+            const errorText = await response.text(); 
+            document.body.innerHTML = errorText; 
             return;
         }
         // for testing with errors

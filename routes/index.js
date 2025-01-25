@@ -8,7 +8,8 @@ router.get('/', async function(req, res, next) {
     try {
         const response = await fetch(`${ApiURI}/data`);  
         if (!response.ok){
-            const error = new Error("Failed to fetch data from database");
+            const errorText = response.body;
+            const error = new Error(errorText);
             error.status = 500;
             throw error;
         }
@@ -20,7 +21,7 @@ router.get('/', async function(req, res, next) {
         });
 
     } catch (err) {
-        console.log("Error in index get")
+        console.log("Error in / get")
         next(err);  
     }
 });

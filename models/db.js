@@ -16,10 +16,6 @@ const connectToDB = async () => {
         await client.connect();
         dbInstance = client.db(process.env.MONGODB_DB); 
         
-        if (!dbInstance){
-            throw new Error("Failed to connect to server"); 
-        }
-
         console.log("Connected to MongoDB successfully");
         return dbInstance;
     } catch (err) {

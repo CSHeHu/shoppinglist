@@ -9,16 +9,9 @@ const validateItem = require('../models/validate');
 router.get('/', async (req, res, next) => {
     try {
         const db = await connectToDB();
-        if (!db){
-            const error = new Error("Failed to connect to database");
-            error.status = 500;
-            throw error;
-        }
-
         const collection = await db.collection('shoppinglistitemsdbs');
         const data = await collection.find().toArray(); 
         return res.status(200).json(data);
-
     } catch (err) {
         console.log("Error in /data get")
         next(err);  
@@ -36,8 +29,7 @@ router.post('/', validateItem, async (req, res, next) => {
         const collection = await db.collection('shoppinglistitemsdbs');
       
         const result = await collection.insertOne({ name, amount, finished});
-
-        if (!result){
+        if (!result.acknowledged){
             const error = new Error("Failed to add Item");
             error.status = 500;
             throw error;
