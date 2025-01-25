@@ -1,23 +1,13 @@
 var express = require('express');
 var router = express.Router();
+const fetchDataMiddleware = require("../middleware/fetchData");
 
-require('dotenv').config();
-const ApiURI = process.env.API_SERVER; 
-
-router.get('/', async function(req, res, next) {
+router.get('/', fetchDataMiddleware,async function(req, res, next) {
     try {
-        const response = await fetch(`${ApiURI}/data`);  
-        if (!response.ok){
-            const errorText = response.body;
-            const error = new Error(errorText);
-            error.status = 500;
-            throw error;
-        }
-        const data = await response.json();  
         
         res.render('index', 
            { title: 'Shopping List', 
-            data : data
+            data : req.data
         });
 
     } catch (err) {

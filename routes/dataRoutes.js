@@ -2,8 +2,7 @@ const express = require('express');
 const connectToDB = require('../models/db');
 const { ObjectId } = require('mongodb');
 const router = express.Router();
-
-const validateItem = require('../models/validate');
+const validateItem = require('../middleware/validate');
 
 // API endpoint to fetch shopping list items in JSON format
 router.get('/', async (req, res, next) => {
