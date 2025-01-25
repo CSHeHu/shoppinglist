@@ -37,10 +37,14 @@ router.post('/', validateItem, async (req, res, next) => {
       
         const result = await collection.insertOne({ name, amount, finished});
 
-        if (result){
-            return res.status(201).json({ message: 'Item added sucessfully'});
+        if (!result){
+            const error = new Error("Failed to add Item");
+            error.status = 500;
+            throw error;
         }
+        return res.status(201).json({ message: 'Item added sucessfully'});
     } catch (err) {
+        console.log("Error in /data post")
         next(err);  
     }
 

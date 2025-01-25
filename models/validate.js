@@ -11,7 +11,7 @@ const validateItem = [
                 error.status = 400;
                 error.details = errors.array();
                 console.log("Validation error");
-                next(error); 
+                return next(error); 
             }
             
 
