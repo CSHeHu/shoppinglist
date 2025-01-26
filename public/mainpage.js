@@ -42,13 +42,14 @@ async function submitForm(){
             body: JSON.stringify({ name, amount, finished}), 
         });
         if (!response.ok) {
-            throw new Error(`Error status: ${response.status}`);
+            const errorData = await response.json();
+            throw new Error(`${errorData.error.message} ${errorData.error.code})`);
         }
         updateList();
     }
 
     catch (err){
-        console.error('Error:', err)
+        console.error(err);
     }
 }
 
@@ -61,13 +62,14 @@ async function resetForm(){
             }
         });
         if (!response.ok) {
-            throw new Error(`Error status: ${response.status}`);
+            const errorData = await response.json();
+            throw new Error(`${errorData.error.message} ${errorData.error.code})`);
         }
         updateList();
     }
 
     catch (err) {
-        console.error('Error:', err)
+        console.error(err)
     }
 
 }
@@ -75,7 +77,8 @@ async function resetForm(){
 async function updateList(){
     const response = await fetch('/data');
     if (!response.ok) {
-        throw new Error(`Error status: ${response.status}`);
+        const errorData = await response.json();
+        throw new Error(`${errorData.error.message} ${errorData.error.code})`);
     }
     const data = await response.json();
 
@@ -157,12 +160,13 @@ async function updateOneElement(event){
             body: JSON.stringify({ _id, name, amount, finished}), 
         });
         if (!response.ok) {
-            throw new Error(`Error status: ${response.status}`);
+            const errorData = await response.json();
+            throw new Error(`${errorData.error.message} ${errorData.error.code})`);
         }
     }
 
     catch (err){
-        console.error('Error:', err)
+        console.error(err)
     }
 
 }
@@ -174,13 +178,14 @@ async function deleteOneElement(_id){
             method: 'DELETE',
         });
         if (!response.ok) {
-            throw new Error(`Error status: ${response.status}`);
+            const errorData = await response.json();
+            throw new Error(`${errorData.error.message} ${errorData.error.code})`);
         }
         updateList();
     }
 
     catch (err){
-        console.error('Error:', err)
+        console.error(err)
     }
 
 }
