@@ -4,6 +4,7 @@ const express = require('express');
 const path = require('path');
 const cookieParser = require('cookie-parser');
 const logger = require('morgan');
+const winston = require('winston');
 
 const indexRouter = require('./routes/index');
 const usersRouter = require('./routes/users');
@@ -35,20 +36,46 @@ app.use('/', indexRouter);
 app.use('/users', usersRouter);
 app.use('/data', dataRouter);
 
+// winston logs errors, morgan connections
+const errorLogger = winston.createLogger({
+    level: 'error',
+    format: winston.format.combine(
+        winston.format.timestamp({ format: 'YYYY-MM-DD HH:mm:ss' }), // Timestamp format
+        winston.format.printf(({ timestamp, message, stack, status }) => {
+            return `Timestamp: ${timestamp}\nStatus: ${status}\nMessage: ${message}\nStack: ${stack}\n`;
+        })
+    ),
+    transports: [
+        new winston.transports.File({ filename: path.join(__dirname, 'error.log') })
+    ],
+});
+
 // catch 404 and forward to error handler
-app.use(function(req, res, next) {
-    next(createError(404));
+app.use(function(req, res, next) {    
+    const error = new Error('Not Found');
+    error.status = 404;
+    next(error);
 });
 
 // error handler
-app.use(function(err, req, res, next) {
-    // set locals, only providing error in development
-    res.locals.message = err.message;
-    res.locals.error = req.app.get('env') === 'development' ? err : {};
+app.use(function(err, req, res, next) {    
+    // Log the error details to the logfile
+    if (req.app.get('env') === 'development'){
+        errorLogger.error({
+            message: err.message,
+            stack: err.stack,
+            status: err.status || 500,
+            timestamp: new Date().toISOString(),
+        });
+    }
 
-    // render the error page
-    res.status(err.status || 500);
-    res.render('error');
+    // Send error response
+    res.status(err.status || 500).json({
+        error: {
+            code: err.status || 500,
+            message: 'Something went wrong. Please try again later.',
+        },
+    });
 });
 
 module.exports = app;
