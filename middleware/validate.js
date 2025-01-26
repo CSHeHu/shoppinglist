@@ -5,18 +5,18 @@ const validateItem = [
     body('name').isString().isLength({ min: 1, max: 100 }).escape(),
     body('amount').isInt({ min: 1, max: 1000 }).escape(),
     (req, res, next) => {
-            const errors = validationResult(req);
-            if (!errors.isEmpty()) {
-                const error = new Error("Validation error");
-                error.status = 400;
-                error.details = errors.array();
-                console.log("Validation error");
-                return next(error); 
-            }
-            
+        const errors = validationResult(req);
+        if (!errors.isEmpty()) {
+            const error = new Error("Validation error");
+            error.status = 400;
+            error.details = errors.array();
+            console.log("Validation error");
+            return next(error); 
+        }
 
-            console.log("Item validated")
-            next(); 
+
+        console.log("Item validated")
+        next(); 
     }
 ];
 
