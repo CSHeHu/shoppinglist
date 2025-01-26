@@ -50,7 +50,5 @@ app.use(function(err, req, res, next) {
     res.status(err.status || 500);
     res.render('error');
 });
-// toinen testi
 
-// test päällekkäin
 module.exports = app;
