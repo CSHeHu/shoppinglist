@@ -90,10 +90,22 @@ router.delete('/', async (req, res, next) => {
     try {
         const db = await connectToDB(); 
         const collection = await db.collection('shoppinglistitemsdbs');
-        const result = await collection.deleteMany( {} ); 
 
-        if (result){
+        // Check if the collection is empty
+        const count = await collection.countDocuments();  
+        if (count === 0) {
+            return res.status(200).json({ message: 'No items to delete, the collection is already empty' });
+        }
+
+        const result = await collection.deleteMany( {} ); 
+        if (result.deletedCount > 0){
             return res.status(200).json({ message: 'Items deleted successfully'})
+        }
+        else{
+            console.log("No item's deleted");
+            const error = new Error("No item's deleted");
+            error.status = 404;
+            throw error;
         }
 
     } catch (err) {

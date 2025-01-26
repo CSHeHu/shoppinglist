@@ -1,65 +1,65 @@
 *{
-  list-style: none;
-  margin: 0;
-  padding: 0;
-  text-decoration: none;
-  color:black;
-  font-weight: normal;
-  font-size: 16px;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    text-decoration: none;
+    color:black;
+    font-weight: normal;
+    font-size: 16px;
 }
 
 a{
-  color:black;
+    color:black;
 }
 
 /* rules */
 
 body {
-  display: flex;
-  flex-direction: column;
-  font-family: Arial, sans-serif;
-  background-color: #f0f0f0;   
-  align-items: center;
+    display: flex;
+    flex-direction: column;
+    font-family: Arial, sans-serif;
+    background-color: #f0f0f0;   
+    align-items: center;
 }
 
 header { 
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  margin: 1em;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin: 1em;
 }
 
 
 #SLContainer{
-  background-color: grey;
-  margin: 1em;
-  width: 90%;
+    background-color: grey;
+    margin: 1em;
+    width: 90%;
 
 }
 
 li{
-  display: flex;
+    display: flex;
 }
 
 li.finished button#collected {
-  background-color: red; 
+    background-color: red; 
 }
 
 
 h1 {
-  font-size: 2em;
+    font-size: 2em;
 }
 
 input.name{
-  width: 60%;
+    width: 60%;
 }
 
 input.amount{
-  width:20%;
+    width:20%;
 }
 
 button{
-  flex: 1;
+    flex: 1;
 }
 
 /* Extra small devices (phones, 600px and down) */

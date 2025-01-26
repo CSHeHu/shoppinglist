@@ -1,52 +1,52 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title><%= title %></title>
-    <link rel="stylesheet" href="/stylesheets/style.css" />
-  </head>
-  <body>
-    <header id="header">
-    <h1><%= title %></h1>
-    <p>Welcome to <%= title %></p>
-    </header>
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title><%= title %></title>
+        <link rel="stylesheet" href="/stylesheets/style.css" />
+    </head>
+    <body>
+        <header id="header">
+            <h1><%= title %></h1>
+            <p>Welcome to <%= title %></p>
+        </header>
 
-    <div id="SLContainer">
-    <% if (data && data.length > 0){ %>
-      <ul>
-        <% data.forEach(item => { %>
-          <% if (item.finished) { %>
-            <li id=<%= item._id %> class="finished">
-              <input type="name" class="name" value="<%= item.name %>">
-              <input type="number" class="amount" value="<%= item.amount %>">
-              <button type="button" id="collected">Collected</button>
-              <button type="button" id="delete">Delete</button>
-            </li>  
-          <% } else { %>
-            <li id=<%= item._id %> class=""> 
-              <input type="name" class="name" value="<%= item.name %>">
-              <input type="number" class="amount" value="<%= item.amount %>" >
-              <button type="button" id="collected">Collected</button>
-              <button type="button" id="delete">Delete</button>
-            </li>
-          <% } %>
+        <div id="SLContainer">
+            <% if (data && data.length > 0){ %>
+            <ul>
+                <% data.forEach(item => { %>
+                <% if (item.finished) { %>
+                <li id=<%= item._id %> class="finished">
+                    <input type="name" class="name" value="<%= item.name %>">
+                    <input type="number" class="amount" value="<%= item.amount %>">
+                    <button type="button" id="collected">Collected</button>
+                    <button type="button" id="delete">Delete</button>
+                </li>  
+                <% } else { %>
+                <li id=<%= item._id %> class=""> 
+                    <input type="name" class="name" value="<%= item.name %>">
+                    <input type="number" class="amount" value="<%= item.amount %>" >
+                    <button type="button" id="collected">Collected</button>
+                    <button type="button" id="delete">Delete</button>
+                </li>
+                <% } %>
 
-        <% }); %>
-      </ul>
-    <% } %> 
-    </div>
+                <% }); %>
+            </ul>
+            <% } %> 
+        </div>
 
-    <div id=addToListContainer>
-      <form id="addToListForm">
-        <input type="text" id="addToListInput" placeholder="Add new item" name="name" required>
-        <input type="number" id="addAmountToListInput" placeholder="Add amount" name="amount" required>
-        <button type="submit" id="addToListSubmit">Add</button>
-        <button type="reset" id="addToListReset">Reset</button>
-      </form>
-    </div>
+        <div id=addToListContainer>
+            <form id="addToListForm">
+                <input type="text" id="addToListInput" placeholder="Add new item" name="name" required>
+                <input type="number" id="addAmountToListInput" placeholder="Add amount" name="amount" required>
+                <button type="submit" id="addToListSubmit">Add</button>
+                <button type="reset" id="addToListReset">Reset</button>
+            </form>
+        </div>
 
-    
-    <script src="mainpage.js"></script>
-  </body>
+
+        <script src="mainpage.js"></script>
+    </body>
 </html>
