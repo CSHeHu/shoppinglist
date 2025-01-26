@@ -88,25 +88,46 @@ router.patch('/',validateItem ,async (req, res, next) => {
 
 router.delete('/', async (req, res, next) => {
     try {
+        const { _id } = req.query;
         const db = await connectToDB(); 
         const collection = await db.collection('shoppinglistitemsdbs');
-
+        
         // Check if the collection is empty
         const count = await collection.countDocuments();  
         if (count === 0) {
             return res.status(200).json({ message: 'No items to delete, the collection is already empty' });
         }
 
+        // If _id is provided, delete a specific item
+        if (_id) {
+            const objectId = ObjectId.createFromHexString(_id);   
+            if (!ObjectId.isValid(objectId)) {
+                console.log('Invalid ObjectId');
+                const error = new Error("Invalid ObjectId");
+                error.status = 500;
+                throw error;
+            }
+            const result = await collection.deleteOne({ _id: objectId });
+
+            if (result.deletedCount === 0) {
+                console.log("Item not found");
+                const error = new Error("Item not found");
+                error.status = 404;
+                throw error;
+            }
+
+            return res.status(200).json({ message: 'Item deleted successfully' });
+        }
+
         const result = await collection.deleteMany( {} ); 
         if (result.deletedCount > 0){
             return res.status(200).json({ message: 'Items deleted successfully'})
         }
-        else{
-            console.log("No item's deleted");
-            const error = new Error("No item's deleted");
-            error.status = 404;
-            throw error;
-        }
+
+        console.log("No item's deleted");
+        const error = new Error("No item's deleted");
+        error.status = 404;
+        throw error;
 
     } catch (err) {
         next(err);  
@@ -114,38 +135,6 @@ router.delete('/', async (req, res, next) => {
     }
 });
 
-
-router.delete('/:_id', async (req, res, next) => {
-    try {
-        const { _id } = req.params;
-        console.log(_id);
-        if (!_id){
-            return res.status(400).json({ message: 'Id is required'});
-        }
-
-        const db = await connectToDB(); 
-        const collection = await db.collection('shoppinglistitemsdbs');
-
-        const objectId = new ObjectId(_id);
-        if (!ObjectId.isValid(objectId)){
-            console.log('Invalid objectid: ', objectId);
-        }
-
-        const result = await collection.deleteOne( {_id: objectId});
-
-        if (result.deletedCount === 0){
-            return res.status(404).json({ message: 'Item not found'});
-        }
-        else {
-            return res.status(200).json({ message: 'Item deleted successfully'});
-        }
-
-    }
-    catch (err){
-        next(err);
-    }
-
-});
 
 
 

@@ -41,15 +41,9 @@ async function submitForm(){
             },
             body: JSON.stringify({ name, amount, finished}), 
         });
-
-        // for testing with errors
         if (!response.ok) {
-            const errorText = await response.text(); 
-            document.body.innerHTML = errorText; 
-            return;
+            throw new Error(`Error status: ${response.status}`);
         }
-        // for testing with errors
-
         updateList();
     }
 
@@ -66,6 +60,9 @@ async function resetForm(){
                 'Content-Type': 'application/json'
             }
         });
+        if (!response.ok) {
+            throw new Error(`Error status: ${response.status}`);
+        }
         updateList();
     }
 
@@ -77,6 +74,9 @@ async function resetForm(){
 
 async function updateList(){
     const response = await fetch('/data');
+    if (!response.ok) {
+        throw new Error(`Error status: ${response.status}`);
+    }
     const data = await response.json();
 
 
@@ -156,6 +156,9 @@ async function updateOneElement(event){
             },
             body: JSON.stringify({ _id, name, amount, finished}), 
         });
+        if (!response.ok) {
+            throw new Error(`Error status: ${response.status}`);
+        }
     }
 
     catch (err){
@@ -167,17 +170,13 @@ async function updateOneElement(event){
 
 async function deleteOneElement(_id){
     try{
-        const response = await fetch(`/data/${_id}`, {
+        const response = await fetch(`/data?_id=${_id}`, {
             method: 'DELETE',
         });
-
-        if (response.ok){
-            updateList();
+        if (!response.ok) {
+            throw new Error(`Error status: ${response.status}`);
         }
-        else{
-            console.log("Error deleting element");
-        }
-
+        updateList();
     }
 
     catch (err){
