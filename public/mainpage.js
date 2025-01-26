@@ -41,10 +41,7 @@ async function submitForm(){
             },
             body: JSON.stringify({ name, amount, finished}), 
         });
-        if (!response.ok) {
-            const errorData = await response.json();
-            throw new Error(`${errorData.error.message} ${errorData.error.code})`);
-        }
+        await handleErrorResponse(response);
         updateList();
     }
 
@@ -61,10 +58,7 @@ async function resetForm(){
                 'Content-Type': 'application/json'
             }
         });
-        if (!response.ok) {
-            const errorData = await response.json();
-            throw new Error(`${errorData.error.message} ${errorData.error.code})`);
-        }
+        await handleErrorResponse(response); 
         updateList();
     }
 
@@ -75,60 +69,66 @@ async function resetForm(){
 }
 
 async function updateList(){
-    const response = await fetch('/data');
-    if (!response.ok) {
-        const errorData = await response.json();
-        throw new Error(`${errorData.error.message} ${errorData.error.code})`);
+    try {
+        const response = await fetch('/data');
+        if (!response.ok) {
+            await handleErrorResponse(response); 
+        }
+        const data = await response.json();
+
+
+        // Clear the old list
+        const SLContainer = document.getElementById("SLContainer");
+        SLContainer.innerHTML = '';
+        // Update the list with new items
+        if (data && data.length > 0){
+            data.forEach(item => {
+                const listItem = document.createElement('LI');
+                listItem.setAttribute("id", item._id);
+
+                // finished
+                if (item.finished){
+                    listItem.className = "finished"
+                }
+
+                // name
+                const nameInput = document.createElement("input");
+                nameInput.type = "text";
+                nameInput.className = "name";
+                nameInput.value = item.name;
+                listItem.appendChild(nameInput);
+
+                // amount
+                const amountInput = document.createElement("input");
+                amountInput.type = "number";
+                amountInput.className = "amount";
+                amountInput.value = item.amount;
+                listItem.appendChild(amountInput);
+
+                // collected button
+                const collectedButton = document.createElement("button");
+                collectedButton.type = "button";
+                collectedButton.id = "collected";
+                collectedButton.textContent = "Collected";
+                listItem.appendChild(collectedButton);
+
+                // delete button
+                const deleteButton = document.createElement("button");
+                deleteButton.type = "button";
+                deleteButton.id = "delete";
+                deleteButton.textContent = "Delete";
+                listItem.appendChild(deleteButton);
+
+                SLContainer.appendChild(listItem);
+
+            })
+        }
+
+    } catch (err){
+        console.error(err)
     }
-    const data = await response.json();
 
 
-    // Clear the old list
-    const SLContainer = document.getElementById("SLContainer");
-    SLContainer.innerHTML = '';
-    // Update the list with new items
-    if (data && data.length > 0){
-        data.forEach(item => {
-            const listItem = document.createElement('LI');
-            listItem.setAttribute("id", item._id);
-
-            // finished
-            if (item.finished){
-                listItem.className = "finished"
-            }
-
-            // name
-            const nameInput = document.createElement("input");
-            nameInput.type = "text";
-            nameInput.className = "name";
-            nameInput.value = item.name;
-            listItem.appendChild(nameInput);
-
-            // amount
-            const amountInput = document.createElement("input");
-            amountInput.type = "number";
-            amountInput.className = "amount";
-            amountInput.value = item.amount;
-            listItem.appendChild(amountInput);
-
-            // collected button
-            const collectedButton = document.createElement("button");
-            collectedButton.type = "button";
-            collectedButton.id = "collected";
-            collectedButton.textContent = "Collected";
-            listItem.appendChild(collectedButton);
-
-            // delete button
-            const deleteButton = document.createElement("button");
-            deleteButton.type = "button";
-            deleteButton.id = "delete";
-            deleteButton.textContent = "Delete";
-            listItem.appendChild(deleteButton);
-
-            SLContainer.appendChild(listItem);
-
-        })
-    }
 }
 
 async function toggleItem(event){
@@ -159,10 +159,7 @@ async function updateOneElement(event){
             },
             body: JSON.stringify({ _id, name, amount, finished}), 
         });
-        if (!response.ok) {
-            const errorData = await response.json();
-            throw new Error(`${errorData.error.message} ${errorData.error.code})`);
-        }
+        await handleErrorResponse(response); 
     }
 
     catch (err){
@@ -177,10 +174,7 @@ async function deleteOneElement(_id){
         const response = await fetch(`/data?_id=${_id}`, {
             method: 'DELETE',
         });
-        if (!response.ok) {
-            const errorData = await response.json();
-            throw new Error(`${errorData.error.message} ${errorData.error.code})`);
-        }
+        await handleErrorResponse(response); 
         updateList();
     }
 
@@ -188,4 +182,13 @@ async function deleteOneElement(_id){
         console.error(err)
     }
 
+}
+
+
+async function handleErrorResponse(response) {
+    if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(`${errorData.error.message} ${errorData.error.code})`);
+    }
+    return response.json();
 }
