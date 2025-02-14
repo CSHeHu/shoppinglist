@@ -201,7 +201,17 @@ async function submitRecipeSearch(){
             await handleErrorResponse(response); 
         }
         const data = await response.json();
-        console.log(data);
+
+        for (let meal of data.meals) {
+            console.log(`Meal ID: ${meal.idMeal}, Name: ${meal.strMeal}`);
+
+            // Loop over each property of the meal object
+            for (let property in meal) {
+                if (meal.hasOwnProperty(property)) {
+                    console.log(`Key: ${property}, Value: ${meal[property]}`);
+                }
+            }
+        }
     }
 
     catch (err){
