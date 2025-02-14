@@ -1,7 +1,10 @@
-
 document.getElementById("addToListForm").addEventListener("submit", event => {
     event.preventDefault();
     submitForm();
+});
+document.getElementById("searchRecipeForm").addEventListener("submit", event => {
+    event.preventDefault();
+    submitRecipeSearch();
 });
 
 document.getElementById("addToListReset").addEventListener("click", event => {
@@ -184,6 +187,27 @@ async function deleteOneElement(_id){
 
 }
 
+
+async function submitRecipeSearch(){
+    const recipe= document.getElementById('searchRecipeInput').value;
+    try{
+        const response = await fetch(`/recipe?recipe=${encodeURIComponent(recipe)}`, {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json',
+            }
+        });
+        if (!response.ok) {
+            await handleErrorResponse(response); 
+        }
+        const data = await response.json();
+        console.log(data);
+    }
+
+    catch (err){
+        console.error(err);
+    }
+}
 
 async function handleErrorResponse(response) {
     if (!response.ok) {

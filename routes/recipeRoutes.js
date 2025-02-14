@@ -5,7 +5,8 @@ const router = express.Router();
 // get recipes from outside API
 router.get('/', async (req, res, next) => {
     try{
-        const ApiURI = process.env.RECIPE_API + "pasta";        
+        const searchQuery = req.query.recipe
+        const ApiURI = `${process.env.RECIPE_API}${encodeURIComponent(searchQuery)}`;
         const response = await fetch(ApiURI);
         if (!response.ok){
             const errorText = response.body;
@@ -14,11 +15,10 @@ router.get('/', async (req, res, next) => {
             throw error;
         }
         const data = await response.json();  
-        req.data = data;
-        next();
+        return res.status(200).json(data);
 
     }catch(err){
-    
+
         console.log("Error in recipeRoutes");
         next(err);
     }
