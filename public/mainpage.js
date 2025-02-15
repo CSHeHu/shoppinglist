@@ -190,6 +190,10 @@ async function deleteOneElement(_id){
 
 async function submitRecipeSearch(){
     const recipe= document.getElementById('searchRecipeInput').value;
+    const recipeContainer = document.getElementById('recipeContainer');
+
+    recipeContainer.innerHTML = '';
+
     try{
         const response = await fetch(`/recipe?recipe=${encodeURIComponent(recipe)}`, {
             method: 'GET',
@@ -202,16 +206,35 @@ async function submitRecipeSearch(){
         }
         const data = await response.json();
 
-        for (let meal of data.meals) {
-            console.log(`Meal ID: ${meal.idMeal}, Name: ${meal.strMeal}`);
+        /*
+        for (let meal of data.meals) { // Loop through meals array
+            console.log(`Meal: ${meal.strMeal}, Category: ${meal.strCategory}`);
 
-            // Loop over each property of the meal object
             for (let property in meal) {
-                if (meal.hasOwnProperty(property)) {
-                    console.log(`Key: ${property}, Value: ${meal[property]}`);
-                }
+                console.log(`Key: ${property}, Value: ${meal[property]}`);
             }
         }
+        */
+
+        const unorList = document.createElement('ul');
+        for (let meal of data.meals) { 
+            for (let property in meal) {
+                const listItem = document.createElement('li');
+
+                const propInput= document.createElement("input");
+                propInput.type = "text";
+                propInput.value = property;
+                listItem.appendChild(propInput);
+
+                const propKeyInput= document.createElement("input");
+                propKeyInput.type = "text";
+                propKeyInput.value = meal[property];
+                listItem.appendChild(propKeyInput);
+
+                unorList.appendChild(listItem);
+            }
+        }
+        recipeContainer.appendChild(unorList);
     }
 
     catch (err){
