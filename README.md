@@ -8,41 +8,24 @@ The app fetches data through API routes and renders a shopping list on the front
 ## 🚀 Features
 
 <ul>
-  <li>Fetch and display shopping list items from a MongoDB database.</li>
-  <li>API-first design with <code>/data</code> endpoint for data fetching.</li>
+  <li>Fetch, add, update, and delete shopping list items from a MongoDB database.</li>
+  <li>API-first design with <code>/data</code> endpoint for data manipulation.</li>
   <li>Dynamic rendering of shopping list using <b>EJS</b> templates.</li>
+  <li>Middleware for data fetching and validation.</li>
 </ul>
-
----
-
-## 🛠️ Dependencies
-
-<ul>
-  <li><code>cookie-parser</code>: "~1.4.4"</li>
-  <li><code>debug</code>: "~2.6.9"</li>
-  <li><code>dotenv</code>: "^16.4.5"</li>
-  <li><code>ejs</code>: "~2.6.1"</li>
-  <li><code>express</code>: "~4.16.1"</li>
-  <li><code>http-errors</code>: "~1.6.3"</li>
-  <li><code>mongodb</code>: "^6.10.0"</li>
-  <li><code>mongoose</code>: "^8.8.0"</li>
-  <li><code>morgan</code>: "~1.9.1"</li>
-</ul>
-
-<p>Install all dependencies by running:</p>
-<pre><code>npm install</code></pre>
 
 ---
 
 ## 🌐 API Endpoints
 
-<ul>
-  <li><code>/data</code></li>
-  <ul>
-    <li>Method: GET</li>
-    <li>Response: JSON array of shopping list items.</li>
-  </ul>
-</ul>
+### `/data`
+
+| Method | Description |
+|--------|-------------|
+| GET    | Fetch all shopping list items. Responds with JSON array. |
+| POST   | Add a new item. Requires JSON body with `name`, `amount`, `finished`. |
+| PATCH  | Update an existing item. Requires JSON body with `_id`, `name`, `amount`, `finished`. |
+| DELETE | Delete an item by `_id` (query param) or all items if `_id` not provided. |
 
 ---
 
@@ -51,39 +34,41 @@ The app fetches data through API routes and renders a shopping list on the front
 <pre>
 .
 ├── routes/
-│   ├── index.js        # Handles root and renders the main page
-│   ├── users.js        # Example route for user-related endpoints
-│   └── dataRoutes.js   # API route for fetching data from the database
+│   ├── index.js           # Handles root and renders the main page
+│   ├── users.js           # Example route for user-related endpoints
+│   └── dataRoutes.js      # API route for CRUD operations on shopping list items
+├── middleware/
+│   ├── fetchData.js       # Middleware to fetch data from DB or external APIs
+│   └── validate.js        # Middleware to validate requests or input data
 ├── views/
-│   ├── index.ejs       # Main view rendered by the app
-│   └── error.ejs       # Error page view
+│   ├── index.ejs          # Main view rendered by the app
+│   └── error.ejs          # Error page view
 ├── models/
-│   └── db.js           # MongoDB connection logic
+│   └── db.js              # MongoDB connection logic
 ├── public/
-│   └── index.js        # Static frontend JavaScript
-├── .env                # Environment variables
-└── app.js              # Main application entry point
+│   └── index.js           # Static frontend JavaScript
+├── .env                   # Environment variables
+└── app.js                 # Main application entry point
 </pre>
 
 ---
 
 ## ⚙️ Environment Variables
 
-<p>This project uses a <code>.env</code> file for environment-specific configurations. Create a <code>.env</code> file in the root directory with the following variables:</p>
+<p>Create a <code>.env</code> file in the root directory with the following variables:</p>
 
-<pre><code>MONGODB_URI=mongodb://localhost:27017/shoppinglist</code></pre>
+<pre><code>MONGODB_URI=mongodb://shoppinglist-user:password@shoppinglist-mongo:27017/shoppinglistdb
+RECIPE_API=http://www.themealdb.com/api/json/v1/1/search.php?s=</code></pre>
 
 ---
 
-## 🖥️ Running the Application
+## 🐳 Running the Application with Docker
 
 <ol>
-  <li>Install dependencies:</li>
-  <pre><code>npm install</code></pre>
-  <li>Start the MongoDB server:</li>
-  <pre><code>mongod</code></pre>
-  <li>Start the application:</li>
-  <pre><code>npm start</code></pre>
+  <li>Build and start the containers:</li>
+  <pre><code>docker compose up --build</code></pre>
   <li>Visit the app in your browser:</li>
   <pre><code>http://localhost:3000</code></pre>
 </ol>
+
+<p>All dependencies are installed automatically inside the Docker container, so you don’t need to install anything on the host machine.</p>
