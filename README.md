@@ -33,22 +33,38 @@ The app fetches data through API routes and renders a shopping list on the front
 
 <pre>
 .
-├── routes/
-│   ├── index.js           # Handles root and renders the main page
-│   ├── users.js           # Example route for user-related endpoints
-│   └── dataRoutes.js      # API route for CRUD operations on shopping list items
-├── middleware/
-│   ├── fetchData.js       # Middleware to fetch data from DB or external APIs
-│   └── validate.js        # Middleware to validate requests or input data
-├── views/
-│   ├── index.ejs          # Main view rendered by the app
-│   └── error.ejs          # Error page view
-├── models/
-│   └── db.js              # MongoDB connection logic
-├── public/
-│   └── index.js           # Static frontend JavaScript
-├── .env                   # Environment variables
-└── app.js                 # Main application entry point
+├── app.js
+├── bin
+│   └── www
+├── CODE_OF_CONDUCT.md
+├── config
+│   └── db.js
+├── controllers
+│   ├── dashboardController.js
+│   └── itemController.js
+├── docker-compose.yml
+├── Dockerfile
+├── LICENSE
+├── middleware
+│   └── validate.js
+├── models
+│   └── itemModel.js
+├── package.json
+├── package-lock.json
+├── project-structure.txt
+├── public
+│   ├── mainpage.js
+│   └── stylesheets
+│       └── style.css
+├── README.md
+├── routes
+│   ├── dashboardRoutes.js
+│   ├── itemRoutes.js
+│   ├── recipeRoutes.js
+│   └── users.js
+├── services
+└── views
+    └── index.ejs
 </pre>
 
 ---
@@ -57,8 +73,8 @@ The app fetches data through API routes and renders a shopping list on the front
 
 <p>Create a <code>.env</code> file in the root directory with the following variables:</p>
 
-<pre><code>MONGODB_URI=mongodb://shoppinglist-user:password@shoppinglist-mongo:27017/shoppinglistdb
-RECIPE_API=http://www.themealdb.com/api/json/v1/1/search.php?s=</code></pre>
+MONGODB_URI=mongodb://<username>:<password>@shoppinglist-mongo:27017/shoppinglistdb?authSource=admin
+RECIPE_API=http://www.themealdb.com/api/json/v1/1/search.php?s=
 
 ---
 
