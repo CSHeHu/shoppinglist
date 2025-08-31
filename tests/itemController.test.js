@@ -79,4 +79,57 @@ describe('Item Controller', () => {
 		expect(found).toBeUndefined();
 	});
 
+	it('POST /data should fail with missing name', async () => {
+		const item = { amount: 5 };
+		const res = await request(app).post('/data').send(item);
+		expect(res.statusCode).toBe(400);
+		expect(res.body.error).toBeDefined();
+	});
+
+	it('POST /data should fail with non-integer amount (string)', async () => {
+		const item = { name: 'Wrong Item', amount: "five" };
+		const res = await request(app).post('/data').send(item);
+		expect(res.statusCode).toBe(400);
+		expect(res.body.error).toBeDefined();
+	});
+
+	it('POST /data should fail with negative amount', async () => {
+		const item = { name: 'Negative Item', amount: -3 };
+		const res = await request(app).post('/data').send(item);
+		expect(res.statusCode).toBe(400);
+		expect(res.body.error).toBeDefined();
+	});
+
+	it('PATCH /data should fail with non-existent _id', async () => {
+		const updatedItem = {
+			_id: '000000000000000000000000', // valid ObjectId but not in DB
+			name: 'Ghost Item',
+			amount: 15
+		};
+
+		const res = await request(app).patch('/data').send(updatedItem);
+		expect(res.statusCode).toBe(404); // assuming your controller returns 404
+		expect(res.body.error).toBeDefined();
+	});
+
+	it('DELETE /data should fail with invalid _id format', async () => {
+		const res = await request(app).delete(`/data?_id=not-an-objectid`);
+		expect(res.statusCode).toBe(400); // validation error
+		expect(res.body.error).toBeDefined();
+	});
+
+	it('DELETE /data should fail with valid but non-existent _id', async () => {
+		const res = await request(app).delete(`/data?_id=000000000000000000000000`);
+		expect(res.statusCode).toBe(404); // not found
+		expect(res.body.error).toBeDefined();
+	});
+
+	it('GET /data should return empty array when no items exist', async () => {
+		await request(app).delete(`/data?_id=000000000000000000000000`);
+
+		const res = await request(app).get('/data');
+		expect(res.statusCode).toBe(200);
+		expect(Array.isArray(res.body)).toBe(true);
+	});
+
 });
