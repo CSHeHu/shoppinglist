@@ -8,7 +8,7 @@ exports.showDashboard = async (req, res, next) => {
 			items  
 		});
 	} catch (err) {
-		console.log("Error in dashboardController.showDashboard");
+		err.status = err.status || 500;
 		next(err);
 	}
 };

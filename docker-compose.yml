@@ -17,8 +17,10 @@ services:
       - "3000:3000"
     depends_on:
       - mongo
+    environment:
+      NODE_ENV: development
 
 volumes:
   mongo-data:
   mongo-config:
-
+  
