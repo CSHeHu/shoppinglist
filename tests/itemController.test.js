@@ -45,6 +45,30 @@ describe('Item Controller', () => {
 		expect(res.body.error).toBeDefined();
 	});
 
+	it('PATCH (data should update the created item', async () => {
+		const updatedItem = { 
+			_id: createdItemId,   // include _id in body
+			name: 'Updated Test Item', 
+			amount: 20, 
+			finished: true       // optional, if your model supports it
+		};
+
+		const res = await request(app)
+			.patch('/data')       // no query string, body only
+			.send(updatedItem);
+
+		expect(res.statusCode).toBe(200);
+		expect(res.body).toHaveProperty('message', 'Item updated successfully');
+
+		// Verify the update
+		const getRes = await request(app).get('/data');
+		const found = getRes.body.find(item => item._id === createdItemId);
+		expect(found).toBeDefined();
+		expect(found.name).toBe(updatedItem.name);
+		expect(found.amount).toBe(updatedItem.amount); // ensure integer
+		expect(found.finished).toBe(true);
+	});
+
 	it('DELETE /data should remove the created item', async () => {
 		const res = await request(app).delete(`/data?_id=${createdItemId}`);
 		expect(res.statusCode).toBe(200);

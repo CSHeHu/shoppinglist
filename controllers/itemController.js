@@ -13,6 +13,7 @@ exports.getAllItems = async (req, res, next) => {
 
 exports.createItem = async (req, res, next) => {
 	try{
+		console.log(typeof req.body.amount)
 		const { name, amount, finished } = req.body;    
 		const result = await itemModel.createItem({ name, amount, finished});
 		if (!result.acknowledged){
@@ -33,6 +34,7 @@ exports.createItem = async (req, res, next) => {
 
 exports.updateItem = async (req, res, next) => {
 	try{
+		console.log(typeof req.body.amount)
 		const { _id, name, amount, finished } = req.body;    
 		const result = await itemModel.updateItem(_id, { name, amount, finished });
 
