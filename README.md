@@ -73,7 +73,10 @@ The app fetches data through API routes and renders a shopping list on the front
 
 <p>Create a <code>.env</code> file in the root directory with the following variables:</p>
 
+API_SERVER=http://shoppinglist:3000
 MONGODB_URI=mongodb://<username>:<password>@shoppinglist-mongo:27017/shoppinglistdb?authSource=admin
+MONGO_INITDB_ROOT_USERNAME=<username>
+MONGO_INITDB_ROOT_PASSWORD=<password>
 RECIPE_API=http://www.themealdb.com/api/json/v1/1/search.php?s=
 
 ---
