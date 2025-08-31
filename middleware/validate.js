@@ -12,9 +12,6 @@ const validateItem = [
             error.details = errors.array();
             return next(error); 
         }
-
-
-        console.log("Item validated")
         next(); 
     }
 ];

@@ -206,16 +206,6 @@ async function submitRecipeSearch(){
         }
         const data = await response.json();
 
-        /*
-        for (let meal of data.meals) { // Loop through meals array
-            console.log(`Meal: ${meal.strMeal}, Category: ${meal.strCategory}`);
-
-            for (let property in meal) {
-                console.log(`Key: ${property}, Value: ${meal[property]}`);
-            }
-        }
-        */
-
         const unorList = document.createElement('ul');
         for (let meal of data.meals) { 
             for (let property in meal) {

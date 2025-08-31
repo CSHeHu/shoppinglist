@@ -20,7 +20,10 @@ exports.createItem = async (req, res, next) => {
 			error.status = 500;
 			throw error;
 		}
-		return res.status(201).json({ message: 'Item added sucessfully'});
+		return res.status(201).json({ 
+			message: 'Item added sucessfully', 
+			_id: result.insertedId.toString()
+		});
 	} catch (err) {
 		err.status = err.status || 500;
 		next(err);  
@@ -34,7 +37,6 @@ exports.updateItem = async (req, res, next) => {
 		const result = await itemModel.updateItem(_id, { name, amount, finished });
 
 		if (result.matchedCount === 0){
-			console.log('Item not found');
 			const error = new Error("Item not found");
 			error.status = 404;
 			throw error;
@@ -64,7 +66,6 @@ exports.deleteItem = async (req, res, next) => {
 		const result = await itemModel.deleteItem(_id);
 
 		if (result.deletedCount === 0) {
-			console.log("Item not found");
 			const error = new Error("Item not found");
 			error.status = 404;
 			throw error;
