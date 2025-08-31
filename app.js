@@ -8,7 +8,7 @@ const winston = require('winston');
 
 const indexRouter = require('./routes/index');
 const usersRouter = require('./routes/users');
-const dataRouter = require('./routes/dataRoutes');
+const itemRouter = require('./routes/itemRoutes');
 const rateLimit = require('express-rate-limit');
 const recipeRouter = require('./routes/recipeRoutes')
 const app = express();
@@ -34,7 +34,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 // routes
 app.use('/', indexRouter);
 app.use('/users', usersRouter);
-app.use('/data', dataRouter);
+app.use('/data', itemRouter);
 app.use('/recipe', recipeRouter);
 
 // winston logs errors, morgan connections

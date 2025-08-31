@@ -1,11 +1,8 @@
-const express = require('express');
-const connectToDB = require('../models/db');
+const connectToDB = require('../config/db');
 const { ObjectId } = require('mongodb');
-const router = express.Router();
-const validateItem = require('../middleware/validate');
 
 // API endpoint to fetch shopping list items in JSON format
-router.get('/', async (req, res, next) => {
+exports.getAllItems = async (req, res, next) => {
     try {
         const db = await connectToDB();
         const collection = await db.collection('shoppinglistitemsdbs');
@@ -16,12 +13,11 @@ router.get('/', async (req, res, next) => {
         next(err);  
 
     }
-});
+};
 
 
 
-
-router.post('/', validateItem, async (req, res, next) => {
+exports.createItem = async (req, res, next) => {
     try{
         const { name, amount, finished } = req.body;    
         const db = await connectToDB(); 
@@ -39,9 +35,9 @@ router.post('/', validateItem, async (req, res, next) => {
         next(err);  
     }
 
-});
+};
 
-router.patch('/',validateItem ,async (req, res, next) => {
+exports.updateItem = async (req, res, next) => {
     try{
         const { _id, name, amount, finished } = req.body;    
 
@@ -83,10 +79,10 @@ router.patch('/',validateItem ,async (req, res, next) => {
         next(err);  
     }
 
-});
+};
 
 
-router.delete('/', async (req, res, next) => {
+exports.deleteItem = async (req, res, next) => {
     try {
         const { _id } = req.query;
         const db = await connectToDB(); 
@@ -133,9 +129,7 @@ router.delete('/', async (req, res, next) => {
         next(err);  
 
     }
-});
+};
 
 
 
-
-module.exports = router;
