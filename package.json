@@ -7,6 +7,7 @@
 		"test": "jest --runInBand"
 	},
 	"dependencies": {
+		"@openfoodfacts/openfoodfacts-nodejs": "^2.0.0-alpha.15",
 		"cookie-parser": "~1.4.4",
 		"debug": "~2.6.9",
 		"dotenv": "^16.4.5",
