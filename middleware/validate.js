@@ -10,7 +10,6 @@ const validateItem = [
             const error = new Error("Validation error");
             error.status = 400;
             error.details = errors.array();
-            console.log("Validation error");
             return next(error); 
         }
 

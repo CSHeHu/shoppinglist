@@ -24,7 +24,9 @@ exports.createItem = async (item) => {
 
 exports.updateItem = async (_id, updateData) => {
 	if (!ObjectId.isValid(_id)) {
-		throw new Error('Invalid ObjectId');
+		const error = new Error('Invalid ObjectId');
+		error.status = 400;
+		throw error;
 	}
 	const coll = await getCollection();
 	const objectId = ObjectId.createFromHexString(_id);
@@ -36,7 +38,9 @@ exports.deleteItem = async (_id) => {
 	const coll = await getCollection();
 	if (_id) {
 		if (!ObjectId.isValid(_id)) {
-			throw new Error('Invalid ObjectId');
+			const error = new Error('Invalid ObjectId');
+			error.status = 400;
+			throw error;
 		}
 		const objectId = ObjectId.createFromHexString(_id);
 		const result = await coll.deleteOne({ _id: objectId });
