@@ -5,7 +5,10 @@ services:
     volumes:
       - mongo-data:/data/db
       - mongo-config:/data/configdb
-    command: ["mongod", "--bind_ip_all", "--noauth"]
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: ${MONGO_INITDB_ROOT_USERNAME}
+      MONGO_INITDB_ROOT_PASSWORD: ${MONGO_INITDB_ROOT_PASSWORD}
+    command: ["mongod"]
 
   shoppinglist:
     build: .
@@ -14,8 +17,6 @@ services:
       - "3000:3000"
     depends_on:
       - mongo
-    environment:
-      MONGO_URL: "${MONGODB_URI}"
 
 volumes:
   mongo-data:
