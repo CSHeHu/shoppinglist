@@ -5,11 +5,9 @@ services:
     volumes:
       - mongo-data:/data/db
       - mongo-config:/data/configdb
-    ports:
-      - "27017:27017"
     command: ["mongod", "--bind_ip_all", "--noauth"]
 
-  app:
+  shoppinglist:
     build: .
     container_name: shoppinglist-app
     ports:
@@ -17,7 +15,7 @@ services:
     depends_on:
       - mongo
     environment:
-      MONGO_URL: "mongodb://mongo:27017/shoppinglistdb"
+      MONGO_URL: "${MONGODB_URI}"
 
 volumes:
   mongo-data:
