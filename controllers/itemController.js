@@ -1,12 +1,8 @@
-const connectToDB = require('../config/db');
-const { ObjectId } = require('mongodb');
+const itemModel = require('../models/itemModel');
 
-// API endpoint to fetch shopping list items in JSON format
 exports.getAllItems = async (req, res, next) => {
     try {
-        const db = await connectToDB();
-        const collection = await db.collection('shoppinglistitemsdbs');
-        const data = await collection.find().toArray(); 
+	const data = await itemModel.getAllItems();
         return res.status(200).json(data);
     } catch (err) {
         console.log("Error in /data get")
@@ -15,15 +11,10 @@ exports.getAllItems = async (req, res, next) => {
     }
 };
 
-
-
 exports.createItem = async (req, res, next) => {
     try{
         const { name, amount, finished } = req.body;    
-        const db = await connectToDB(); 
-        const collection = await db.collection('shoppinglistitemsdbs');
-
-        const result = await collection.insertOne({ name, amount, finished});
+        const result = await itemModel.createItem({ name, amount, finished});
         if (!result.acknowledged){
             const error = new Error("Failed to add Item");
             error.status = 500;
@@ -40,23 +31,7 @@ exports.createItem = async (req, res, next) => {
 exports.updateItem = async (req, res, next) => {
     try{
         const { _id, name, amount, finished } = req.body;    
-
-        const db = await connectToDB(); 
-        const collection = await db.collection('shoppinglistitemsdbs');
-        const objectId = ObjectId.createFromHexString(_id);   
-        //new ObjectId(_id);
-
-        if (!ObjectId.isValid(objectId)){
-            console.log('Invalid objectid: ', objectId);
-            const error = new Error("Invalid objectid");
-            error.status = 500;
-            throw error;
-        }
-
-        const result = await collection.updateOne(
-            {_id: objectId},
-            {$set: {name: name, amount: amount, finished: finished}}
-        );
+	const result = await itemModel.updateItem(_id, { name, amount, finished });
 
         if (result.matchedCount === 0){
             console.log('Item not found');
@@ -85,45 +60,17 @@ exports.updateItem = async (req, res, next) => {
 exports.deleteItem = async (req, res, next) => {
     try {
         const { _id } = req.query;
-        const db = await connectToDB(); 
-        const collection = await db.collection('shoppinglistitemsdbs');
-        
-        // Check if the collection is empty
-        const count = await collection.countDocuments();  
-        if (count === 0) {
-            return res.status(200).json({ message: 'No items to delete, the collection is already empty' });
-        }
+	const result = await itemModel.deleteItem(_id);
 
-        // If _id is provided, delete a specific item
-        if (_id) {
-            const objectId = ObjectId.createFromHexString(_id);   
-            if (!ObjectId.isValid(objectId)) {
-                console.log('Invalid ObjectId');
-                const error = new Error("Invalid ObjectId");
-                error.status = 500;
-                throw error;
-            }
-            const result = await collection.deleteOne({ _id: objectId });
-
-            if (result.deletedCount === 0) {
+        if (result.deletedCount === 0) {
                 console.log("Item not found");
                 const error = new Error("Item not found");
                 error.status = 404;
                 throw error;
-            }
-
-            return res.status(200).json({ message: 'Item deleted successfully' });
         }
 
-        const result = await collection.deleteMany( {} ); 
-        if (result.deletedCount > 0){
-            return res.status(200).json({ message: 'Items deleted successfully'})
-        }
-
-        console.log("No item's deleted");
-        const error = new Error("No item's deleted");
-        error.status = 404;
-        throw error;
+        return res.status(200).json({ message: 'Item deleted successfully' });
+        
 
     } catch (err) {
         next(err);  
