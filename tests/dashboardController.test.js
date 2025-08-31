@@ -1,8 +1,8 @@
+import dashboardController from '../controllers/dashboardController.js';
+import itemModel from '../models/itemModel.js';
+import { jest } from '@jest/globals';
 
-const dashboardController = require('../controllers/dashboardController');
-const itemModel = require('../models/itemModel');
-
-jest.mock('../models/itemModel');
+jest.mock('../models/itemModel.js');
 
 describe('Dashboard Controller', () => {
     let req, res, next;

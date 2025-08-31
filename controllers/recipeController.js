@@ -1,16 +1,12 @@
+import { fetchRecipes } from '../services/recipeService.js';
 
-const recipeService = require('../services/recipeService');
-
-exports.searchRecipes = async (req, res, next) => {
-	try{
-		const searchQuery = req.query.recipe
-		const recipe = await recipeService.fetchRecipes(searchQuery);  
-		return res.status(200).json(recipe);
-
-	}catch(err){
-		err.status = err.status || 500;
-		next(err);
-	}
+export const searchRecipes = async (req, res, next) => {
+    try {
+        const searchQuery = req.query.recipe;
+        const recipe = await fetchRecipes(searchQuery);
+        return res.status(200).json(recipe);
+    } catch (err) {
+        err.status = err.status || 500;
+        next(err);
+    }
 };
-
-

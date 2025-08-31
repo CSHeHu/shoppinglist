@@ -1,6 +1,10 @@
+import winston from 'winston';
+import path from 'path';
+import { fileURLToPath } from 'url';
 
-const winston = require('winston');
-const path = require('path');
+// __dirname replacement for ESM
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 const errorLogger = winston.createLogger({
     level: 'error',
@@ -15,7 +19,7 @@ const errorLogger = winston.createLogger({
     ],
 });
 
-function errorHandler(err, req, res, next) {
+export default function errorHandler(err, req, res, next) {
     const status = err.status || 500;
 
     // Always log error details
@@ -37,5 +41,3 @@ function errorHandler(err, req, res, next) {
         },
     });
 }
-
-module.exports = errorHandler;

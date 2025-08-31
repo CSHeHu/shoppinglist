@@ -1,8 +1,7 @@
+import 'dotenv/config';
+import fetch from 'node-fetch';
 
-require('dotenv').config();
-const fetch = (...args) => import('node-fetch').then(({ default: fetch }) => fetch(...args));
-
-async function fetchRecipes(query) {
+export async function fetchRecipes(query) {
     if (!query) {
         const error = new Error("Recipe query is required");
         error.status = 400;
@@ -36,5 +35,3 @@ async function fetchRecipes(query) {
         throw error;
     }
 }
-
-module.exports = { fetchRecipes };

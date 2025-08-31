@@ -1,9 +1,8 @@
+import express from 'express';
+import { searchRecipes } from '../controllers/recipeController.js';
 
-const express = require('express');
 const router = express.Router();
-const recipeController = require('../controllers/recipeController')
 
+router.get('/', searchRecipes);
 
-router.get('/', recipeController.searchRecipes); 
-
-module.exports = router;
+export default router;

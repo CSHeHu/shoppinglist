@@ -1,9 +1,8 @@
+import request from 'supertest';
+import app from '../app.js';
+import * as recipeService from '../services/recipeService.js';
 
-const request = require('supertest');
-const app = require('../app');
-const recipeService = require('../services/recipeService');
-
-jest.mock('../services/recipeService'); // mock the service
+jest.mock('../services/recipeService.js'); // mock the service
 
 describe('Recipe Controller', () => {
     it('GET /recipe?recipe=pasta should return recipe results', async () => {

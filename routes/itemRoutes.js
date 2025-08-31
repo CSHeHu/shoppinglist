@@ -1,11 +1,17 @@
-const express = require('express');
+import express from 'express';
+import {
+  getAllItems,
+  createItem,
+  updateItem,
+  deleteItem,
+} from '../controllers/itemController.js';
+import { validateItem } from '../middleware/validate.js';
+
 const router = express.Router();
-const validateItem = require('../middleware/validate');
-const itemController = require('../controllers/itemController');
 
-router.get('/', itemController.getAllItems);
-router.post('/', validateItem, itemController.createItem);
-router.patch('/', validateItem, itemController.updateItem);
-router.delete('/', itemController.deleteItem);
+router.get('/', getAllItems);
+router.post('/', validateItem, createItem);
+router.patch('/', validateItem, updateItem);
+router.delete('/', deleteItem);
 
-module.exports = router;
+export default router;

@@ -1,15 +1,20 @@
-const createError = require('http-errors');
-const express = require('express');
-const path = require('path');
-const cookieParser = require('cookie-parser');
-const logger = require('morgan');
-const rateLimit = require('express-rate-limit');
 
-const dashboardRouter = require('./routes/dashboardRoutes');
-const usersRouter = require('./routes/users');
-const itemRouter = require('./routes/itemRoutes');
-const recipeRouter = require('./routes/recipeRoutes');
-const errorHandler = require('./middleware/errorHandler');
+import createError from 'http-errors';
+import express from 'express';
+import path from 'path';
+import { fileURLToPath } from 'url';
+import cookieParser from 'cookie-parser';
+import logger from 'morgan';
+import rateLimit from 'express-rate-limit';
+
+import dashboardRouter from './routes/dashboardRoutes.js';
+import usersRouter from './routes/users.js';
+import itemRouter from './routes/itemRoutes.js';
+import recipeRouter from './routes/recipeRoutes.js';
+import errorHandler from './middleware/errorHandler.js';
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 const app = express();
 
@@ -42,4 +47,4 @@ app.use((req, res, next) => {
 // central error handler
 app.use(errorHandler);
 
-module.exports = app;
+export default app;
