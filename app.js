@@ -6,7 +6,7 @@ const cookieParser = require('cookie-parser');
 const logger = require('morgan');
 const winston = require('winston');
 
-const indexRouter = require('./routes/index');
+const dashboardRouter = require('./routes/dashboardRoutes');
 const usersRouter = require('./routes/users');
 const itemRouter = require('./routes/itemRoutes');
 const rateLimit = require('express-rate-limit');
@@ -32,7 +32,7 @@ app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
 // routes
-app.use('/', indexRouter);
+app.use('/', dashboardRouter);
 app.use('/users', usersRouter);
 app.use('/data', itemRouter);
 app.use('/recipe', recipeRouter);

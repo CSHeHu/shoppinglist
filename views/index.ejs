@@ -12,9 +12,9 @@
         </header>
 
         <div id="SLContainer">
-            <% if (data && data.length > 0){ %>
+            <% if (items && items.length > 0){ %>
             <ul>
-                <% data.forEach(item => { %>
+                <% items.forEach(item => { %>
                 <% if (item.finished) { %>
                 <li id=<%= item._id %> class="finished">
                     <input type="name" class="name" value="<%= item.name %>">
