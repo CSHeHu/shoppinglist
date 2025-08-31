@@ -17,6 +17,7 @@
     "mongodb": "^6.10.0",
     "mongoose": "^8.8.0",
     "morgan": "~1.9.1",
+    "node-fetch": "^3.3.2",
     "winston": "^3.17.0"
   },
   "license": "MIT"
