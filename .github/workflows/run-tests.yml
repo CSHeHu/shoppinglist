@@ -21,7 +21,7 @@ jobs:
     env:
       MONGO_INITDB_ROOT_USERNAME: root
       MONGO_INITDB_ROOT_PASSWORD: example
-      NODE_ENV: test
+      NODE_ENV: development
       MONGODB_URI: mongodb://root:example@localhost:27017/shoppinglistdb?authSource=admin
       MONGODB_DB: shoppinglistdb
       API_SERVER: http://localhost:3000
