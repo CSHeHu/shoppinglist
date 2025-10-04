@@ -1,31 +1,31 @@
 {
-	"name": "shoppinglist",
-	"version": "0.0.0",
-	"type": "module",
-	"private": true,
-	"scripts": {
-		"start": "node ./bin/www",
-		"test": "jest --runInBand"
-	},
-	"dependencies": {
-		"@openfoodfacts/openfoodfacts-nodejs": "^2.0.0-alpha.15",
-		"cookie-parser": "~1.4.4",
-		"debug": "~2.6.9",
-		"dotenv": "^16.4.5",
-		"ejs": "^3.1.10",
-		"express": "^4.21.2",
-		"express-rate-limit": "^7.5.0",
-		"express-validator": "^7.2.0",
-		"http-errors": "~1.6.3",
-		"mongodb": "^6.10.0",
-		"mongoose": "^8.8.0",
-		"morgan": "~1.9.1",
-		"node-fetch": "^3.3.2",
-		"winston": "^3.17.0"
-	},
-	"license": "MIT",
-	"devDependencies": {
-		"jest": "^30.1.1",
-		"supertest": "^7.1.4"
-	}
+  "name": "shoppinglist",
+  "version": "0.0.0",
+  "type": "module",
+  "private": true,
+  "main": "app.js",
+  "scripts": {
+    "start": "node ./bin/www",
+    "test": "jest --runInBand"
+  },
+  "dependencies": {
+    "@openfoodfacts/openfoodfacts-nodejs": "^2.0.0-alpha.15",
+    "debug": "~2.6.9",
+    "dotenv": "^16.4.5",
+    "ejs": "^3.1.10",
+    "express": "^4.21.2",
+    "express-rate-limit": "^7.5.0",
+    "express-validator": "^7.2.0",
+    "http-errors": "~1.6.3",
+    "mongodb": "^6.10.0",
+    "mongoose": "^8.8.0",
+    "morgan": "~1.9.1",
+    "node-fetch": "^3.3.2",
+    "winston": "^3.17.0"
+  },
+  "license": "MIT",
+  "devDependencies": {
+    "jest": "^30.1.1",
+    "supertest": "^7.1.4"
+  }
 }
