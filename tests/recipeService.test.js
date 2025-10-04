@@ -13,6 +13,16 @@ describe('Recipe Service API', () => {
 
 describe('fetchRecipes', () => {
 
+  // Test error handling for invalid JSON response
+  it('throws if response is not valid JSON', async () => {
+    const mockFetch = async () => ({
+      ok: true,
+      status: 200,
+      json: () => { throw new Error('Unexpected token < in JSON'); }
+    });
+    await expect(fetchRecipes('anything', mockFetch)).rejects.toThrow('Failed to parse recipe API response');
+  });
+
   // Test error handling for !response.ok (e.g., 404 from API)
   it('throws if fetchRecipes gets a non-200 response', async () => {
     const originalApi = process.env.RECIPE_API;

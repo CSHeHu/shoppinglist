@@ -1,7 +1,8 @@
+
 import 'dotenv/config';
 import fetch from 'node-fetch';
 
-export async function fetchRecipes(query) {
+export async function fetchRecipes(query, fetchImpl = fetch) {
     if (!query) {
         const error = new Error("Recipe query is required");
         error.status = 400;
@@ -9,10 +10,9 @@ export async function fetchRecipes(query) {
     }
 
     const ApiURI = `${process.env.RECIPE_API}${encodeURIComponent(query)}`;
-    
     let response;
     try {
-        response = await fetch(ApiURI);
+        response = await fetchImpl(ApiURI);
     } catch (err) {
         const error = new Error("Failed to fetch from recipe API");
         error.status = 502;
