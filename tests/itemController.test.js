@@ -16,6 +16,19 @@ afterAll(async () => {
 });
 
 describe('Item Controller', () => {
+    it('DELETE /data with no _id should delete all items', async () => {
+        // Add two items
+        await request(app).post('/data').send({ name: 'Item1', amount: 1 });
+        await request(app).post('/data').send({ name: 'Item2', amount: 2 });
+
+        // Delete all items
+        const res = await request(app).delete('/data');
+        expect(res.statusCode).toBe(200);
+
+        // Confirm all items are deleted
+        const getRes = await request(app).get('/data');
+        expect(getRes.body.length).toBe(0);
+    });
     it('PATCH /data should fail with invalid _id format', async () => {
         const updatedItem = {
             _id: 'not-an-objectid',
