@@ -1,5 +1,5 @@
-import dashboardController from '../controllers/dashboardController.js';
-import itemModel from '../models/itemModel.js';
+import { showDashboard } from '../controllers/dashboardController.js';
+import * as itemModel from '../models/itemModel.js';
 import { jest } from '@jest/globals';
 
 jest.mock('../models/itemModel.js');
@@ -19,7 +19,7 @@ describe('Dashboard Controller', () => {
         const fakeItems = [{ name: 'Milk', amount: 2 }, { name: 'Eggs', amount: 12 }];
         itemModel.getAllItems.mockResolvedValue(fakeItems);
 
-        await dashboardController.showDashboard(req, res, next);
+        await showDashboard(req, res, next);
 
         expect(itemModel.getAllItems).toHaveBeenCalled();
         expect(res.render).toHaveBeenCalledWith('index', {
@@ -32,7 +32,7 @@ describe('Dashboard Controller', () => {
         const err = new Error('DB failure');
         itemModel.getAllItems.mockRejectedValue(err);
 
-        await dashboardController.showDashboard(req, res, next);
+        await showDashboard(req, res, next);
 
         expect(next).toHaveBeenCalledWith(err);
     });
