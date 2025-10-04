@@ -5,8 +5,8 @@
   "private": true,
   "main": "app.js",
   "scripts": {
-    "start": "node ./bin/www",
-    "test": "jest --runInBand"
+  "start": "node ./bin/www",
+  "test": "node --experimental-vm-modules node_modules/.bin/jest --runInBand"
   },
   "dependencies": {
     "@openfoodfacts/openfoodfacts-nodejs": "^2.0.0-alpha.15",
