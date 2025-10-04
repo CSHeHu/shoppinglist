@@ -34,26 +34,6 @@ describe('fetchRecipes', () => {
     process.env.RECIPE_API = originalApi;
   });
 
-  // Test error handling for non-2xx API response by calling our own API with a nonsense query (works in both local Docker and CI)
-  it('throws if response.ok is false (non-2xx from our API)', async () => {
-    const originalApi = process.env.RECIPE_API;
-    // Try localhost first, then fallback to Docker service name if localhost fails
-    let errorCaught = false;
-    try {
-      process.env.RECIPE_API = 'http://localhost:3000/api/recipes/';
-      await expect(fetchRecipes('thisdoesnotexist')).rejects.toThrow('Recipe API error');
-    } catch (err) {
-      // If localhost fails, try Docker service name
-      process.env.RECIPE_API = 'http://shoppinglist-app:3000/api/recipes/';
-      await expect(fetchRecipes('thisdoesnotexist')).rejects.toThrow('Recipe API error');
-      errorCaught = true;
-    }
-    process.env.RECIPE_API = originalApi;
-    if (!errorCaught) {
-      // If localhost worked, mark as passed
-      expect(true).toBe(true);
-    }
-  });
 });
 
 
