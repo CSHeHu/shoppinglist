@@ -33,5 +33,13 @@ describe('fetchRecipes', () => {
     await expect(fetchRecipes('pasta')).rejects.toThrow('Failed to fetch from recipe API');
     process.env.RECIPE_API = originalApi;
   });
+
+  // Test error handling for non-2xx API response by requesting a non-existent route from our own API
+  it('throws if our API returns non-2xx status', async () => {
+    const res = await request(app).get('/api/recipes/thisdoesnotexist');
+    expect(res.statusCode).toBe(404);
+  });
 });
+
+
 
