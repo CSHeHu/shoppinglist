@@ -1,7 +1,6 @@
 import request from 'supertest';
 import app from '../app.js';
 import { fetchRecipes } from '../services/recipeService.js';
-import fetch from 'node-fetch';
 
 describe('Recipe Service API', () => {
   // Test that the API endpoint for recipes is reachable and responds
@@ -27,5 +26,12 @@ describe('fetchRecipes', () => {
     expect(data.meals).toBeDefined();
   });
 
+  // Test error handling for network error by using a malformed API URL
+  it('throws if fetch fails due to unreachable API', async () => {
+    const originalApi = process.env.RECIPE_API;
+    process.env.RECIPE_API = 'http://localhost:9999/doesnotexist';
+    await expect(fetchRecipes('pasta')).rejects.toThrow('Failed to fetch from recipe API');
+    process.env.RECIPE_API = originalApi;
+  });
 });
 
