@@ -194,40 +194,43 @@ async function submitRecipeSearch(){
 
     recipeContainer.innerHTML = '';
 
-    try{
+    try {
         const response = await fetch(`/recipe?recipe=${encodeURIComponent(recipe)}`, {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json',
             }
         });
+        if (response.status === 404) {
+            recipeContainer.textContent = 'No recipes found.';
+            return;
+        }
         if (!response.ok) {
-            await handleErrorResponse(response); 
+            await handleErrorResponse(response);
         }
         const data = await response.json();
-
+        if (!data.meals || !Array.isArray(data.meals)) {
+            recipeContainer.textContent = 'No recipes found.';
+            return;
+        }
         const unorList = document.createElement('ul');
-        for (let meal of data.meals) { 
+        for (let meal of data.meals) {
             for (let property in meal) {
                 const listItem = document.createElement('li');
-
-                const propInput= document.createElement("input");
+                const propInput = document.createElement("input");
                 propInput.type = "text";
                 propInput.value = property;
                 listItem.appendChild(propInput);
-
-                const propKeyInput= document.createElement("input");
+                const propKeyInput = document.createElement("input");
                 propKeyInput.type = "text";
                 propKeyInput.value = meal[property];
                 listItem.appendChild(propKeyInput);
-
                 unorList.appendChild(listItem);
             }
         }
         recipeContainer.appendChild(unorList);
-    }
-
-    catch (err){
+    } catch (err) {
+        recipeContainer.textContent = 'Error fetching recipes.';
         console.error(err);
     }
 }

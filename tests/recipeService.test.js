@@ -12,6 +12,15 @@ describe('Recipe Service API', () => {
 });
 
 describe('fetchRecipes', () => {
+
+  // Test error handling for !response.ok (e.g., 404 from API)
+  it('throws if fetchRecipes gets a non-200 response', async () => {
+    const originalApi = process.env.RECIPE_API;
+    process.env.RECIPE_API = 'https://www.themealdb.com/api/json/v1/1/doesnotexist/';
+    await expect(fetchRecipes('anything')).rejects.toThrow('Recipe API error');
+    process.env.RECIPE_API = originalApi;
+  });
+
   // Test input validation: should throw if no query is provided
   it('throws if query is missing', async () => {
     await expect(fetchRecipes()).rejects.toThrow('Recipe query is required');
