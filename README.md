@@ -1,3 +1,6 @@
+
+[![Coverage Status](https://coveralls.io/repos/github/CSHeHu/shoppinglist/badge.svg?branch=main)](https://coveralls.io/github/CSHeHu/shoppinglist?branch=main)
+
 # Shopping List Application
 
 A simple Node.js application to manage a shopping list. This project uses Express.js for the server-side framework, MongoDB for the database, and EJS for templating. 

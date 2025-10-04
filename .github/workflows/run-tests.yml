@@ -40,5 +40,9 @@ jobs:
             nc -z localhost 27017 && echo "MongoDB is up" && break
             sleep 2
           done
-      - name: Run tests
-        run: npm test
+      - name: Run tests with coverage
+        run: npm test -- --coverage
+      - name: Upload coverage to Coveralls
+        run: cat ./coverage/lcov.info | npx coveralls
+        env:
+          COVERALLS_REPO_TOKEN: ${{ secrets.COVERALLS_REPO_TOKEN }}
