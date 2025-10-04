@@ -20,13 +20,6 @@ services:
     environment:
       NODE_ENV: development 
 
-  shoppinglist-tests:
-    build: .
-    container_name: shoppinglist-tests
-    depends_on:
-      - mongo
-    environment:
-      NODE_ENV: test
 
 volumes:
   mongo-data:

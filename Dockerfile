@@ -14,5 +14,5 @@ COPY . .
 # Expose the port your app listens on
 EXPOSE 3000
 
-# Start the app with different environments
-CMD ["sh", "-c", "if [ \"$NODE_ENV\" = 'test' ]; then npm test; else npm start; fi"]
+# Start the app
+CMD ["npm", "start"]
