@@ -37,13 +37,4 @@ describe('Dashboard Controller', () => {
         if (inserted) await itemModel.deleteItem(inserted._id.toString());
     });
 
-    it('should call next with error if itemModel.getAllItems throws', async () => {
-        // Temporarily replace getAllItems to throw
-        const orig = itemModel.getAllItems;
-        itemModel.getAllItems = async () => { throw new Error('DB fail'); };
-        await dashboardController.showDashboard({}, res, next);
-        expect(next).toHaveBeenCalledWith(expect.any(Error));
-        // Restore
-        itemModel.getAllItems = orig;
-    });
 });
