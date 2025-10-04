@@ -1,9 +1,6 @@
 import dashboardController from '../controllers/dashboardController.js';
-import * as itemModel from '../models/itemModel.js';
-import { jest } from '@jest/globals';
 
-jest.mock('../models/itemModel.js');
-itemModel.getAllItems = jest.fn();
+import * as itemModel from '../models/itemModel.js';
 
 describe('Dashboard Controller', () => {
     let req, res, next;
