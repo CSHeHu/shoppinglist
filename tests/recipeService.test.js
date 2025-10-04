@@ -34,10 +34,10 @@ describe('fetchRecipes', () => {
     process.env.RECIPE_API = originalApi;
   });
 
-  // Test error handling for non-2xx API response by calling our own API with a nonsense query
+  // Test error handling for non-2xx API response by calling our own API with a nonsense query (using Docker hostname)
   it('throws if response.ok is false (non-2xx from our API)', async () => {
     const originalApi = process.env.RECIPE_API;
-    process.env.RECIPE_API = 'http://localhost:3000/api/recipes/';
+    process.env.RECIPE_API = 'http://shoppinglist-app:3000/api/recipes/';
     await expect(fetchRecipes('thisdoesnotexist')).rejects.toThrow('Recipe API error');
     process.env.RECIPE_API = originalApi;
   });
