@@ -4,6 +4,7 @@ import app from '../app.js';
 import * as recipeService from '../services/recipeService.js';
 
 jest.mock('../services/recipeService.js'); // mock the service
+recipeService.fetchRecipes = jest.fn();
 
 describe('Recipe Controller', () => {
     it('GET /recipe?recipe=pasta should return recipe results', async () => {

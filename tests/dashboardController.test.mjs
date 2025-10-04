@@ -3,6 +3,7 @@ import * as itemModel from '../models/itemModel.js';
 import { jest } from '@jest/globals';
 
 jest.mock('../models/itemModel.js');
+itemModel.getAllItems = jest.fn();
 
 describe('Dashboard Controller', () => {
     let req, res, next;
