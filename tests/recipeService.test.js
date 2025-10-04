@@ -34,10 +34,12 @@ describe('fetchRecipes', () => {
     process.env.RECIPE_API = originalApi;
   });
 
-  // Test error handling for non-2xx API response by requesting a non-existent route from our own API
-  it('throws if our API returns non-2xx status', async () => {
-    const res = await request(app).get('/api/recipes/thisdoesnotexist');
-    expect(res.statusCode).toBe(404);
+  // Test error handling for non-2xx API response by calling our own API with a nonsense query
+  it('throws if response.ok is false (non-2xx from our API)', async () => {
+    const originalApi = process.env.RECIPE_API;
+    process.env.RECIPE_API = 'http://localhost:3000/api/recipes/';
+    await expect(fetchRecipes('thisdoesnotexist')).rejects.toThrow('Recipe API error');
+    process.env.RECIPE_API = originalApi;
   });
 });
 
