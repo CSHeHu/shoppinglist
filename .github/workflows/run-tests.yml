@@ -17,11 +17,7 @@ jobs:
         env:
           MONGO_INITDB_ROOT_USERNAME: root
           MONGO_INITDB_ROOT_PASSWORD: example
-        options: >-
-          --health-cmd="mongo --eval 'db.runCommand({ ping: 1 })'"
-          --health-interval=10s
-          --health-timeout=20s
-          --health-retries=10
+        # No health check options
     env:
       MONGO_INITDB_ROOT_USERNAME: root
       MONGO_INITDB_ROOT_PASSWORD: example
