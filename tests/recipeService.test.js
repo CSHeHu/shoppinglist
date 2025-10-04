@@ -25,10 +25,13 @@ describe('fetchRecipes', () => {
 
   // Test error handling for !response.ok (e.g., 404 from API)
   it('throws if fetchRecipes gets a non-200 response', async () => {
-    const originalApi = process.env.RECIPE_API;
-    process.env.RECIPE_API = 'https://www.themealdb.com/api/json/v1/1/doesnotexist/';
-    await expect(fetchRecipes('anything')).rejects.toThrow('Recipe API error');
-    process.env.RECIPE_API = originalApi;
+    const mockFetch = async () => ({
+      ok: false,
+      status: 404,
+      text: async () => 'Not Found',
+      json: async () => { throw new Error('Should not call json on error'); }
+    });
+    await expect(fetchRecipes('anything', mockFetch)).rejects.toThrow('Recipe API error');
   });
 
   // Test input validation: should throw if no query is provided

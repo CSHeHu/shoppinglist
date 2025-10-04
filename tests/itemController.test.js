@@ -16,6 +16,16 @@ afterAll(async () => {
 });
 
 describe('Item Controller', () => {
+    it('PATCH /data should fail with invalid _id format', async () => {
+        const updatedItem = {
+            _id: 'not-an-objectid',
+            name: 'Invalid ID',
+            amount: 10
+        };
+        const res = await request(app).patch('/data').send(updatedItem);
+        expect(res.statusCode).toBe(400);
+        expect(res.body.error).toBeDefined();
+    });
     it('GET /data should return 200 and an array', async () => {
         const res = await request(app).get('/data');
         expect(res.statusCode).toBe(200);
