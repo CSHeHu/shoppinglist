@@ -1,5 +1,5 @@
 
-[![Coverage Status](https://coveralls.io/repos/github/CSHeHu/shoppinglist/badge.svg?branch=main)](https://coveralls.io/github/CSHeHu/shoppinglist?branch=main)
+[![Coverage Status](https://coveralls.io/repos/github/CSHeHu/shoppinglist/badge.svg?branch=main&kill_cache=1)](https://coveralls.io/github/CSHeHu/shoppinglist?branch=main)
 
 # Shopping List Application
 
