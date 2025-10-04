@@ -22,6 +22,14 @@ describe('Dashboard Controller', () => {
         next = jest.fn();
     });
 
+    it('should call next with error if getAllItems throws', async () => {
+        const mockModel = {
+            getAllItems: jest.fn().mockRejectedValue(new Error('DB failure')),
+        };
+        await dashboardController.showDashboard({}, res, next, mockModel);
+        expect(next).toHaveBeenCalledWith(expect.objectContaining({ message: 'DB failure' }));
+    });
+
     it('should render the dashboard with items from DB', async () => {
         // Insert a test item
         const testItem = { name: 'DashboardTest', amount: 1 };
