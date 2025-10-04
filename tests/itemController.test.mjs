@@ -1,6 +1,6 @@
 import request from 'supertest';
 import app from '../app.js';
-import connectToDB from '../config/db.js';
+import { connectToDB } from '../config/db.js';
 
 let client, createdItemId;
 
