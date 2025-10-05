@@ -7,8 +7,6 @@ on:
     branches: [ '**' ]
 
 jobs:
-      - name: Print environment variables for debugging
-        run: printenv | sort
   build-and-test:
     runs-on: ubuntu-latest
     env:
@@ -20,6 +18,8 @@ jobs:
       API_SERVER: ${{ vars.API_SERVER }}
       RECIPE_API: ${{ vars.RECIPE_API }}
     steps:
+      - name: Print environment variables for debugging
+        run: printenv | sort
       - uses: actions/checkout@v4
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
