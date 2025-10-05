@@ -81,7 +81,27 @@ describe('Item Controller', () => {
       expect(res.statusCode).to.equal(400);
       expect(res.body.error).to.exist;
     });
-  });
+
+    it('should fail if createItem throws', async () => {
+      const fakeItemModel = {
+        createItem: () => { throw new Error('DB error'); }
+      };
+      const { createItem } = await esmock('../controllers/itemController.js', {
+        '../models/itemModel.js': fakeItemModel
+      });
+      const app = express();
+      app.use(express.json());
+      app.post('/data', createItem);
+      app.use((err, req, res, next) => {
+        res.status(err.status || 500).json({ error: err.message });
+      });
+      const res = await request(app).post('/data').send({ name: 'fail', amount: 1 });
+      expect(res.statusCode).to.equal(500);
+      expect(res.body).to.have.property('error', 'DB error');
+    });
+  
+
+});
 
   describe('PATCH /data', () => {
     it('should fail with invalid _id format', async () => {
