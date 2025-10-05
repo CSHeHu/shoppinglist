@@ -25,5 +25,24 @@ describe('connectToDB', () => {
     expect(db2).to.equal(fakeDb);
     expect(connectCalled).to.equal(1);
   });
+
+  it('should throw a 500 error if MongoDB connection fails', async () => {
+    // Mock MongoClient to throw on connect
+    const fakeClient = {
+      connect: async () => { throw new Error('Connection failed'); },
+      db: () => { throw new Error('Should not be called'); }
+    };
+    const { connectToDB } = await esmock('../config/db.js', {
+      'mongodb': { MongoClient: class { constructor() { return fakeClient; } } }
+    });
+    try {
+      await connectToDB();
+      throw new Error('Should have thrown');
+    } catch (err) {
+      expect(err).to.be.an('error');
+      expect(err.message).to.match(/Failed to connect to MongoDB|Connection failed/);
+      expect(err.status).to.equal(500);
+    }
+  });
 });
 
