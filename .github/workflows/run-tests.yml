@@ -10,13 +10,13 @@ jobs:
   build-and-test:
     runs-on: ubuntu-latest
     env:
-      NODE_ENV: test
-      MONGO_INITDB_ROOT_USERNAME: testuser
-      MONGO_INITDB_ROOT_PASSWORD: testpass
-      MONGODB_URI: mongodb://testuser:testpass@shoppinglist-mongo:27017/shoppinglistdb?authSource=admin
-      MONGODB_DB: shoppinglistdb
-      API_SERVER: http://shoppinglist-app:3000
-      RECIPE_API: http://www.themealdb.com/api/json/v1/1/search.php?s=
+      NODE_ENV: ${{ vars.NODE_ENV }}
+      MONGO_INITDB_ROOT_USERNAME: ${{ secrets.MONGO_INITDB_ROOT_USERNAME }}
+      MONGO_INITDB_ROOT_PASSWORD: ${{ secrets.MONGO_INITDB_ROOT_PASSWORD }}
+      MONGODB_URI: ${{ secrets.MONGODB_URI }}
+      MONGODB_DB: ${{ vars.MONGODB_DB }}
+      API_SERVER: ${{ vars.API_SERVER }}
+      RECIPE_API: ${{ vars.RECIPE_API }}
     steps:
       - uses: actions/checkout@v4
       - name: Set up Docker Buildx
