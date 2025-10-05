@@ -24,13 +24,6 @@ jobs:
       - name: Build and start containers
         run: |
           docker compose up --build -d
-      - name: Wait for app to be ready
-        run: |
-          for i in {1..30}; do
-            docker exec shoppinglist-app sh -c 'curl -sf "$API_SERVER/"' && \
-            echo "App server is up" && break
-            sleep 2
-          done
       - name: Run tests in app container
         run: |
           docker exec shoppinglist-app npm test
