@@ -21,3 +21,5 @@ export const connectToDB = async () => {
         throw error;
     }
 };
+
+export { client };

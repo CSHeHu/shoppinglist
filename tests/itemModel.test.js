@@ -2,6 +2,7 @@ import { expect, use } from 'chai';
 import chaiAsPromised from 'chai-as-promised';
 use(chaiAsPromised);
 import * as itemModel from '../models/itemModel.js';
+import { client } from '../config/db.js';
 
 describe('itemModel', () => {
   describe('getCollection', () => {
@@ -25,5 +26,11 @@ describe('itemModel', () => {
       };
       await expect(itemModel.getAllItems(fakeCollection)).to.be.rejectedWith('DB error');
     });
+  });
+
+  after(async () => {
+    if (client && client.close) {
+      await client.close();
+    }
   });
 });

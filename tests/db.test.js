@@ -1,4 +1,4 @@
-import { connectToDB } from '../config/db.js';
+import { connectToDB, client } from '../config/db.js';
 import { expect } from 'chai';
 import sinon from 'sinon';
 import * as mongodb from 'mongodb';
@@ -12,5 +12,10 @@ describe('connectToDB', () => {
     expect(result).to.exist;
     stub.restore();
   });
+});
 
+after(async () => {
+  if (client && client.close) {
+    await client.close();
+  }
 });

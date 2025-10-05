@@ -67,5 +67,3 @@ export async function deleteItem(_id) {
         throw err;
     }
 }
-
-// Minor cleanup to trigger workflow
