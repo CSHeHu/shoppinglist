@@ -2,7 +2,8 @@
 
 
 import request from 'supertest';
-import app from '../app.js';
+
+const apiUrl = process.env.API_SERVER;
 import { fetchRecipes } from '../services/recipeService.js';
 import * as chai from 'chai';
 import chaiAsPromised from 'chai-as-promised';
@@ -11,7 +12,7 @@ const { expect } = chai;
 
 describe('Recipe Service API', () => {
   it('should respond to the /api/recipes endpoint', async () => {
-    const res = await request(app).get('/api/recipes');
+    const res = await request(apiUrl).get('/api/recipes');
     expect(res.statusCode).to.be.at.least(200);
     expect(res.statusCode).to.be.below(500);
   });

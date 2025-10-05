@@ -13,14 +13,22 @@ async function getCollection() {
 }
 
 export async function getAllItems() {
-    const coll = await getCollection();
-    return coll.find().toArray();
+    try {
+        const coll = await getCollection();
+        return await coll.find().toArray();
+    } catch (err) {
+        throw err;
+    }
 }
 
 export async function createItem(item) {
-    const coll = await getCollection();
-    const result = await coll.insertOne(item);
-    return result;
+    try {
+        const coll = await getCollection();
+        const result = await coll.insertOne(item);
+        return result;
+    } catch (err) {
+        throw err;
+    }
 }
 
 export async function updateItem(_id, updateData) {
@@ -29,25 +37,33 @@ export async function updateItem(_id, updateData) {
         error.status = 400;
         throw error;
     }
-    const coll = await getCollection();
-    const objectId = ObjectId.createFromHexString(_id);
-    const result = await coll.updateOne({ _id: objectId }, { $set: updateData });
-    return result;
+    try {
+        const coll = await getCollection();
+        const objectId = ObjectId.createFromHexString(_id);
+        const result = await coll.updateOne({ _id: objectId }, { $set: updateData });
+        return result;
+    } catch (err) {
+        throw err;
+    }
 }
 
 export async function deleteItem(_id) {
-    const coll = await getCollection();
-    if (_id) {
-        if (!ObjectId.isValid(_id)) {
-            const error = new Error('Invalid ObjectId');
-            error.status = 400;
-            throw error;
+    try {
+        const coll = await getCollection();
+        if (_id) {
+            if (!ObjectId.isValid(_id)) {
+                const error = new Error('Invalid ObjectId');
+                error.status = 400;
+                throw error;
+            }
+            const objectId = ObjectId.createFromHexString(_id);
+            const result = await coll.deleteOne({ _id: objectId });
+            return result;
+        } else {
+            const result = await coll.deleteMany({});
+            return result;
         }
-        const objectId = ObjectId.createFromHexString(_id);
-        const result = await coll.deleteOne({ _id: objectId });
-        return result;
-    } else {
-        const result = await coll.deleteMany({});
-        return result;
+    } catch (err) {
+        throw err;
     }
 }
