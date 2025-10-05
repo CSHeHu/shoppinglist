@@ -1,18 +1,16 @@
+
 import request from 'supertest';
 import app from '../app.js';
+import * as chai from 'chai';
+const { expect } = chai;
+
+let createdItemId;
+
+
 import { connectToDB } from '../config/db.js';
 
-let client, createdItemId;
-
-beforeAll(async () => {
-    const db = await connectToDB();
-    client = db.client; // store the MongoClient instance
-});
-
-afterAll(async () => {
-    if (client) {
-        await client.close(); // close the connection
-    }
+before(async () => {
+    // No DB connection logprints
 });
 
 describe('Item Controller', () => {
@@ -23,11 +21,11 @@ describe('Item Controller', () => {
 
         // Delete all items
         const res = await request(app).delete('/data');
-        expect(res.statusCode).toBe(200);
+        expect(res.statusCode).to.equal(200);
 
         // Confirm all items are deleted
         const getRes = await request(app).get('/data');
-        expect(getRes.body.length).toBe(0);
+        expect(getRes.body.length).to.equal(0);
     });
     it('PATCH /data should fail with invalid _id format', async () => {
         const updatedItem = {
@@ -36,35 +34,35 @@ describe('Item Controller', () => {
             amount: 10
         };
         const res = await request(app).patch('/data').send(updatedItem);
-        expect(res.statusCode).toBe(400);
-        expect(res.body.error).toBeDefined();
+        expect(res.statusCode).to.equal(400);
+        expect(res.body.error).to.exist;
     });
     it('GET /data should return 200 and an array', async () => {
         const res = await request(app).get('/data');
-        expect(res.statusCode).toBe(200);
-        expect(Array.isArray(res.body)).toBe(true);
+        expect(res.statusCode).to.equal(200);
+        expect(Array.isArray(res.body)).to.be.true;
     });
 
     it('POST /data should fail without body', async () => {
         const res = await request(app).post('/data').send({});
-        expect(res.statusCode).toBe(400); 
-        expect(res.body.error).toBeDefined();
+        expect(res.statusCode).to.equal(400);
+        expect(res.body.error).to.exist;
     });
 
     it('POST /data should pass with valid amount (10)', async () => {
         const validItem = { name: 'Test Item', amount: 10 };
         const res = await request(app).post('/data').send(validItem);
         createdItemId = res.body._id;
-        expect(createdItemId).toBeDefined();
-        expect(res.statusCode).toBe(201);
-        expect(res.body).toHaveProperty('message', 'Item added sucessfully'); 
+        expect(createdItemId).to.exist;
+        expect(res.statusCode).to.equal(201);
+        expect(res.body.message).to.equal('Item added sucessfully');
     });
 
     it('POST /data should fail with invalid amount (10000)', async () => {
         const invalidItem = { name: 'Big Item', amount: 10000 };
         const res = await request(app).post('/data').send(invalidItem);
-        expect(res.statusCode).toBe(400); 
-        expect(res.body.error).toBeDefined();
+    expect(res.statusCode).to.equal(400);
+    expect(res.body.error).to.exist;
     });
 
     it('PATCH /data should update the created item', async () => {
@@ -79,47 +77,47 @@ describe('Item Controller', () => {
             .patch('/data')
             .send(updatedItem);
 
-        expect(res.statusCode).toBe(200);
-        expect(res.body).toHaveProperty('message', 'Item updated successfully');
+        expect(res.statusCode).to.equal(200);
+        expect(res.body.message).to.equal('Item updated successfully');
 
         // Verify the update
         const getRes = await request(app).get('/data');
         const found = getRes.body.find(item => item._id === createdItemId);
-        expect(found).toBeDefined();
-        expect(found.name).toBe(updatedItem.name);
-        expect(found.amount).toBe(updatedItem.amount);
-        expect(found.finished).toBe(true);
+        expect(found).to.exist;
+        expect(found.name).to.equal(updatedItem.name);
+        expect(found.amount).to.equal(updatedItem.amount);
+        expect(found.finished).to.be.true;
     });
 
     it('DELETE /data should remove the created item', async () => {
         const res = await request(app).delete(`/data?_id=${createdItemId}`);
-        expect(res.statusCode).toBe(200);
-        expect(res.body).toHaveProperty('message', 'Item deleted successfully');
+        expect(res.statusCode).to.equal(200);
+        expect(res.body.message).to.equal('Item deleted successfully');
 
         const getRes = await request(app).get('/data');
         const found = getRes.body.find(item => item._id === createdItemId);
-        expect(found).toBeUndefined();
+        expect(found).to.be.undefined;
     });
 
     it('POST /data should fail with missing name', async () => {
         const item = { amount: 5 };
         const res = await request(app).post('/data').send(item);
-        expect(res.statusCode).toBe(400);
-        expect(res.body.error).toBeDefined();
+    expect(res.statusCode).to.equal(400);
+    expect(res.body.error).to.exist;
     });
 
     it('POST /data should fail with non-integer amount (string)', async () => {
         const item = { name: 'Wrong Item', amount: "five" };
         const res = await request(app).post('/data').send(item);
-        expect(res.statusCode).toBe(400);
-        expect(res.body.error).toBeDefined();
+    expect(res.statusCode).to.equal(400);
+    expect(res.body.error).to.exist;
     });
 
     it('POST /data should fail with negative amount', async () => {
         const item = { name: 'Negative Item', amount: -3 };
         const res = await request(app).post('/data').send(item);
-        expect(res.statusCode).toBe(400);
-        expect(res.body.error).toBeDefined();
+    expect(res.statusCode).to.equal(400);
+    expect(res.body.error).to.exist;
     });
 
     it('PATCH /data should fail with non-existent _id', async () => {
@@ -130,27 +128,27 @@ describe('Item Controller', () => {
         };
 
         const res = await request(app).patch('/data').send(updatedItem);
-        expect(res.statusCode).toBe(404);
-        expect(res.body.error).toBeDefined();
+        expect(res.statusCode).to.equal(404);
+        expect(res.body.error).to.exist;
     });
 
     it('DELETE /data should fail with invalid _id format', async () => {
         const res = await request(app).delete(`/data?_id=not-an-objectid`);
-        expect(res.statusCode).toBe(400);
-        expect(res.body.error).toBeDefined();
+    expect(res.statusCode).to.equal(400);
+    expect(res.body.error).to.exist;
     });
 
     it('DELETE /data should fail with valid but non-existent _id', async () => {
         const res = await request(app).delete(`/data?_id=000000000000000000000000`);
-        expect(res.statusCode).toBe(404);
-        expect(res.body.error).toBeDefined();
+        expect(res.statusCode).to.equal(404);
+        expect(res.body.error).to.exist;
     });
 
     it('GET /data should return empty array when no items exist', async () => {
         await request(app).delete(`/data?_id=000000000000000000000000`);
 
         const res = await request(app).get('/data');
-        expect(res.statusCode).toBe(200);
-        expect(Array.isArray(res.body)).toBe(true);
+        expect(res.statusCode).to.equal(200);
+        expect(Array.isArray(res.body)).to.be.true;
     });
 });

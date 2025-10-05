@@ -6,8 +6,8 @@
   "main": "app.js",
   "scripts": {
     "start": "node ./bin/www",
-  "test": "node --experimental-vm-modules node_modules/.bin/jest --runInBand",
-  "coverage": "npm test -- --coverage && cat ./coverage/lcov.info | coveralls"
+  "test": "mocha --timeout 10000 'tests/**/*.test.js'",
+  "coverage": "nyc mocha --timeout 10000 'tests/**/*.test.js' && cat ./coverage/lcov.info | coveralls"
   },
   "dependencies": {
     "@openfoodfacts/openfoodfacts-nodejs": "^2.0.0-alpha.15",
@@ -26,8 +26,12 @@
   },
   "license": "MIT",
   "devDependencies": {
+    "chai": "^6.2.0",
+    "chai-as-promised": "^8.0.2",
     "coveralls": "^3.1.1",
-    "jest": "^30.1.1",
+    "mocha": "^11.7.4",
+    "nyc": "^17.1.0",
+    "sinon": "^21.0.0",
     "supertest": "^7.1.4"
   }
 }
