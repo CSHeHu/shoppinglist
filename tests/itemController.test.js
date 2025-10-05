@@ -1,8 +1,10 @@
 import request from 'supertest';
 import * as chai from 'chai';
 const { expect } = chai;
+import sinon from 'sinon';
 
 import '../controllers/itemController.js';
+import * as itemModel from '../models/itemModel.js';
 
 const apiUrl = process.env.API_SERVER;
 let createdItemId;
@@ -144,5 +146,13 @@ describe('Item Controller', () => {
         const res = await request(apiUrl).get('/data');
         expect(res.statusCode).to.equal(200);
         expect(Array.isArray(res.body)).to.be.true;
+    });
+
+    it('GET /data should handle errors from itemModel.getAllItems', async () => {
+        const stub = sinon.stub(itemModel, 'getAllItems').throws(new Error('DB error'));
+        const res = await request(apiUrl).get('/data');
+        expect(res.statusCode).to.be.oneOf([500, 400]);
+        expect(res.body.error).to.exist;
+        stub.restore();
     });
 });
