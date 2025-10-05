@@ -1,0 +1,45 @@
+# CI: Test & Coverage (main branch only)
+# This workflow runs tests and uploads coverage only on main branch.
+
+name: CI: Test & Coverage (main branch only)
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  test-and-coverage:
+    runs-on: ubuntu-latest
+    env:
+      NODE_ENV: ${{ vars.NODE_ENV }}
+      MONGO_INITDB_ROOT_USERNAME: ${{ secrets.MONGO_INITDB_ROOT_USERNAME }}
+      MONGO_INITDB_ROOT_PASSWORD: ${{ secrets.MONGO_INITDB_ROOT_PASSWORD }}
+      MONGODB_URI: ${{ secrets.MONGODB_URI }}
+      MONGODB_DB: ${{ vars.MONGODB_DB }}
+      API_SERVER: ${{ vars.API_SERVER }}
+      RECIPE_API: ${{ vars.RECIPE_API }}
+    steps:
+      - uses: actions/checkout@v4
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+      - name: Build and start containers
+        run: |
+          docker compose up --build -d
+      - name: Wait for app to start
+        run: sleep 5
+      - name: Run tests with coverage in app container
+        run: |
+          docker exec shoppinglist-app npm run coverage
+      - name: Copy coverage from container
+        run: |
+          docker cp shoppinglist-app:/shoppinglist/coverage ./coverage
+      - name: Upload coverage to Coveralls
+        uses: coverallsapp/github-action@v2
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          path-to-lcov: ./coverage/lcov.info
+      - name: Stop and clean up containers
+        if: always()
+        run: |
+          docker compose down -v
