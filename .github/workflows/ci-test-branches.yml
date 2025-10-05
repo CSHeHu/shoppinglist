@@ -1,7 +1,7 @@
 # CI: Test (all branches except main)
 # This workflow runs tests on all branches except main.
 
-name: CI: Test (all branches except main)
+name: CI Test (all branches except main)
 
 on:
   push:

@@ -1,7 +1,7 @@
 # CI: Test & Coverage (main branch only)
 # This workflow runs tests and uploads coverage only on main branch.
 
-name: CI: Test & Coverage (main branch only)
+name: CI Test & Coverage (main branch only)
 
 on:
   push:
