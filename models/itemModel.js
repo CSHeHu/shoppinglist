@@ -4,7 +4,7 @@ import { ObjectId } from 'mongodb';
 const collectionName = 'shoppinglistitemsdbs';
 let collection;
 
-export async function getCollection() {
+export async function getCollection(collectionParam) {
     if (!collection) {
         const db = await connectToDB();
         collection = db.collection(collectionName);
@@ -12,9 +12,9 @@ export async function getCollection() {
     return collection;
 }
 
-export async function getAllItems() {
+export async function getAllItems(collectionParam) {
     try {
-        const coll = await getCollection();
+        const coll = collectionParam || await getCollection();
         return await coll.find().toArray();
     } catch (err) {
         throw err;
