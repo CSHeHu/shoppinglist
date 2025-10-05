@@ -4,7 +4,7 @@ import { ObjectId } from 'mongodb';
 const collectionName = 'shoppinglistitemsdbs';
 let collection;
 
-async function getCollection() {
+export async function getCollection() {
     if (!collection) {
         const db = await connectToDB();
         collection = db.collection(collectionName);
