@@ -9,39 +9,36 @@ on:
 jobs:
   build-and-test:
     runs-on: ubuntu-latest
-    services:
-      mongo:
-        image: mongo:6
-        ports:
-          - 27017:27017
-        env:
-          MONGO_INITDB_ROOT_USERNAME: root
-          MONGO_INITDB_ROOT_PASSWORD: example
-        # No health check options
     env:
-      MONGO_INITDB_ROOT_USERNAME: root
-      MONGO_INITDB_ROOT_PASSWORD: example
-      NODE_ENV: development
-      MONGODB_URI: mongodb://root:example@localhost:27017/shoppinglistdb?authSource=admin
+      NODE_ENV: test
+      MONGO_INITDB_ROOT_USERNAME: testuser
+      MONGO_INITDB_ROOT_PASSWORD: testpass
+      MONGODB_URI: mongodb://testuser:testpass@shoppinglist-mongo:27017/shoppinglistdb?authSource=admin
       MONGODB_DB: shoppinglistdb
-      API_SERVER: http://localhost:3000
+      API_SERVER: http://shoppinglist-app:3000
       RECIPE_API: http://www.themealdb.com/api/json/v1/1/search.php?s=
     steps:
       - uses: actions/checkout@v4
-      - name: Use Node.js 20.x
-        uses: actions/setup-node@v4
-        with:
-          node-version: 20
-      - name: Install dependencies
-        run: npm ci
-      - name: Wait for MongoDB
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+      - name: Build and start containers
+        run: |
+          docker compose up --build -d
+      - name: Wait for app to be ready
         run: |
           for i in {1..30}; do
-            nc -z localhost 27017 && echo "MongoDB is up" && break
+            docker exec shoppinglist-app nc -z shoppinglist-mongo 27017 && \
+            docker exec shoppinglist-app nc -z shoppinglist-app 3000 && \
+            echo "App and MongoDB are up" && break
             sleep 2
           done
-      - name: Run tests with coverage
-        run: npm run coverage
+      - name: Run tests in app container
+        run: |
+          docker exec shoppinglist-app npm test
+      - name: Stop and clean up containers
+        if: always()
+        run: |
+          docker compose down -v
       - name: Upload coverage to Coveralls
         run: cat ./coverage/lcov.info | npx coveralls
         env:
