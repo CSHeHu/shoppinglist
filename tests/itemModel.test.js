@@ -19,7 +19,9 @@ describe('itemModel', () => {
     });
     it('should throw if collection throws', async () => {
       const fakeCollection = {
-        find: () => { throw new Error('DB error'); }
+        find: () => ({
+          toArray: () => { throw new Error('DB error'); }
+        })
       };
       await expect(itemModel.getAllItems(fakeCollection)).to.be.rejectedWith('DB error');
     });
