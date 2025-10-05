@@ -5,9 +5,8 @@ services:
     volumes:
       - mongo-data:/data/db
       - mongo-config:/data/configdb
-    environment:
-      MONGO_INITDB_ROOT_USERNAME: ${MONGO_INITDB_ROOT_USERNAME}
-      MONGO_INITDB_ROOT_PASSWORD: ${MONGO_INITDB_ROOT_PASSWORD}
+    env_file:
+      - .env
     command: ["mongod"]
 
   shoppinglist:
@@ -18,7 +17,9 @@ services:
     depends_on:
       - mongo
     environment:
-      NODE_ENV: development 
+      NODE_ENV: development
+    env_file:
+      - .env
 
 
 volumes:

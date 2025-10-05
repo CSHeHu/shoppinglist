@@ -9,10 +9,6 @@ let createdItemId;
 
 import { connectToDB } from '../config/db.js';
 
-before(async () => {
-    // No DB connection logprints
-});
-
 describe('Item Controller', () => {
     it('DELETE /data with no _id should delete all items', async () => {
         // Add two items
