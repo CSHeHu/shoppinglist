@@ -4,7 +4,7 @@ import request from 'supertest';
 import * as chai from 'chai';
 const { expect } = chai;
 
-const apiUrl = process.env.API_SERVER || 'http://localhost:3000';
+const apiUrl = process.env.API_SERVER;
 let createdItemId;
 
 describe('Item Controller', () => {
