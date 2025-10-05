@@ -1,5 +1,4 @@
 // This file is used to force c8 to include all source files in coverage reports.
-import '../config/db.js';
 import '../controllers/dashboardController.js';
 import '../controllers/itemController.js';
 import '../controllers/recipeController.js';
