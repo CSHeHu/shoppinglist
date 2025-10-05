@@ -7,6 +7,8 @@ on:
     branches: [ '**' ]
 
 jobs:
+      - name: Print environment variables for debugging
+        run: printenv | sort
   build-and-test:
     runs-on: ubuntu-latest
     env:
