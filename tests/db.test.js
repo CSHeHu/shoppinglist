@@ -1,16 +1,29 @@
-import { connectToDB, client } from '../config/db.js';
+import '../config/db.js'; // Ensure c8 coverage
+import esmock from 'esmock';
 import { expect } from 'chai';
-import sinon from 'sinon';
-import * as mongodb from 'mongodb';
 
 describe('connectToDB', () => {
   it('should return the existing dbInstance if already connected', async () => {
-    // Stub connect to avoid real DB connection
-    const stub = sinon.stub(mongodb.MongoClient.prototype, 'connect').resolves();
-    await connectToDB(); // sets dbInstance
-    const result = await connectToDB(); // should return cached instance
-    expect(result).to.exist;
-    stub.restore();
+    // Mock MongoClient and dbInstance
+    const fakeDb = { fake: true };
+    let connectCalled = 0;
+    const fakeClient = {
+      connect: async () => { connectCalled++; },
+      db: () => fakeDb
+    };
+    // esmock config/db.js with fake MongoClient
+    const { connectToDB } = await esmock('../config/db.js', {
+      'mongodb': { MongoClient: class { 
+        constructor() { return fakeClient; }
+      }}
+    });
+    // First call sets dbInstance
+    const db1 = await connectToDB();
+    // Second call should return cached instance
+    const db2 = await connectToDB();
+    expect(db1).to.equal(fakeDb);
+    expect(db2).to.equal(fakeDb);
+    expect(connectCalled).to.equal(1);
   });
 });
 
