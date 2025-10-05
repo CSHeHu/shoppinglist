@@ -6,7 +6,6 @@ import '../controllers/recipeController.js';
 import '../middleware/errorHandler.js';
 import '../middleware/validate.js';
 import '../models/itemModel.js';
-import '../public/mainpage.js';
 import '../routes/dashboardRoutes.js';
 import '../routes/itemRoutes.js';
 import '../routes/recipeRoutes.js';
