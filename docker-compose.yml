@@ -5,8 +5,13 @@ services:
     volumes:
       - mongo-data:/data/db
       - mongo-config:/data/configdb
-    env_file:
-      - .env
+    environment:
+      - MONGO_INITDB_ROOT_USERNAME
+      - MONGO_INITDB_ROOT_PASSWORD
+      - MONGODB_URI
+      - MONGODB_DB
+      - API_SERVER
+      - RECIPE_API
     command: ["mongod"]
 
   shoppinglist:
@@ -17,9 +22,13 @@ services:
     depends_on:
       - mongo
     environment:
-      NODE_ENV: development
-    env_file:
-      - .env
+      - NODE_ENV
+      - MONGO_INITDB_ROOT_USERNAME
+      - MONGO_INITDB_ROOT_PASSWORD
+      - MONGODB_URI
+      - MONGODB_DB
+      - API_SERVER
+      - RECIPE_API
 
 
 volumes:
