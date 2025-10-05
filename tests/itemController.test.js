@@ -1,16 +1,16 @@
 import request from 'supertest';
 import * as chai from 'chai';
 const { expect } = chai;
-import sinon from 'sinon';
+import esmock from 'esmock';
+import express from 'express';
 
-import '../controllers/itemController.js';
 import * as itemModel from '../models/itemModel.js';
 
 const apiUrl = process.env.API_SERVER;
 let createdItemId;
 
 describe('Item Controller', () => {
-  describe('GET /data', () => {
+  describe('GET /data (getAllItems)', () => {
     it('should return 200 and an array', async () => {
       const res = await request(apiUrl).get('/data');
       expect(res.statusCode).to.equal(200);
@@ -21,6 +21,25 @@ describe('Item Controller', () => {
       const res = await request(apiUrl).get('/data');
       expect(res.statusCode).to.equal(200);
       expect(Array.isArray(res.body)).to.be.true;
+    });
+    it('should return 500 if getAllItems throws', async () => {
+      const fakeItemModel = {
+        getAllItems: () => { throw new Error('DB error'); }
+      };
+      // Import the real controller with the mocked model
+      const { getAllItems } = await esmock('../controllers/itemController.js', {
+        '../models/itemModel.js': fakeItemModel
+      });
+      // Create a minimal app using the real controller (with mock inside)
+      const app = express();
+      app.get('/data', getAllItems);
+      // Add error handler to return JSON
+      app.use((err, req, res, next) => {
+        res.status(err.status || 500).json({ error: err.message });
+      });
+      const res = await request(app).get('/data');
+      expect(res.statusCode).to.equal(500);
+      expect(res.body).to.have.property('error');
     });
   });
 
