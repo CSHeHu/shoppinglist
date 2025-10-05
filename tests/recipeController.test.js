@@ -1,9 +1,8 @@
-
-
-
 import request from 'supertest';
 import * as chai from 'chai';
 const { expect } = chai;
+
+import '../controllers/recipeController.js';
 
 const apiUrl = process.env.API_SERVER;
 

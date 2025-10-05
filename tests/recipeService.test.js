@@ -1,10 +1,8 @@
-
-
-
 import request from 'supertest';
 
 const apiUrl = process.env.API_SERVER;
 import { fetchRecipes } from '../services/recipeService.js';
+import '../services/recipeService.js';
 import * as chai from 'chai';
 import chaiAsPromised from 'chai-as-promised';
 chai.use(chaiAsPromised);
