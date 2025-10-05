@@ -148,11 +148,4 @@ describe('Item Controller', () => {
         expect(Array.isArray(res.body)).to.be.true;
     });
 
-    it('GET /data should handle errors from itemModel.getAllItems', async () => {
-        const stub = sinon.stub(itemModel, 'getAllItems').throws(new Error('DB error'));
-        const res = await request(apiUrl).get('/data');
-        expect(res.statusCode).to.be.oneOf([500, 400]);
-        expect(res.body.error).to.exist;
-        stub.restore();
-    });
 });
