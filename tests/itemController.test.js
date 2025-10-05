@@ -108,6 +108,21 @@ describe('Item Controller', () => {
   });
 
   describe('DELETE /data', () => {
+    let testItemId;
+
+    it('should remove the created item', async () => {
+      // Create a test item for this test
+      const createRes = await request(apiUrl).post('/data').send({ name: 'DeleteMe', amount: 1 });
+      testItemId = createRes.body._id;
+      expect(testItemId).to.exist;
+      // Now delete it
+      const res = await request(apiUrl).delete(`/data?_id=${testItemId}`);
+      expect(res.statusCode).to.equal(200);
+      expect(res.body.message).to.equal('Item deleted successfully');
+      const getRes = await request(apiUrl).get('/data');
+      const found = getRes.body.find(item => item._id === testItemId);
+      expect(found).to.be.undefined;
+    });
     it('with no _id should delete all items', async () => {
       // Add two items
       await request(apiUrl).post('/data').send({ name: 'Item1', amount: 1 });
@@ -119,14 +134,6 @@ describe('Item Controller', () => {
       const getRes = await request(apiUrl).get('/data');
       expect(getRes.body.length).to.equal(0);
     });
-    it('should remove the created item', async () => {
-      const res = await request(apiUrl).delete(`/data?_id=${createdItemId}`);
-      expect(res.statusCode).to.equal(200);
-      expect(res.body.message).to.equal('Item deleted successfully');
-      const getRes = await request(apiUrl).get('/data');
-      const found = getRes.body.find(item => item._id === createdItemId);
-      expect(found).to.be.undefined;
-    });
     it('should fail with invalid _id format', async () => {
       const res = await request(apiUrl).delete(`/data?_id=not-an-objectid`);
       expect(res.statusCode).to.equal(400);
@@ -137,5 +144,10 @@ describe('Item Controller', () => {
       expect(res.statusCode).to.equal(404);
       expect(res.body.error).to.exist;
     });
+  });
+
+  after(async () => {
+    // Clean up: delete all items at the end
+    await request(apiUrl).delete('/data');
   });
 });
