@@ -4,6 +4,12 @@ use(chaiAsPromised);
 import * as itemModel from '../models/itemModel.js';
 import { client } from '../config/db.js';
 
+after(async () => {
+  if (client && client.close) {
+    await client.close();
+  }
+});
+
 describe('itemModel', () => {
   describe('getCollection', () => {
     it('should return a collection object', async () => {
@@ -21,16 +27,11 @@ describe('itemModel', () => {
     it('should throw if collection throws', async () => {
       const fakeCollection = {
         find: () => ({
-          toArray: () => { throw new Error('DB error'); }
+          toArray: () => Promise.reject(new Error('DB error'))
         })
       };
       await expect(itemModel.getAllItems(fakeCollection)).to.be.rejectedWith('DB error');
     });
   });
 
-  after(async () => {
-    if (client && client.close) {
-      await client.close();
-    }
-  });
 });

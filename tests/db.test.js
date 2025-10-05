@@ -14,8 +14,3 @@ describe('connectToDB', () => {
   });
 });
 
-after(async () => {
-  if (client && client.close) {
-    await client.close();
-  }
-});
