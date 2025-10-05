@@ -29,12 +29,12 @@ jobs:
       - name: Run tests with coverage in app container
         run: |
           docker exec shoppinglist-app npm run coverage
-      - name: Stop and clean up containers
-        if: always()
-        run: |
-          docker compose down -v
       - name: Upload coverage to Coveralls
         uses: coverallsapp/github-action@v2
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           path-to-lcov: ./coverage/lcov.info
+      - name: Stop and clean up containers
+        if: always()
+        run: |
+          docker compose down -v
