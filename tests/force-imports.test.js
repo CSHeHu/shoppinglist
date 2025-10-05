@@ -12,4 +12,3 @@ import '../routes/itemRoutes.js';
 import '../routes/recipeRoutes.js';
 import '../routes/users.js';
 import '../services/recipeService.js';
-import '../views/index.ejs'; // This will be ignored by c8 since it's not JS, but included for completeness
