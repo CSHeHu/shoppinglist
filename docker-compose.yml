@@ -62,8 +62,22 @@ services:
 
     networks:
       - backend
-      - default
 
+
+  nginx:
+    image: nginx:stable
+    container_name: shoppinglist-nginx
+    ports:
+      - "80:80"
+      - "443:443"
+    depends_on:
+      - shoppinglist
+    volumes:
+      - ./docker/nginx/conf.d:/etc/nginx/conf.d:ro
+      - ./certs:/etc/nginx/certs:ro
+    networks:
+      - default
+      - backend
 
 volumes:
   mongo-data:
@@ -73,5 +87,6 @@ networks:
     internal: true
   default:
     driver: bridge
-
   
+
+
