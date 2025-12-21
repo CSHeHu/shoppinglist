@@ -10,12 +10,10 @@ const errorLogger = winston.createLogger({
     level: 'error',
     format: winston.format.combine(
         winston.format.timestamp({ format: 'YYYY-MM-DD HH:mm:ss' }),
-        winston.format.printf(({ timestamp, message, stack, status }) => {
-            return `Timestamp: ${timestamp}\nStatus: ${status}\nMessage: ${message}\nStack: ${stack}\n`;
-        })
+        winston.format.json()
     ),
     transports: [
-        new winston.transports.File({ filename: path.join(__dirname, '../error.log') }),
+        new winston.transports.File({ filename: path.join(__dirname, '../error.log'), maxsize: 5 * 1024 * 1024, maxFiles: 5 }),
     ],
 });
 
