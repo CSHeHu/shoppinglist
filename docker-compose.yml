@@ -30,16 +30,40 @@ services:
       MONGO_APP_USER: ${MONGO_APP_USER}
       MONGO_APP_PASSWORD: ${MONGO_APP_PASSWORD}
       MONGODB_DB: ${MONGODB_DB}
+      USER_DB_NAME: ${USER_DB_NAME}
+      USER_DB_USER: ${USER_DB_USER}
+      USER_DB_PASSWORD: ${USER_DB_PASSWORD}
     entrypoint:
-      - mongosh
-      - --host
-      - shoppinglist-mongo
-      - -u
-      - "${MONGO_INITDB_ROOT_USERNAME}"
-      - -p
-      - "${MONGO_INITDB_ROOT_PASSWORD}"
-      - --eval
-      - "db.getSiblingDB('${MONGODB_DB}').createUser({user:'${MONGO_APP_USER}',pwd:'${MONGO_APP_PASSWORD}',roles:[{role:'readWrite',db:'${MONGODB_DB}'}]})"
+    - mongosh
+    - --host
+    - shoppinglist-mongo
+    - -u
+    - "${MONGO_INITDB_ROOT_USERNAME}"
+    - -p
+    - "${MONGO_INITDB_ROOT_PASSWORD}"
+    - --authenticationDatabase
+    - admin
+    - --eval
+    - |
+        print("Creating app DB user");
+        let appDb = db.getSiblingDB('${MONGODB_DB}');
+        if (!appDb.getUser('${MONGO_APP_USER}')) {
+          appDb.createUser({
+            user: '${MONGO_APP_USER}',
+            pwd: '${MONGO_APP_PASSWORD}',
+            roles: [{ role: 'readWrite', db: '${MONGODB_DB}' }]
+          });
+        }
+
+        print("Creating user DB user");
+        let userDb = db.getSiblingDB('${USER_DB_NAME}');
+        if (!userDb.getUser('${USER_DB_USER}')) {
+          userDb.createUser({
+            user: '${USER_DB_USER}',
+            pwd: '${USER_DB_PASSWORD}',
+            roles: [{ role: 'readWrite', db: '${USER_DB_NAME}' }]
+          });
+        }
     restart: 'no'
     networks:
       - backend
