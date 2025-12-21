@@ -9,7 +9,6 @@ import rateLimit from 'express-rate-limit';
 import dashboardRouter from './routes/dashboardRoutes.js';
 import usersRouter from './routes/users.js';
 import itemRouter from './routes/itemRoutes.js';
-import recipeRouter from './routes/recipeRoutes.js';
 import errorHandler from './middleware/errorHandler.js';
 
 const __filename = fileURLToPath(import.meta.url);
@@ -35,7 +34,6 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use('/', dashboardRouter);
 app.use('/users', usersRouter);
 app.use('/data', itemRouter);
-app.use('/recipe', recipeRouter);
 
 // catch 404
 app.use((req, res, next) => {

@@ -2,10 +2,6 @@ document.getElementById("addToListForm").addEventListener("submit", event => {
     event.preventDefault();
     submitForm();
 });
-document.getElementById("searchRecipeForm").addEventListener("submit", event => {
-    event.preventDefault();
-    submitRecipeSearch();
-});
 
 document.getElementById("addToListReset").addEventListener("click", event => {
     event.preventDefault();
@@ -187,53 +183,6 @@ async function deleteOneElement(_id){
 
 }
 
-
-async function submitRecipeSearch(){
-    const recipe= document.getElementById('searchRecipeInput').value;
-    const recipeContainer = document.getElementById('recipeContainer');
-
-    recipeContainer.innerHTML = '';
-
-    try {
-        const response = await fetch(`/recipe?recipe=${encodeURIComponent(recipe)}`, {
-            method: 'GET',
-            headers: {
-                'Content-Type': 'application/json',
-            }
-        });
-        if (response.status === 404) {
-            recipeContainer.textContent = 'No recipes found.';
-            return;
-        }
-        if (!response.ok) {
-            await handleErrorResponse(response);
-        }
-        const data = await response.json();
-        if (!data.meals || !Array.isArray(data.meals)) {
-            recipeContainer.textContent = 'No recipes found.';
-            return;
-        }
-        const unorList = document.createElement('ul');
-        for (let meal of data.meals) {
-            for (let property in meal) {
-                const listItem = document.createElement('li');
-                const propInput = document.createElement("input");
-                propInput.type = "text";
-                propInput.value = property;
-                listItem.appendChild(propInput);
-                const propKeyInput = document.createElement("input");
-                propKeyInput.type = "text";
-                propKeyInput.value = meal[property];
-                listItem.appendChild(propKeyInput);
-                unorList.appendChild(listItem);
-            }
-        }
-        recipeContainer.appendChild(unorList);
-    } catch (err) {
-        recipeContainer.textContent = 'Error fetching recipes.';
-        console.error(err);
-    }
-}
 
 async function handleErrorResponse(response) {
     if (!response.ok) {
