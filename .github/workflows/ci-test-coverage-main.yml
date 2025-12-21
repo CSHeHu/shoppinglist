@@ -26,8 +26,6 @@ jobs:
       - name: Build and start containers
         run: |
           docker compose up --build -d
-      - name: Wait for app to start
-        run: sleep 10 
       - name: Run tests with coverage in app container
         run: |
           docker exec shoppinglist-app npm run coverage

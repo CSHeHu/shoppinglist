@@ -4,7 +4,6 @@ services:
     container_name: shoppinglist-mongo
     volumes:
       - mongo-data:/data/db
-      - mongo-config:/data/configdb
     environment:
       MONGO_INITDB_ROOT_USERNAME: ${MONGO_INITDB_ROOT_USERNAME}
       MONGO_INITDB_ROOT_PASSWORD: ${MONGO_INITDB_ROOT_PASSWORD}
@@ -48,10 +47,11 @@ services:
   shoppinglist:
     build: .
     container_name: shoppinglist-app
+    depends_on:
+      mongo:
+        condition: service_healthy
     ports:
       - "3000:3000"
-    depends_on:
-      - mongo
     environment:
       NODE_ENV: ${NODE_ENV}
       MONGO_APP_USER: ${MONGO_APP_USER}
@@ -67,7 +67,6 @@ services:
 
 volumes:
   mongo-data:
-  mongo-config:
   
 networks:
   backend:
