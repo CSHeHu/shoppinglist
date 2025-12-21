@@ -14,9 +14,18 @@ const buildUsersUri = () => {
     return `mongodb://${encodeURIComponent(user)}:${encodeURIComponent(pass)}@${host}:${port}/${db}?authSource=${db}`;
 };
 
+router.get('/login', (req, res) => {
+    const { error } = req.query;
+    res.render('login', { error });
+});
+
 router.post('/login', async (req, res) => {
     const { email, password } = req.body;
-    if (!email || !password) return res.status(400).json({ error: 'email and password required' });
+    const wantsHtml = req.accepts('html') && !req.is('application/json');
+    if (!email || !password) {
+        if (wantsHtml) return res.redirect('/users/login?error=missing');
+        return res.status(400).json({ error: 'email and password required' });
+    }
 
     const uri = buildUsersUri();
     const client = new MongoClient(uri);
@@ -24,15 +33,23 @@ router.post('/login', async (req, res) => {
         await client.connect();
         const db = client.db(process.env.USER_DB_NAME);
         const user = await db.collection('users').findOne({ email });
-        if (!user) return res.status(401).json({ error: 'invalid email' });
+        if (!user) {
+            if (wantsHtml) return res.redirect('/users/login?error=invalid');
+            return res.status(401).json({ error: 'invalid credentials' });
+        }
 
         const ok = await bcrypt.compare(password, user.password);
-        if (!ok) return res.status(401).json({ error: 'invalid credentials' });
+        if (!ok) {
+            if (wantsHtml) return res.redirect('/users/login?error=invalid');
+            return res.status(401).json({ error: 'invalid credentials' });
+        }
 
         req.session.userId = String(user._id);
         req.session.role = user.role;
+        if (wantsHtml) return res.redirect('/');
         return res.json({ ok: true, user: { email: user.email, role: user.role } });
     } catch (err) {
+        if (wantsHtml) return res.redirect('/users/login?error=server');
         return res.status(500).json({ error: 'server error' });
     } finally {
         await client.close();
@@ -40,12 +57,17 @@ router.post('/login', async (req, res) => {
 });
 
 router.post('/logout', (req, res) => {
-    req.session.destroy(() => res.json({ ok: true }));
+        req.session.destroy(() => res.json({ ok: true }));
+});
+
+// render simple logout confirmation page
+router.get('/logout', (req, res) => {
+    res.render('logout');
 });
 
 router.get('/me', (req, res) => {
     if (!req.session || !req.session.userId) return res.status(401).json({ error: 'unauthenticated' });
-    return res.json({ userId: req.session.userId, role: req.session.role });
+    return res.json({ userId: req.session.userId, role: req.session.role});
 });
 
 export default router;

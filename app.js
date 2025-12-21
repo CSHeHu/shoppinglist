@@ -33,18 +33,20 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(express.static(path.join(__dirname, 'public')));
 
-// when running behind a reverse proxy (nginx) we need to trust the proxy
-// so express-session can detect secure (HTTPS) requests via X-Forwarded-* headers
+await mongoClient.connect();
 app.set('trust proxy', 1);
-
-// session (store sessions in Mongo)
 app.use(session({
-    secret: process.env.SESSION_SECRET,
-    resave: false,
-    saveUninitialized: false,
-    store: MongoStore.create({ clientPromise: mongoClient.connect().then(() => mongoClient) }),
-    cookie: { httpOnly: true, secure: true}
+  secret: process.env.SESSION_SECRET,
+  resave: false,
+  saveUninitialized: false,
+  store: MongoStore.create({ client: mongoClient }),
+  cookie: {
+    httpOnly: true,
+    secure: true,
+    maxAge: 24 * 60 * 60 * 1000 // 1 day
+  }
 }));
+
 
 // routes
 app.use('/', dashboardRouter);
