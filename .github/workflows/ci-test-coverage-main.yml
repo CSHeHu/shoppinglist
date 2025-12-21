@@ -15,10 +15,10 @@ jobs:
       NODE_ENV: ${{ vars.NODE_ENV }}
       MONGO_INITDB_ROOT_USERNAME: ${{ secrets.MONGO_INITDB_ROOT_USERNAME }}
       MONGO_INITDB_ROOT_PASSWORD: ${{ secrets.MONGO_INITDB_ROOT_PASSWORD }}
-      MONGODB_URI: ${{ secrets.MONGODB_URI }}
+      MONGO_APP_USER: ${{ secrets.MONGO_APP_USER }}
+      MONGO_APP_PASSWORD: ${{ secrets.MONGO_APP_PASSWORD }}
       MONGODB_DB: ${{ vars.MONGODB_DB }}
       API_SERVER: ${{ vars.API_SERVER }}
-      RECIPE_API: ${{ vars.RECIPE_API }}
     steps:
       - uses: actions/checkout@v4
       - name: Set up Docker Buildx
@@ -27,7 +27,7 @@ jobs:
         run: |
           docker compose up --build -d
       - name: Wait for app to start
-        run: sleep 5
+        run: sleep 10 
       - name: Run tests with coverage in app container
         run: |
           docker exec shoppinglist-app npm run coverage
