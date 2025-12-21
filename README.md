@@ -79,9 +79,11 @@ Create a `.env` file in the root directory with the following variables (example
 
 ```env
 API_SERVER=http://shoppinglist-app:3000
-MONGODB_URI=mongodb://root:example@shoppinglist-mongo:27017/shoppinglistdb?authSource=admin
-MONGO_INITDB_ROOT_USERNAME=root
-MONGO_INITDB_ROOT_PASSWORD=example
+MONGO_INITDB_ROOT_USERNAME=adminroot
+MONGO_INITDB_ROOT_PASSWORD=change_this_root_password
+MONGO_APP_USER=shoppinglist_app
+MONGO_APP_PASSWORD=change_this_app_password
+MONGODB_DB=shoppinglistdb
 ```
 
 ---

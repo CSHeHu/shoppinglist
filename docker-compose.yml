@@ -6,12 +6,42 @@ services:
       - mongo-data:/data/db
       - mongo-config:/data/configdb
     environment:
-      - MONGO_INITDB_ROOT_USERNAME
-      - MONGO_INITDB_ROOT_PASSWORD
-      - MONGODB_URI
-      - MONGODB_DB
-      - API_SERVER
+      MONGO_INITDB_ROOT_USERNAME: ${MONGO_INITDB_ROOT_USERNAME}
+      MONGO_INITDB_ROOT_PASSWORD: ${MONGO_INITDB_ROOT_PASSWORD}
+      MONGODB_DB: ${MONGODB_DB}
+      API_SERVER: ${API_SERVER}
     command: ["mongod"]
+    networks:
+      - backend
+    healthcheck:
+      test: ["CMD", "mongosh", "--eval", "db.adminCommand('ping')"]
+      interval: 5s
+      timeout: 5s
+      retries: 12
+
+  mongo-init:
+    image: mongo:6
+    container_name: shoppinglist-mongo-init
+    depends_on:
+      mongo:
+        condition: service_healthy
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: ${MONGO_INITDB_ROOT_USERNAME}
+      MONGO_INITDB_ROOT_PASSWORD: ${MONGO_INITDB_ROOT_PASSWORD}
+      MONGO_APP_USER: ${MONGO_APP_USER}
+      MONGO_APP_PASSWORD: ${MONGO_APP_PASSWORD}
+      MONGODB_DB: ${MONGODB_DB}
+    entrypoint:
+      - mongosh
+      - --host
+      - shoppinglist-mongo
+      - -u
+      - "${MONGO_INITDB_ROOT_USERNAME}"
+      - -p
+      - "${MONGO_INITDB_ROOT_PASSWORD}"
+      - --eval
+      - "db.getSiblingDB('${MONGODB_DB}').createUser({user:'${MONGO_APP_USER}',pwd:'${MONGO_APP_PASSWORD}',roles:[{role:'readWrite',db:'${MONGODB_DB}'}]})"
+    restart: 'no'
     networks:
       - backend
 
@@ -23,12 +53,12 @@ services:
     depends_on:
       - mongo
     environment:
-      - NODE_ENV
-      - MONGO_INITDB_ROOT_USERNAME
-      - MONGO_INITDB_ROOT_PASSWORD
-      - MONGODB_URI
-      - MONGODB_DB
-      - API_SERVER
+      NODE_ENV: ${NODE_ENV}
+      MONGO_APP_USER: ${MONGO_APP_USER}
+      MONGO_APP_PASSWORD: ${MONGO_APP_PASSWORD}
+      MONGODB_DB: ${MONGODB_DB}
+      MONGODB_HOST: shoppinglist-mongo
+      API_SERVER: ${API_SERVER}
 
     networks:
       - backend

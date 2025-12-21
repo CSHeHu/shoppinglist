@@ -2,7 +2,24 @@ import { MongoClient } from 'mongodb';
 import dotenv from 'dotenv';
 dotenv.config();
 
-const mongodbUri = process.env.MONGODB_URI;
+
+const buildUri = () => {
+    if (process.env.MONGODB_URI) return process.env.MONGODB_URI;
+
+    const user = process.env.MONGO_APP_USER;
+    const pass = process.env.MONGO_APP_PASSWORD;
+    const host = process.env.MONGODB_HOST;
+    const db = process.env.MONGODB_DB;
+
+    if (!user || !pass) {
+        throw new Error('MONGODB_URI or MONGO_APP_USER/MONGO_APP_PASSWORD must be set');
+    }
+
+    // authSource set to the application DB where the user will be created
+    return `mongodb://${encodeURIComponent(user)}:${encodeURIComponent(pass)}@${host}:27017/${db}?authSource=${db}`;
+};
+
+const mongodbUri = buildUri();
 const client = new MongoClient(mongodbUri);
 let dbInstance = null;
 
