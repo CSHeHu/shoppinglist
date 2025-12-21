@@ -78,11 +78,10 @@ The app fetches data through API routes and renders a shopping list on the front
 Create a `.env` file in the root directory with the following variables (example values shown):
 
 ```env
-API_SERVER=http://localhost:3000
-MONGODB_URI=mongodb://root:example@localhost:27017/shoppinglistdb?authSource=admin
+API_SERVER=http://shoppinglist-app:3000
+MONGODB_URI=mongodb://root:example@shoppinglist-mongo:27017/shoppinglistdb?authSource=admin
 MONGO_INITDB_ROOT_USERNAME=root
 MONGO_INITDB_ROOT_PASSWORD=example
-RECIPE_API=http://www.themealdb.com/api/json/v1/1/search.php?s=
 ```
 
 ---

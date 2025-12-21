@@ -11,8 +11,9 @@ services:
       - MONGODB_URI
       - MONGODB_DB
       - API_SERVER
-      - RECIPE_API
     command: ["mongod"]
+    networks:
+      - backend
 
   shoppinglist:
     build: .
@@ -28,10 +29,20 @@ services:
       - MONGODB_URI
       - MONGODB_DB
       - API_SERVER
-      - RECIPE_API
+
+    networks:
+      - backend
+      - default
 
 
 volumes:
   mongo-data:
   mongo-config:
+  
+networks:
+  backend:
+    internal: true
+  default:
+    driver: bridge
+
   
