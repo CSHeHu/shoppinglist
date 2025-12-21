@@ -186,8 +186,15 @@ async function deleteOneElement(_id){
 
 async function handleErrorResponse(response) {
     if (!response.ok) {
-        const errorData = await response.json();
-        throw new Error(`${errorData.error.message} ${errorData.error.code})`);
-    }
+        // If server indicates unauthenticated, redirect to login page for the user.
+        if (response.status === 401) {
+            window.location.href = '/users/login';
+            return Promise.reject(new Error('unauthenticated'));
+        }
+        else{
+            const errorData = await response.json();
+            throw new Error(`${errorData.error.message} ${errorData.error.code})`);
+        }
     return response.json();
+    }
 }
