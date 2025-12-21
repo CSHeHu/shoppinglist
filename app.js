@@ -10,6 +10,9 @@ import dashboardRouter from './routes/dashboardRoutes.js';
 import usersRouter from './routes/users.js';
 import itemRouter from './routes/itemRoutes.js';
 import errorHandler from './middleware/errorHandler.js';
+import session from 'express-session';
+import MongoStore from 'connect-mongo';
+import { client as mongoClient } from './config/db.js';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -29,6 +32,19 @@ app.use(logger('dev'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(express.static(path.join(__dirname, 'public')));
+
+// when running behind a reverse proxy (nginx) we need to trust the proxy
+// so express-session can detect secure (HTTPS) requests via X-Forwarded-* headers
+app.set('trust proxy', 1);
+
+// session (store sessions in Mongo)
+app.use(session({
+    secret: process.env.SESSION_SECRET,
+    resave: false,
+    saveUninitialized: false,
+    store: MongoStore.create({ clientPromise: mongoClient.connect().then(() => mongoClient) }),
+    cookie: { httpOnly: true, secure: true}
+}));
 
 // routes
 app.use('/', dashboardRouter);
