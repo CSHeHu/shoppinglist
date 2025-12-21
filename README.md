@@ -81,28 +81,37 @@ MONGODB_DB=shoppinglistdb
 
 <p>All dependencies are installed automatically inside the Docker container, so you don’t need to install anything on the host machine.</p>
 
-## 🔐 Local TLS (nginx + self-signed certs)
+## 🔐 Local TLS (nginx + mkcert) for local dev 
 
-This repo includes an `nginx` reverse-proxy for TLS in development. The proxy will terminate HTTPS and forward requests to the app container. For local development you can generate self-signed certs.
+This repository uses `nginx` as a local reverse proxy for HTTPS in development. The proxy expects certificate files mounted at `/etc/nginx/certs/cert.pem` and `/etc/nginx/certs/key.pem` (the Compose file mounts your local `./certs` directory). You can skip this part if you have some other certs and place them in /certs.
 
-1) Create certs directory and generate a self-signed cert:
+1) Install `mkcert` (https://github.com/FiloSottile/mkcert) for your platform and install the local CA once:
+
+```bash
+# install mkcert (platform-specific), then run once:
+mkcert -install
+```
+
+2) Generate certs for localhost and loopback addresses:
 
 ```bash
 mkdir -p certs
-openssl req -x509 -nodes -days 365 -newkey rsa:2048 \
-  -keyout certs/key.pem -out certs/cert.pem -subj "/CN=localhost"
+mkcert \
+  localhost \
+  127.0.0.1 \
+  ::1 \
+  shoppinglist \
+  shoppinglist.local
+
 ```
 
-2) Start the stack (nginx will expose HTTPS on port 443):
+3) Start the stack and visit HTTPS locally:
 
 ```bash
 docker compose up --build
+# open https://localhost
 ```
-
-3) Open https://youraddress (you may need to accept the browser warning), or use `curl -k https://youraddress`.
-
 
 ### Note about nginx configuration
 
-- This repository does not include a committed `nginx` configuration file by default. Create the file `docker/nginx/conf.d/default.conf` locally before starting the stack. The local `docker/` folder is intended for runtime and developer files and is excluded from the repository.
-
+- This repo expects a local `nginx` config at `docker/nginx/conf.d/default.conf` (not committed). 
