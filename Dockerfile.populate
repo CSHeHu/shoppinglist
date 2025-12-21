@@ -1,0 +1,14 @@
+# Use official Node 18 image
+FROM node:18
+
+# Set working directory inside the container
+WORKDIR /app
+
+# Copy the script into the container
+COPY scripts/populate-admin.js .
+
+# Install npm dependencies once (offline at runtime)
+RUN npm init -y && npm install mongodb bcrypt
+
+# Default command to run the script
+CMD ["node", "/app/populate-admin.js"]

@@ -47,6 +47,7 @@ The app fetches data through API routes and renders a shopping list on the front
 ├── public
 │   └── stylesheets
 ├── routes
+├── scripts
 ├── services
 ├── certs/                    
 └── views
@@ -61,11 +62,26 @@ Create a `.env` file in the root directory with the following variables (example
 
 ```env
 API_SERVER=http://shoppinglist-app:3000
+
 MONGO_INITDB_ROOT_USERNAME=adminroot
 MONGO_INITDB_ROOT_PASSWORD=change_this_root_password
+
+# App DB
+MONGODB_DB=shoppinglistdb
 MONGO_APP_USER=shoppinglist_app
 MONGO_APP_PASSWORD=change_this_app_password
-MONGODB_DB=shoppinglistdb
+
+# Users DB
+USER_DB_NAME=usersdb
+USER_DB_USER=users_app
+USER_DB_PASSWORD=change_this_users_password
+
+# Initial root/admin user for the application
+ROOT_EMAIL=admin@example.com
+ROOT_PASSWORD=change_this_admin_password
+
+# Session secret used by express-session 
+SESSION_SECRET=gfdsjkl3903jkfd8934jkfd8932jklr320fsdlkj32lsdf092jklsfd092jösdf023j
 ```
 
 ---
@@ -80,6 +96,15 @@ MONGODB_DB=shoppinglistdb
 </ol>
 
 <p>All dependencies are installed automatically inside the Docker container, so you don’t need to install anything on the host machine.</p>
+
+## Database bootstrap & admin population
+
+This project creates DB-level users during MongoDB first-boot using the `mongo-init` service (`mongosh --eval` entry). The application-level admin record is created by a short-lived one-shot service `admin_user-populate` which runs `scripts/populate-admin.js`.
+
+How it works:
+- `mongo-init` creates two DB users (app DB and users DB) on first initialization only.
+- `admin_user-populate` connects with the dedicated `USER_DB_USER` to insert a hashed admin document into the `users` collection (idempotent upsert).
+
 
 ## 🔐 Local TLS (nginx + mkcert) for local dev 
 

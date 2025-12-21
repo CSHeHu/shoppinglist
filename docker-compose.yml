@@ -103,6 +103,26 @@ services:
       - default
       - backend
 
+  admin_user-populate:
+    build:
+      context: .
+      dockerfile: Dockerfile.populate
+    container_name: shoppinglist-mongo-populate_admin_user
+    depends_on:
+      mongo-init:
+        condition: service_completed_successfully
+    environment:
+      MONGO_HOST: shoppinglist-mongo
+      MONGO_PORT: 27017
+      USER_DB_NAME: ${USER_DB_NAME}
+      USER_DB_USER: ${USER_DB_USER}
+      USER_DB_PASSWORD: ${USER_DB_PASSWORD}
+      ROOT_EMAIL: ${ROOT_EMAIL}
+      ROOT_PASSWORD: ${ROOT_PASSWORD}
+    restart: "no"
+    networks:
+      - backend
+
 volumes:
   mongo-data:
   
@@ -111,6 +131,6 @@ networks:
     internal: true
   default:
     driver: bridge
-  
+
 
 
