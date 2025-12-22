@@ -13,7 +13,6 @@ import errorHandler from './middleware/errorHandler.js';
 import session from 'express-session';
 import MongoStore from 'connect-mongo';
 import { client as mongoClient } from './config/db.js';
-import 'dotenv/config';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
