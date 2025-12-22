@@ -32,6 +32,9 @@ jobs:
       - name: Build and start containers
         run: |
           docker compose up --build -d
+      - name: Debug: print SESSION_SECRET inside container
+        run: |
+          docker exec shoppinglist-app printenv | grep SESSION_SECRET
       - name: Run tests with coverage in app container
         run: |
           docker exec shoppinglist-app npm run coverage
