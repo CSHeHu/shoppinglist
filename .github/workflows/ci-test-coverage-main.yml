@@ -19,6 +19,12 @@ jobs:
       MONGO_APP_PASSWORD: ${{ secrets.MONGO_APP_PASSWORD }}
       MONGODB_DB: ${{ vars.MONGODB_DB }}
       API_SERVER: ${{ vars.API_SERVER }}
+      USER_DB_NAME: ${{ vars.USER_DB_NAME }}
+      USER_DB_USER: ${{ secrets.USER_DB_USER }}
+      USER_DB_PASSWORD: ${{ secrets.USER_DB_PASSWORD }}
+      ROOT_EMAIL: ${{ secrets.ROOT_EMAIL }}
+      ROOT_PASSWORD: ${{ secrets.ROOT_PASSWORD }}
+      SESSION_SECRET: ${{ secrets.SESSION_SECRET }}
     steps:
       - uses: actions/checkout@v4
       - name: Set up Docker Buildx
