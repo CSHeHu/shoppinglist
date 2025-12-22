@@ -3,32 +3,49 @@
 
 # Shopping List Application
 
-A simple Node.js application to manage a shopping list. This project uses Express.js for the server-side framework, MongoDB for the database, and EJS for templating. 
-The app fetches data through API routes and renders a shopping list on the frontend.
+Lightweight Node.js shopping list app with a small EJS frontend and an API backend. Key design points:
+- Session-based authentication (server-side sessions stored in MongoDB via `connect-mongo`).
+- Separate dedicated users database and least-privilege DB users created at MongoDB first-boot.
+- Docker Compose stack with optional nginx reverse-proxy for local HTTPS during development.
 
 ---
 
 ## 🚀 Features
 
-<ul>
-  <li>Fetch, add, update, and delete shopping list items from a MongoDB database.</li>
-  <li>API-first design with <code>/data</code> endpoint for data manipulation.</li>
-  <li>Dynamic rendering of shopping list using <b>EJS</b> templates.</li>
-  <li>Middleware for data fetching and validation.</li>
-</ul>
+- Session-based login/logout with a minimal admin bootstrap flow (`scripts/populate-admin.js`).
+- Public read access for the shopping list (`GET /data`) and protected modifying endpoints for authenticated users (`POST`, `PATCH`, `DELETE` on `/data`).
+- Dedicated users DB (`USER_DB_NAME`) and dedicated app DB user for data access.
+- Minimal EJS-rendered frontend plus an API-first design for fetch/XHR usage.
+- Local HTTPS in development via nginx + mkcert (optional) and a Compose-friendly DB bootstrap (entrypoint + one-shot admin populator).
+- Tests for controllers (see `tests/`).
 
 ---
 
 ## 🌐 API Endpoints
 
+This app exposes a small set of endpoints for the UI and API clients. All modifying `/data` requests require an authenticated session; `GET /data` is public.
+
 ### `/data`
 
 | Method | Description |
 |--------|-------------|
-| GET    | Fetch all shopping list items. Responds with JSON array. |
-| POST   | Add a new item. Requires JSON body with `name`, `amount`, `finished`. |
-| PATCH  | Update an existing item. Requires JSON body with `_id`, `name`, `amount`, `finished`. |
-| DELETE | Delete an item by `_id` (query param) or all items if `_id` not provided. |
+| GET    | Fetch all shopping list items. Responds with a JSON array. (Public) |
+| POST   | Add a new item. Requires `Content-Type: application/json` and JSON body: `{ name, amount, finished }`. (Requires session) |
+| PATCH  | Update an item. Requires `Content-Type: application/json` and JSON body: `{ _id, name, amount, finished }`. (Requires session) |
+| DELETE | Delete an item by `_id` (query param) or delete all items if `_id` not provided. (Requires session) |
+
+### `/users`
+
+| Method | Path | Description |
+|--------|------|-------------|
+| GET    | `/users/login` | Render the login page (HTML form). |
+| POST   | `/users/login` | Authenticate user. Expects `application/x-www-form-urlencoded` or JSON `{ email, password }`. On success sets a server-side session. Returns JSON for API clients. |
+| POST   | `/users/logout` | Destroy the current session (log out). |
+| GET    | `/users/me` | Return the currently authenticated user's public info (requires session). |
+
+Notes:
+- Unauthenticated modifying requests return HTTP 401 JSON; the frontend handles 401 by redirecting the browser to `/users/login`.
+- The server returns JSON error objects for API clients; HTML form flows receive normal browser navigations.
 
 ---
 
