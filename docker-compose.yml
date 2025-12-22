@@ -83,7 +83,7 @@ services:
       MONGODB_DB: ${MONGODB_DB}
       MONGODB_HOST: shoppinglist-mongo
       API_SERVER: ${API_SERVER}
-
+      SESSION_SECRET: ${SESSION_SECRET}
     networks:
       - backend
 
