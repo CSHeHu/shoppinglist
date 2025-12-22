@@ -1,16 +1,22 @@
-import request from 'supertest';
-import * as chai from 'chai';
-const { expect } = chai;
+import { expect } from 'chai';
+import esmock from 'esmock';
 
-import '../controllers/dashboardController.js';
+describe('Dashboard Controller (unit)', () => {
+    it('showDashboard calls res.render with items', async () => {
+        const fakeItems = [{ name: 'Milk', amount: 1 }];
+        const mockModel = { getAllItems: async () => fakeItems };
+        const { default: controller } = await esmock('../controllers/dashboardController.js', {
+            '../models/itemModel.js': mockModel
+        });
 
-const apiUrl = process.env.API_SERVER;
+        let rendered = null;
+        const req = {};
+        const res = { render: (template, data) => { rendered = { template, data }; } };
+        const next = (err) => { throw err; };
 
-describe('Dashboard Controller', () => {
-    it('GET / should render the dashboard with items from DB', async () => {
-        const res = await request(apiUrl).get('/');
-        expect(res.statusCode).to.equal(200);
-        // Optionally check for HTML or content
-        expect(res.headers['content-type']).to.match(/html/);
+        await controller.showDashboard(req, res, next, mockModel);
+        expect(rendered).to.exist;
+        expect(rendered.template).to.equal('index');
+        expect(rendered.data).to.have.property('items');
     });
 });

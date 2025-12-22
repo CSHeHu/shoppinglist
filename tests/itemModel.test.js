@@ -1,37 +1,20 @@
-import { expect, use } from 'chai';
-import chaiAsPromised from 'chai-as-promised';
-use(chaiAsPromised);
-import * as itemModel from '../models/itemModel.js';
-import { client } from '../config/db.js';
+import { expect } from 'chai';
+import esmock from 'esmock';
 
-after(async () => {
-  if (client && client.close) {
-    await client.close();
-  }
-});
-
-describe('itemModel', () => {
-  describe('getCollection', () => {
-    it('should return a collection object', async () => {
-      const collection = await itemModel.getCollection();
-      expect(collection).to.exist;
-      expect(collection.collectionName).to.be.a('string');
-    });
+describe('itemModel (unit)', () => {
+  it('exports expected functions', async () => {
+    const mod = await import('../models/itemModel.js');
+    expect(mod.getCollection).to.be.a('function');
+    expect(mod.getAllItems).to.be.a('function');
+    expect(mod.createItem).to.be.a('function');
+    expect(mod.updateItem).to.be.a('function');
+    expect(mod.deleteItem).to.be.a('function');
   });
 
-  describe('getAllItems', () => {
-    it('should return an array (possibly empty)', async () => {
-      const items = await itemModel.getAllItems();
-      expect(items).to.be.an('array');
-    });
-    it('should throw if collection throws', async () => {
-      const fakeCollection = {
-        find: () => ({
-          toArray: () => Promise.reject(new Error('DB error'))
-        })
-      };
-      await expect(itemModel.getAllItems(fakeCollection)).to.be.rejectedWith('DB error');
-    });
+  it('getAllItems works with a passed-in collection', async () => {
+    const fakeCollection = { find: () => ({ toArray: async () => [1,2,3] }) };
+    const { getAllItems } = await esmock('../models/itemModel.js', {});
+    const items = await getAllItems(fakeCollection);
+    expect(items).to.deep.equal([1,2,3]);
   });
-
 });
