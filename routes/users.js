@@ -20,7 +20,6 @@ router.get('/login', (req, res) => {
 });
 
 router.post('/login', async (req, res) => {
-    console.log('Login body:', req.body); //debug
     const { email, password } = req.body;
     const wantsHtml = req.accepts('html') && !req.is('application/json');
     if (!email || !password) {

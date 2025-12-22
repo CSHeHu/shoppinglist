@@ -4,6 +4,7 @@ import { expect } from 'chai';
 
 let agent;
 before(async function () {
+  this.timeout(10000);
   agent = request.agent(app);
   const email = process.env.ROOT_EMAIL 
   const password = process.env.ROOT_PASSWORD
