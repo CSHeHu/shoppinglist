@@ -2,19 +2,14 @@ import request from 'supertest';
 import app from '../app.js';
 import { expect } from 'chai';
 
-// Use a persistent agent so tests run authenticated as the admin user.
 let agent;
-
 before(async function () {
   agent = request.agent(app);
   const email = process.env.ROOT_EMAIL 
   const password = process.env.ROOT_PASSWORD
 
-
-  // Attempt to log in; tests require an authenticated session for modifying routes.
   const res = await agent.post('/users/login').send({ email, password });
   if (res.status !== 200) {
-    // If login failed, surface a helpful error to adjust CI/test envs.
     throw new Error(`Test setup: login failed with status ${res.status}`);
   }
 });
