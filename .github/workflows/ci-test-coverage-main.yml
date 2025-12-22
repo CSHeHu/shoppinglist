@@ -32,7 +32,6 @@ jobs:
       - name: Build and start containers
         run: |
           docker compose up --build -d
-          - run: echo "SESSION_SECRET=$SESSION_SECRET"
       - name: Run tests with coverage in app container
         run: |
           docker exec shoppinglist-app npm run coverage
