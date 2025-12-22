@@ -15,10 +15,9 @@ before(async function () {
 });
 
 describe('Route: /users', () => {
-  it('GET /users should respond with a resource', async () => {
+  it('GET /users should not have a resource at root', async () => {
     const res = await agent.get('/users');
-    expect(res.status).to.equal(200);
-    expect(res.text).to.include('respond with a resource');
+    expect(res.status).to.equal(404);
   });
 });
 
