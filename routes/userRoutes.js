@@ -1,8 +1,8 @@
 import express from 'express';
 import { MongoClient } from 'mongodb';
 import bcrypt from 'bcrypt';
-
 const router = express.Router();
+import { loginUser } from '../controllers/userController.js';
 
 const buildUsersUri = () => {
     const host = process.env.MONGO_HOST || 'shoppinglist-mongo';
@@ -14,10 +14,7 @@ const buildUsersUri = () => {
     return `mongodb://${encodeURIComponent(user)}:${encodeURIComponent(pass)}@${host}:${port}/${db}?authSource=${db}`;
 };
 
-router.get('/login', (req, res) => {
-    const { error } = req.query;
-    res.render('login', { error });
-});
+router.get('/login', loginUser);
 
 router.post('/login', async (req, res) => {
     const { email, password } = req.body;
