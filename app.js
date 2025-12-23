@@ -7,7 +7,7 @@ import logger from 'morgan';
 import rateLimit from 'express-rate-limit';
 
 import dashboardRouter from './routes/dashboardRoutes.js';
-import usersRouter from './routes/users.js';
+import userRouter from './routes/userRoutes.js';
 import itemRouter from './routes/itemRoutes.js';
 import errorHandler from './middleware/errorHandler.js';
 import session from 'express-session';
@@ -50,7 +50,7 @@ app.use(session({
 
 // routes
 app.use('/', dashboardRouter);
-app.use('/users', usersRouter);
+app.use('/user', userRouter);
 app.use('/data', itemRouter);
 
 // catch 404

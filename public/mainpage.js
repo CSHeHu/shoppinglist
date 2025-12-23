@@ -188,7 +188,7 @@ async function handleErrorResponse(response) {
     if (!response.ok) {
         // If server indicates unauthenticated, redirect to login page for the user.
         if (response.status === 401) {
-            window.location.href = '/users/login';
+            window.location.href = '/user/login';
             return Promise.reject(new Error('unauthenticated'));
         }
         else{
