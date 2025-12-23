@@ -2,7 +2,10 @@ import express from 'express';
 import { MongoClient } from 'mongodb';
 import bcrypt from 'bcrypt';
 const router = express.Router();
-import { loginUser } from '../controllers/userController.js';
+import { loginUserRender 
+	,logoutUserRender
+	, logoutUserAction
+} from '../controllers/userController.js';
 
 const buildUsersUri = () => {
     const host = process.env.MONGO_HOST || 'shoppinglist-mongo';
@@ -14,7 +17,9 @@ const buildUsersUri = () => {
     return `mongodb://${encodeURIComponent(user)}:${encodeURIComponent(pass)}@${host}:${port}/${db}?authSource=${db}`;
 };
 
-router.get('/login', loginUser);
+router.get('/login', loginUserRender);
+router.get('/logout', logoutUserRender);
+router.post('/logout', logoutUserAction);
 
 router.post('/login', async (req, res) => {
     const { email, password } = req.body;
@@ -53,14 +58,6 @@ router.post('/login', async (req, res) => {
     }
 });
 
-router.post('/logout', (req, res) => {
-        req.session.destroy(() => res.json({ ok: true }));
-});
-
-// render simple logout confirmation page
-router.get('/logout', (req, res) => {
-    res.render('logout');
-});
 
 router.get('/me', (req, res) => {
     if (!req.session || !req.session.userId) return res.status(401).json({ error: 'unauthenticated' });
