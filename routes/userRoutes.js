@@ -1,17 +1,17 @@
 import express from 'express';
 const router = express.Router();
-import { loginUserRender 
-	,logoutUserRender
-	, logoutUserAction
+import { showLogoutPage 
+	, logoutUser
 	, getUser
-	, loginUserAction
+	, loginUser,
+    showLoginPage
 } from '../controllers/userController.js';
 
 
-router.get('/login', loginUserRender);
-router.get('/logout', logoutUserRender);
-router.post('/logout', logoutUserAction);
+router.get('/login', showLoginPage);
+router.get('/logout', showLogoutPage);
+router.post('/logout', logoutUser);
 router.get('/me', getUser);
-router.post('/login', loginUserAction);
+router.post('/login', loginUser);
 
 export default router;
