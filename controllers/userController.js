@@ -39,6 +39,7 @@ export const getUser = async (req, res, next) => {
   }
 }
 
+// TODO: add input validation middleware
 export const loginUser = async (req, res, next) => {
   const { email, password } = req.body;
   if (!email || !password) {
