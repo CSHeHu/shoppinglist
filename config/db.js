@@ -4,14 +4,11 @@ dotenv.config();
 
 
 const buildUri = () => {
-    if (process.env.MONGODB_URI) return process.env.MONGODB_URI;
-
     const user = process.env.MONGO_APP_USER;
     const pass = process.env.MONGO_APP_PASSWORD;
     const host = process.env.MONGODB_HOST;
     const db = process.env.MONGODB_DB;
-
-    if (!user || !pass) {
+    if (!user || !pass || !host || !db) {
         throw new Error('MONGODB_URI or MONGO_APP_USER/MONGO_APP_PASSWORD must be set');
     }
 

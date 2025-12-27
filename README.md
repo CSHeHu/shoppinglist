@@ -98,9 +98,11 @@ ROOT_EMAIL=admin@example.com
 ROOT_PASSWORD=change_this_admin_password
 
 # Session secret used by express-session 
-SESSION_SECRET=gfdsjkl3903jkfd8934jkfd8932jklr320fsdlkj32lsdf092jklsfd092jösdf023j
-```
+SESSION_SECRET=change_this_session_secret
 
+#MongoDB connection host  
+MONGODB_HOST=shoppinglist-mongo
+```
 ---
 
 ## 🐳 Running the Application with Docker
