@@ -10,12 +10,9 @@ import requireAuth from '../middleware/requireAuth.js';
 
 const router = express.Router();
 
-// allow public GETs but protect modifying endpoints
-router.use(requireAuth);
-
 router.get('/', getAllItems);
-router.post('/', validateItem, createItem);
-router.patch('/', validateItem, updateItem);
-router.delete('/', deleteItem);
+router.post('/', requireAuth, validateItem, createItem);
+router.patch('/', requireAuth, validateItem, updateItem);
+router.delete('/', requireAuth, deleteItem);
 
 export default router;
