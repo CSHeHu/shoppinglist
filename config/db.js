@@ -2,8 +2,7 @@ import { MongoClient } from 'mongodb';
 import dotenv from 'dotenv';
 dotenv.config();
 
-
-const buildUri = () => {
+const buildItemDBUri = () => {
     const user = process.env.MONGO_APP_USER;
     const pass = process.env.MONGO_APP_PASSWORD;
     const host = process.env.MONGODB_HOST;
@@ -16,19 +15,19 @@ const buildUri = () => {
     return `mongodb://${encodeURIComponent(user)}:${encodeURIComponent(pass)}@${host}:27017/${db}?authSource=${db}`;
 };
 
-const mongodbUri = buildUri();
-const client = new MongoClient(mongodbUri);
-let dbInstance = null;
+const itemDBUri = buildItemDBUri();
+const itemDBClient = new MongoClient(itemDBUri);
+let itemDBInstance = null;
 
-export const connectToDB = async () => {
-    if (dbInstance) {
-        return dbInstance; // Return existing DB instance if already connected
+export const connectToItemDB = async () => {
+    if (itemDBInstance) {
+        return itemDBInstance; // Return existing DB instance if already connected
     }
 
     try {
-        await client.connect();
-        dbInstance = client.db(process.env.MONGODB_DB);
-        return dbInstance;
+        await itemDBClient.connect();
+        itemDBInstance = itemDBClient.db(process.env.MONGODB_DB);
+        return itemDBInstance;
     } catch (err) {
         const error = new Error('Failed to connect to MongoDB');
         error.status = 500;
@@ -36,4 +35,35 @@ export const connectToDB = async () => {
     }
 };
 
-export { client };
+// --- User DB ---
+const buildUserDBUri = () => {
+    const user = process.env.USER_DB_USER;
+    const pass = process.env.USER_DB_PASSWORD;
+    const host = process.env.MONGODB_HOST;
+    const db = process.env.USER_DB_NAME;
+    if (!user || !pass || !host || !db) {
+        throw new Error('USER_DB_USER/USER_DB_PASSWORD/USER_DB_NAME/MONGODB_HOST must be set');
+    }
+    return `mongodb://${encodeURIComponent(user)}:${encodeURIComponent(pass)}@${host}:27017/${db}?authSource=${db}`;
+};
+
+const userDBUri = buildUserDBUri();
+const userDBClient = new MongoClient(userDBUri);
+let userDBInstance = null;
+
+export const connectToUserDB = async () => {
+    if (userDBInstance) {
+        return userDBInstance;
+    }
+    try {
+        await userDBClient.connect();
+        userDBInstance = userDBClient.db(process.env.USER_DB_NAME);
+        return userDBInstance;
+    } catch (err) {
+        const error = new Error('Failed to connect to User MongoDB');
+        error.status = 500;
+        throw error;
+    }
+};
+
+export { itemDBClient, userDBClient };

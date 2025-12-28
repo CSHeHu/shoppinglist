@@ -1,12 +1,12 @@
-import { connectToDB } from '../config/db.js';
+import { connectToItemDB } from '../config/db.js';
 import { ObjectId } from 'mongodb';
 
 const collectionName = 'shoppinglistitemsdbs';
 let collection;
 
-export async function getCollection(collectionParam) {
+export async function getCollection() {
     if (!collection) {
-        const db = await connectToDB();
+        const db = await connectToItemDB();
         collection = db.collection(collectionName);
     }
     return collection;

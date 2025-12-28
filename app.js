@@ -12,7 +12,8 @@ import itemRouter from './routes/itemRoutes.js';
 import errorHandler from './middleware/errorHandler.js';
 import session from 'express-session';
 import MongoStore from 'connect-mongo';
-import { client as mongoClient } from './config/db.js';
+import { userDBClient } from './config/db.js';
+
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -33,19 +34,20 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(express.static(path.join(__dirname, 'public')));
 
-await mongoClient.connect();
+await userDBClient.connect();
 app.set('trust proxy', 1);
 app.use(session({
   secret: process.env.SESSION_SECRET,
   resave: false,
   saveUninitialized: false,
-  store: MongoStore.create({ client: mongoClient }),
+  store: MongoStore.create({ client: userDBClient }),
   cookie: {
     httpOnly: true,
     secure: process.env.NODE_ENV === 'production',
     maxAge: 24 * 60 * 60 * 1000 // 1 day
   }
 }));
+
 
 
 // routes
