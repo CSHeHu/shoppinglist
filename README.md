@@ -88,6 +88,10 @@ MONGODB_DB=shoppinglistdb
 MONGO_APP_USER=shoppinglist_app
 MONGO_APP_PASSWORD=change_this_app_password
 
+# Collection names
+ITEM_COLLECTION_NAME=items
+USER_COLLECTION_NAME=users
+
 # Users DB
 USER_DB_NAME=usersdb
 USER_DB_USER=users_app
