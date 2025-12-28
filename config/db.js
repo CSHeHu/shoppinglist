@@ -47,17 +47,25 @@ const buildUserDBUri = () => {
     return `mongodb://${encodeURIComponent(user)}:${encodeURIComponent(pass)}@${host}:27017/${db}?authSource=${db}`;
 };
 
-const userDBUri = buildUserDBUri();
-const userDBClient = new MongoClient(userDBUri);
+let _userDBClient = null;
 let userDBInstance = null;
 
+export const getUserDBClient = () => {
+    if (_userDBClient) return _userDBClient;
+    const userDBUri = buildUserDBUri();
+    _userDBClient = new MongoClient(userDBUri);
+    return _userDBClient;
+};
+
+
 export const connectToUserDB = async () => {
+    const client = getUserDBClient();
     if (userDBInstance) {
         return userDBInstance;
     }
     try {
-        await userDBClient.connect();
-        userDBInstance = userDBClient.db(process.env.USER_DB_NAME);
+        await client.connect();
+        userDBInstance = client.db(process.env.USER_DB_NAME);
         return userDBInstance;
     } catch (err) {
         const error = new Error('Failed to connect to User MongoDB');
@@ -66,4 +74,3 @@ export const connectToUserDB = async () => {
     }
 };
 
-export { itemDBClient, userDBClient };

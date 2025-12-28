@@ -12,7 +12,7 @@ import itemRouter from './routes/itemRoutes.js';
 import errorHandler from './middleware/errorHandler.js';
 import session from 'express-session';
 import MongoStore from 'connect-mongo';
-import { userDBClient } from './config/db.js';
+import { getUserDBClient } from './config/db.js';
 
 
 const __filename = fileURLToPath(import.meta.url);
@@ -34,7 +34,7 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(express.static(path.join(__dirname, 'public')));
 
-await userDBClient.connect();
+const userDBClient = getUserDBClient();
 app.set('trust proxy', 1);
 app.use(session({
   secret: process.env.SESSION_SECRET,
