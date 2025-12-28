@@ -69,11 +69,9 @@ async function resetForm() {
 
 async function updateList() {
   try {
-    const response = await fetch('/data');
-    if (!response.ok) {
+      const response = await fetch('/data');
       await handleErrorResponse(response);
-    }
-    const data = await response.json();
+      const data = await response.json();
 
 
     // Clear the old list
@@ -186,7 +184,15 @@ async function deleteOneElement(_id) {
 
 async function handleErrorResponse(response) {
   if (!response.ok) {
-    const errorData = await response.json();
-    throw new Error(`${errorData.error.message} ${errorData.error.code})`);
+    let errorMsg = `HTTP error ${response.status}`;
+    try {
+      const errorData = await response.json();
+      if (errorData && errorData.error) {
+        errorMsg = `${errorData.error.message} (${errorData.error.code})`;
+      }
+    } catch (e) {
+      // Ignore JSON parse errors, keep default message
+    }
+    throw new Error(errorMsg);
   }
 }
