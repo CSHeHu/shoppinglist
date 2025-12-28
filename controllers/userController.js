@@ -11,7 +11,7 @@ export const showLoginPage = async (req, res, next) => {
 
 export const showLogoutPage = async (req, res, next) => {
   try {
-    res.render('logout');
+    res.render('logout_form');
   } catch (err) {
     err.status = err.status || 500;
     next(err);
@@ -20,7 +20,9 @@ export const showLogoutPage = async (req, res, next) => {
 
 export const logoutUser = async (req, res, next) => {
   try {
-    req.session.destroy(() => res.json({ ok: true }));
+    req.session.destroy(() => {
+      res.status(200).render('logged_out', { message: 'You have been logged out' });
+    });
   } catch (err) {
     err.status = err.status || 500;
     next(err);
@@ -53,9 +55,9 @@ export const loginUser = async (req, res, next) => {
     req.session.userId = String(user._id);
     req.session.role = user.role;
 
-    return res.json({ ok: true, user: { email: user.email, role: user.role } });
+    return res.redirect('/');
   } catch (err) {
-    next(err); 
+    next(err);
   }
 };
 
