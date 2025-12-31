@@ -32,8 +32,6 @@ export const logoutUser = async (req, res, next) => {
 export const getUser = async (req, res, next) => {
   try {
     // TODO: enhance with more user info from DB 
-    if (!req.session || !req.session.userId)
-      return res.status(401).json({ error: { code: 401, message: 'unauthenticated' } });
     return res.json({ userId: req.session.userId, role: req.session.role });
   } catch (err) {
     err.status = err.status || 500;
