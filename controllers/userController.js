@@ -33,7 +33,7 @@ export const getUser = async (req, res, next) => {
   try {
     // TODO: enhance with more user info from DB 
     if (!req.session || !req.session.userId)
-      return res.status(401).json({ error: 'unauthenticated' });
+      return res.status(401).json({ error: { code: 401, message: 'unauthenticated' } });
     return res.json({ userId: req.session.userId, role: req.session.role });
   } catch (err) {
     err.status = err.status || 500;
@@ -45,12 +45,12 @@ export const getUser = async (req, res, next) => {
 export const loginUser = async (req, res, next) => {
   const { email, password } = req.body;
   if (!email || !password) {
-    return res.status(400).json({ error: 'email and password required' });
+    return res.status(400).json({ error: { code: 400, message: 'email and password required' } });
   }
 
   try {
     const user = await verifyUserCredentials(email, password);
-    if (!user) return res.status(401).json({ error: 'invalid credentials' });
+    if (!user) return res.status(401).json({ error: { code: 401, message: 'invalid credentials' } });
 
     req.session.userId = String(user._id);
     req.session.role = user.role;
