@@ -6,12 +6,13 @@ import { showLogoutPage
 	, loginUser,
     showLoginPage
 } from '../controllers/userController.js';
+import requireAuth from '../middleware/requireAuth.js';
 
 
 router.get('/login', showLoginPage);
-router.get('/logout', showLogoutPage);
-router.post('/logout', logoutUser);
-router.get('/me', getUser);
+router.get('/logout', requireAuth, showLogoutPage);
+router.post('/logout', requireAuth, logoutUser);
+router.get('/me', requireAuth, getUser);
 router.post('/login', loginUser);
 
 export default router;
