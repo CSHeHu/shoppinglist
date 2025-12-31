@@ -28,7 +28,20 @@ document.getElementById("SLContainer").addEventListener("focusout", event => {
 });
 
 
+function showError(message) {
+  const errorDiv = document.getElementById('errorMessage');
+  errorDiv.textContent = message;
+  errorDiv.style.display = '';
+}
+
+function hideError() {
+  const errorDiv = document.getElementById('errorMessage');
+  errorDiv.textContent = '';
+  errorDiv.style.display = 'none';
+}
+
 async function submitForm() {
+  hideError();
   const name = document.getElementById('addToListInput').value;
   const amount = document.getElementById('addAmountToListInput').value;
   const finished = false;
@@ -45,11 +58,12 @@ async function submitForm() {
   }
 
   catch (err) {
-    console.error(err);
+    showError(err.message);
   }
 }
 
 async function resetForm() {
+  hideError();
   try {
     const response = await fetch('/data', {
       method: 'DELETE',
@@ -62,12 +76,13 @@ async function resetForm() {
   }
 
   catch (err) {
-    console.error(err)
+    showError(err.message);
   }
 
 }
 
 async function updateList() {
+  hideError();
   try {
       const response = await fetch('/data');
       await handleErrorResponse(response);
@@ -122,7 +137,7 @@ async function updateList() {
     }
 
   } catch (err) {
-    console.error(err)
+    showError(err.message);
   }
 
 
@@ -142,6 +157,7 @@ async function toggleItem(event) {
 }
 
 async function updateOneElement(event) {
+  hideError();
   const listItem = event.target.parentElement;
   const _id = listItem.getAttribute("id");
   const name = listItem.children[0].value;
@@ -160,13 +176,14 @@ async function updateOneElement(event) {
   }
 
   catch (err) {
-    console.error(err)
+    showError(err.message);
   }
 
 }
 
 
 async function deleteOneElement(_id) {
+  hideError();
   try {
     const response = await fetch(`/data?_id=${_id}`, {
       method: 'DELETE',
@@ -176,7 +193,7 @@ async function deleteOneElement(_id) {
   }
 
   catch (err) {
-    console.error(err)
+    showError(err.message);
   }
 
 }
