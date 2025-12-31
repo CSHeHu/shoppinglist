@@ -201,6 +201,11 @@ async function deleteOneElement(_id) {
 
 async function handleErrorResponse(response) {
   if (!response.ok) {
+    if (response.status === 401){
+      window.location.href = '/user/login';
+      return;
+    }
+
     let errorMsg = `HTTP error ${response.status}`;
     try {
       const errorData = await response.json();
