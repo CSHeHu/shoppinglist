@@ -1,7 +1,38 @@
 import { verifyUserCredentials, findUserById } from '../models/userModel.js';
 
 
+// TODO: List all users (GET /users)
+export const listUsers = async (req, res, next) => {
+  // TODO: Implement logic to list all users (admin only)
+  res.status(501).json({ message: 'Not implemented: list all users' });
+};
+
+// TODO: Register a new user (POST /users)
+export const registerUser = async (req, res, next) => {
+  // TODO: Implement logic to register a new user
+  res.status(501).json({ message: 'Not implemented: register user' });
+};
+
+// TODO: Get user by id (GET /users/:id)
+export const getUserById = async (req, res, next) => {
+  // TODO: Implement logic to get user by id (admin only)
+  res.status(501).json({ message: 'Not implemented: get user by id' });
+};
+
+// TODO: Update user by id (PUT /users/:id)
+export const updateUser = async (req, res, next) => {
+  // TODO: Implement logic to update user by id (admin or self)
+  res.status(501).json({ message: 'Not implemented: update user' });
+};
+
+// TODO: Delete user by id (DELETE /users/:id)
+export const deleteUser = async (req, res, next) => {
+  // TODO: Implement logic to delete user by id (admin or self)
+  res.status(501).json({ message: 'Not implemented: delete user' });
+};
+
 export const showLoginPage = async (req, res, next) => {
+  // Handles GET /login
   try {
     res.render('login');
   } catch (err) {
@@ -11,6 +42,7 @@ export const showLoginPage = async (req, res, next) => {
 };
 
 export const showLogoutPage = async (req, res, next) => {
+  // Handles GET /logout
   try {
     res.render('logout_form');
   } catch (err) {
@@ -20,6 +52,8 @@ export const showLogoutPage = async (req, res, next) => {
 };
 
 export const logoutUser = async (req, res, next) => {
+  // Handles POST /users/logout
+
   try {
     req.session.destroy(() => {
       res.status(200).render('logged_out', { message: 'You have been logged out' });
@@ -31,6 +65,8 @@ export const logoutUser = async (req, res, next) => {
 };
 
 export const getUser = async (req, res, next) => {
+  // Handles GET /users/me
+
   try {
     const user = await findUserById(req.session.userId);
     if (!user) {
@@ -47,6 +83,8 @@ export const getUser = async (req, res, next) => {
 
 // TODO: add input validation middleware
 export const loginUser = async (req, res, next) => {
+  // Handles POST /users/login
+
   const { email, password } = req.body;
   if (!email || !password) {
     return res.status(400).json({ error: { code: 400, message: 'email and password required' } });

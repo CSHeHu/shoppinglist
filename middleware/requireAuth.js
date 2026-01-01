@@ -1,4 +1,4 @@
 export default function requireAuth(req, res, next) {
   if (req.session && req.session.userId) return next();
-  return res.redirect('/user/login');
+  return res.redirect('/login');
 }

@@ -53,7 +53,7 @@ app.use(session({
 
 // routes
 app.use('/', dashboardRouter);
-app.use('/user', userRouter);
+app.use('/', userRouter);
 app.use('/data', itemRouter);
 
 // catch 404
