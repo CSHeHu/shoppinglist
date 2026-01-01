@@ -12,6 +12,8 @@
       <li><strong>ID:</strong> <%= _id %></li>
       <li><strong>Email:</strong> <%= email %></li>
       <li><strong>Role:</strong> <%= role %></li>
+      <li><strong>Created At:</strong> <%= createdAt ? new Date(createdAt).toLocaleString() : '' %></li>
+      <li><strong>Updated At:</strong> <%= updatedAt ? new Date(updatedAt).toLocaleString() : '' %></li>
     </ul>
   </body>
 </html>

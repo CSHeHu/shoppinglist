@@ -1,4 +1,4 @@
-import { verifyUserCredentials, findUserById, findAllUsers } from '../models/userModel.js';
+import { verifyUserCredentials, findUserById, findAllUsers, createUser, findUserByEmail } from '../models/userModel.js';
 
 // List all users (GET /users)
 export const listUsers = async (req, res, next) => {
@@ -12,11 +12,30 @@ export const listUsers = async (req, res, next) => {
 };
 
 
-// TODO: Register a new user (POST /users)
+// Register a new user (POST /users)
 export const registerUser = async (req, res, next) => {
-  // TODO: Implement logic to register a new user
-  res.status(501).json({ message: 'Not implemented: register user' });
+  try {
+    const { email, password, role } = req.body;
+    if (!email || !password || !role || !['user', 'root'].includes(role)) {
+      return res.status(400).json({ message: 'Missing or invalid fields' });
+    }
+    // Check if user already exists
+    const existing = await findUserByEmail(email);
+    if (existing) {
+      return res.status(409).json({ message: 'User already exists' });
+    }
+    const result = await createUser(email, password, role);
+    if (result.insertedId) {
+      return res.status(201).json({ message: 'User created', userId: result.insertedId });
+    } else {
+      return res.status(500).json({ message: 'User creation failed' });
+    }
+  } catch (err) {
+    err.status = err.status || 500;
+    next(err);
+  }
 };
+
 
 // TODO: Get user by id (GET /users/:id)
 export const getUserById = async (req, res, next) => {
@@ -77,8 +96,8 @@ export const getUser = async (req, res, next) => {
     if (!user) {
       return res.status(404).json({ error: { code: 404, message: 'User not found' } });
     }
-      const { _id, email, role } = user;
-      return res.render('user_me', { _id, email, role });
+    const { _id, email, role, createdAt, updatedAt } = user;
+    return res.render('user_me', { _id, email, role, createdAt, updatedAt });
   } catch (err) {
     err.status = err.status || 500;
     next(err);

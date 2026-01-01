@@ -11,10 +11,46 @@
         <h1>Admin Control Panel</h1>
     </header>
     <main>
+        <div id="userCreateContainer">
+            <h2>Create New User</h2>
+            <form id="createUserForm">
+                <label for="newUserEmail">Email:</label>
+                <input id="newUserEmail" name="email" type="email" required>
+                <label for="newUserPassword">Password:</label>
+                <input id="newUserPassword" name="password" type="password" required>
+                <label for="newUserRole">Role:</label>
+                <select id="newUserRole" name="role" required>
+                    <option value="user">User</option>
+                    <option value="root">Root</option>
+                </select>
+                <button type="submit">Create User</button>
+            </form>
+            <div id="createUserMsg"></div>
+        </div>
         <button id="listUsersBtn">List All Users</button>
         <div id="usersList"></div>
     </main>
     <script>
+    document.getElementById('createUserForm').addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const email = document.getElementById('newUserEmail').value;
+        const password = document.getElementById('newUserPassword').value;
+        const role = document.getElementById('newUserRole').value;
+        const res = await fetch('/users', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ email, password, role }),
+            credentials: 'same-origin'
+        });
+        const msgDiv = document.getElementById('createUserMsg');
+        if (res.ok) {
+            msgDiv.innerText = 'User created successfully!';
+            document.getElementById('createUserForm').reset();
+        } else {
+            const data = await res.json();
+            msgDiv.innerText = data.message || 'Failed to create user.';
+        }
+    });
     document.getElementById('listUsersBtn').addEventListener('click', async () => {
         const res = await fetch('/users', { credentials: 'same-origin' });
         if (res.ok) {
@@ -27,3 +63,5 @@
     </script>
 </body>
 </html>
+
+

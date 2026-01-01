@@ -5,7 +5,8 @@ import { showLogoutPage
 	, getUser
 	, loginUser,
     showLoginPage,
-    listUsers
+    listUsers,
+    registerUser
 } from '../controllers/userController.js';
 import { requireAuth, requireAdmin } from '../middleware/requireAuth.js';
 
@@ -20,11 +21,9 @@ router.get('/logout', requireAuth, showLogoutPage);
 router.get('/users', requireAdmin, listUsers);
 
 
-// Register a new user
-router.post('/users', (req, res) => {
-  // TODO: Implement registerUser controller
-  res.status(501).json({ message: 'Not implemented: register user' });
-});
+// Register a new user (admin only)
+router.post('/users', requireAdmin, registerUser);
+
 
 // Get current user info
 router.get('/users/me', requireAuth, getUser);
