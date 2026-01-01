@@ -1,6 +1,6 @@
 import * as itemModel from '../models/itemModel.js';
 
-export const showDashboard = async (req, res, next, model = itemModel) => {
+export const shoppingListPanel = async (req, res, next, model = itemModel) => {
   try {
     const items = await model.getAllItems();
     res.render('index', { title: 'Shopping List', items });
@@ -9,6 +9,7 @@ export const showDashboard = async (req, res, next, model = itemModel) => {
     next(err);
   }
 };
+
 
 export const showAdminPanel = (req, res, next) => {
   res.render('admin');
