@@ -16,6 +16,18 @@ export async function getAllItems() {
   return await coll.find().toArray();
 }
 
+export async function getItemById(_id) {
+  if (!ObjectId.isValid(_id)) {
+    const error = new Error('Invalid ObjectId');
+    error.status = 400;
+    throw error;
+  }
+  const objectId = ObjectId.createFromHexString(_id);
+  const coll = await getCollection();
+  return await coll.findOne({ _id: objectId });
+}
+
+
 export async function createItem(item) {
   const coll = await getCollection();
   const result = await coll.insertOne(item);

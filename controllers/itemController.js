@@ -31,10 +31,27 @@ export const createItem = async (req, res, next) => {
   }
 };
 
+export const getItemById = async (req, res, next) => {
+  try {
+    const { id } = req.params;
+    const item = await itemModel.getItemById(id);
+    if (!item) {
+      const error = new Error("Item not found");
+      error.status = 404;
+      throw error;
+    }
+    return res.status(200).json(item);
+  } catch (err) {
+    err.status = err.status || 500;
+    next(err);
+  }
+};
+
 export const updateItem = async (req, res, next) => {
   try {
-    const { _id, name, amount, finished } = req.body;
-    const result = await itemModel.updateItem(_id, { name, amount, finished });
+    const { id } = req.params;
+    const { name, amount, finished } = req.body;
+    const result = await itemModel.updateItem(id, { name, amount, finished });
 
     if (result.matchedCount === 0) {
       const error = new Error("Item not found");
@@ -55,8 +72,8 @@ export const updateItem = async (req, res, next) => {
 
 export const deleteItem = async (req, res, next) => {
   try {
-    const { _id } = req.query;
-    const result = await itemModel.deleteItem(_id);
+    const { id } = req.params;
+    const result = await itemModel.deleteItem(id);
 
     if (result.deletedCount === 0) {
       const error = new Error("Item not found");
@@ -70,3 +87,14 @@ export const deleteItem = async (req, res, next) => {
     next(err);
   }
 };
+
+export const deleteAllItems = async (req, res, next) => {
+  try {
+    const result = await itemModel.deleteItem();
+    return res.status(200).json({ message: 'All items deleted', deletedCount: result.deletedCount });
+  } catch (err) {
+    err.status = err.status || 500;
+    next(err);
+  }
+};
+

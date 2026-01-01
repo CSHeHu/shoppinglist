@@ -46,7 +46,7 @@ async function submitForm() {
   const amount = document.getElementById('addAmountToListInput').value;
   const finished = false;
   try {
-    const response = await fetch('/data', {
+    const response = await fetch('/items', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -65,7 +65,7 @@ async function submitForm() {
 async function resetForm() {
   hideError();
   try {
-    const response = await fetch('/data', {
+    const response = await fetch('/items', {
       method: 'DELETE',
       headers: {
         'Content-Type': 'application/json'
@@ -84,7 +84,7 @@ async function resetForm() {
 async function updateList() {
   hideError();
   try {
-      const response = await fetch('/data');
+      const response = await fetch('/items');
       await handleResponse(response);
       const data = await response.json();
 
@@ -165,12 +165,12 @@ async function updateOneElement(event) {
   const finished = listItem.classList.contains("finished");
 
   try {
-    const response = await fetch('/data', {
+    const response = await fetch(`/items/${_id}`, {
       method: 'PATCH',
       headers: {
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify({ _id, name, amount, finished }),
+      body: JSON.stringify({ name, amount, finished }),
     });
     await handleResponse(response);
   }
@@ -185,7 +185,7 @@ async function updateOneElement(event) {
 async function deleteOneElement(_id) {
   hideError();
   try {
-    const response = await fetch(`/data?_id=${_id}`, {
+    const response = await fetch(`/items/${_id}`, {
       method: 'DELETE',
     });
     await handleResponse(response);
