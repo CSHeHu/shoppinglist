@@ -6,18 +6,16 @@ import { showLogoutPage
 	, loginUser,
     showLoginPage,
     listUsers,
-    registerUser
+    registerUser,
+    getUserById,
+    getUserByEmail,
 } from '../controllers/userController.js';
 import { requireAuth, requireAdmin } from '../middleware/requireAuth.js';
-import { validateUser, userFields, loginFields, idParam } from '../middleware/validateUser.js';
-
-
+import { validateUser, userFields, loginFields, idParam, emailParam } from '../middleware/validateUser.js';
 
 // Render login/logout pages
 router.get('/login', showLoginPage);
 router.get('/logout', requireAuth, showLogoutPage);
-
-
 
 // List all users (admin only)
 router.get('/users', requireAdmin, listUsers);
@@ -29,10 +27,10 @@ router.post('/users', requireAdmin, validateUser(userFields), registerUser);
 router.get('/users/me', requireAuth, getUser);
 
 // Get user by id (admin only)
-router.get('/users/:id', requireAdmin, validateUser(idParam), (req, res) => {
-  // TODO: Implement getUserById controller
-  res.status(501).json({ message: 'Not implemented: get user by id' });
-});
+router.get('/users/id/:id', requireAdmin, validateUser(idParam), getUserById);
+// Get user by email (admin only)
+router.get('/users/email/:email', requireAdmin, validateUser(emailParam), getUserByEmail);
+
 
 // Update user by id (admin only)
 router.put('/users/:id', requireAdmin, validateUser([...idParam, ...userFields]), (req, res) => {

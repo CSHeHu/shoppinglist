@@ -37,11 +37,36 @@ export const registerUser = async (req, res, next) => {
 };
 
 
-// TODO: Get user by id (GET /users/:id)
+// Get user by id (GET /users/id/:id)
 export const getUserById = async (req, res, next) => {
-  // TODO: Implement logic to get user by id (admin only)
-  res.status(501).json({ message: 'Not implemented: get user by id' });
+  try {
+    const { id } = req.params;
+    const user = await findUserById(id);
+    if (!user) {
+      return res.status(404).json({ message: 'User not found' });
+    }
+    res.json(user);
+  } catch (err) {
+    err.status = err.status || 500;
+    next(err);
+  }
 };
+
+// Get user by email (GET /users/email/:email)
+export const getUserByEmail = async (req, res, next) => {
+  try {
+    const { email } = req.params;
+    const user = await findUserByEmail(email);
+    if (!user) {
+      return res.status(404).json({ message: 'User not found' });
+    }
+    res.json(user);
+  } catch (err) {
+    err.status = err.status || 500;
+    next(err);
+  }
+};
+
 
 // TODO: Update user by id (PUT /users/:id)
 export const updateUser = async (req, res, next) => {

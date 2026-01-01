@@ -27,3 +27,32 @@ document.getElementById('listUsersBtn').addEventListener('click', async () => {
         document.getElementById('usersList').innerText = 'Failed to fetch users.';
     }
 });
+
+// User search functionality
+const searchUserForm = document.getElementById('searchUserForm');
+if (searchUserForm) {
+    searchUserForm.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const type = document.getElementById('searchType').value;
+        const value = document.getElementById('searchUserInput').value.trim();
+        const msgDiv = document.getElementById('searchUserMsg');
+        const resultDiv = document.getElementById('searchUserResult');
+        msgDiv.innerText = '';
+        resultDiv.innerText = '';
+        let url = '';
+        if (type === 'id') {
+            url = `/users/id/${encodeURIComponent(value)}`;
+        } else if (type === 'email') {
+            url = `/users/email/${encodeURIComponent(value)}`;
+        }
+        const res = await fetch(url, { credentials: 'same-origin' });
+        if (res.ok) {
+            const user = await res.json();
+            resultDiv.innerText = JSON.stringify(user, null, 2);
+        } else {
+            const data = await res.json().catch(() => ({}));
+            msgDiv.innerText = data.message || 'User not found or error.';
+        }
+    });
+}
+

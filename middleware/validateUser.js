@@ -30,3 +30,8 @@ export const loginFields = [
 export const idParam = [
   param('id').isMongoId(),
 ];
+
+export const emailParam = [
+  param('email').isEmail().normalizeEmail(),
+];
+
