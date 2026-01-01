@@ -53,7 +53,7 @@ async function submitForm() {
       },
       body: JSON.stringify({ name, amount, finished }),
     });
-    await handleErrorResponse(response);
+    await handleResponse(response);
     updateList();
   }
 
@@ -71,7 +71,7 @@ async function resetForm() {
         'Content-Type': 'application/json'
       }
     });
-    await handleErrorResponse(response);
+    await handleResponse(response);
     updateList();
   }
 
@@ -85,7 +85,7 @@ async function updateList() {
   hideError();
   try {
       const response = await fetch('/data');
-      await handleErrorResponse(response);
+      await handleResponse(response);
       const data = await response.json();
 
 
@@ -172,7 +172,7 @@ async function updateOneElement(event) {
       },
       body: JSON.stringify({ _id, name, amount, finished }),
     });
-    await handleErrorResponse(response);
+    await handleResponse(response);
   }
 
   catch (err) {
@@ -188,7 +188,7 @@ async function deleteOneElement(_id) {
     const response = await fetch(`/data?_id=${_id}`, {
       method: 'DELETE',
     });
-    await handleErrorResponse(response);
+    await handleResponse(response);
     updateList();
   }
 
@@ -199,7 +199,11 @@ async function deleteOneElement(_id) {
 }
 
 
-async function handleErrorResponse(response) {
+async function handleResponse(response) {
+  if (response.redirected) {
+    window.location.href = response.url;
+    return;
+  }
   if (!response.ok) {
     let errorMsg = `HTTP error ${response.status}`;
     try {
@@ -208,8 +212,8 @@ async function handleErrorResponse(response) {
         errorMsg = `${errorData.error.message} (${errorData.error.code})`;
       }
     } catch (e) {
-      // Ignore JSON parse errors, keep default message
     }
     throw new Error(errorMsg);
   }
+  return response;
 }
