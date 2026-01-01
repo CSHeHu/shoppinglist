@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Control Panel</title>
+    <link rel="stylesheet" href="/stylesheets/style.css" />
+</head>
+<body>
+    <header>
+        <h1>Admin Control Panel</h1>
+    </header>
+    <main>
+        <button id="listUsersBtn">List All Users</button>
+        <div id="usersList"></div>
+    </main>
+    <script>
+    document.getElementById('listUsersBtn').addEventListener('click', async () => {
+        const res = await fetch('/users', { credentials: 'same-origin' });
+        if (res.ok) {
+            const users = await res.json();
+            document.getElementById('usersList').innerText = JSON.stringify(users, null, 2);
+        } else {
+            document.getElementById('usersList').innerText = 'Failed to fetch users.';
+        }
+    });
+    </script>
+</body>
+</html>

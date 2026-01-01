@@ -4,9 +4,11 @@ import { showLogoutPage
 	, logoutUser
 	, getUser
 	, loginUser,
-    showLoginPage
+    showLoginPage,
+    listUsers
 } from '../controllers/userController.js';
-import requireAuth from '../middleware/requireAuth.js';
+import { requireAuth, requireAdmin } from '../middleware/requireAuth.js';
+
 
 // Render login/logout pages
 router.get('/login', showLoginPage);
@@ -14,11 +16,9 @@ router.get('/logout', requireAuth, showLogoutPage);
 
 
 
-// List all users (optional, admin only)
-router.get('/users', requireAuth, (req, res) => {
-  // TODO: Implement listUsers controller
-  res.status(501).json({ message: 'Not implemented: list all users' });
-});
+// List all users (admin only)
+router.get('/users', requireAdmin, listUsers);
+
 
 // Register a new user
 router.post('/users', (req, res) => {

@@ -1,8 +1,12 @@
 import express from 'express';
-import dashboardController from '../controllers/dashboardController.js';
+import { showDashboard, showAdminPanel } from '../controllers/dashboardController.js';
+import { requireAdmin } from '../middleware/requireAuth.js';
 
 const router = express.Router();
 
-router.get('/', dashboardController.showDashboard);
+router.get('/', showDashboard);
+router.get('/admin', requireAdmin, showAdminPanel);
 
 export default router;
+
+

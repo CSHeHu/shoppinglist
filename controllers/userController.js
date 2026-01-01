@@ -1,11 +1,16 @@
-import { verifyUserCredentials, findUserById } from '../models/userModel.js';
+import { verifyUserCredentials, findUserById, findAllUsers } from '../models/userModel.js';
 
-
-// TODO: List all users (GET /users)
+// List all users (GET /users)
 export const listUsers = async (req, res, next) => {
-  // TODO: Implement logic to list all users (admin only)
-  res.status(501).json({ message: 'Not implemented: list all users' });
+  try {
+    const users = await findAllUsers();
+    res.json(users);
+  } catch (err) {
+    err.status = err.status || 500;
+    next(err);
+  }
 };
+
 
 // TODO: Register a new user (POST /users)
 export const registerUser = async (req, res, next) => {

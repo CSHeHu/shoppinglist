@@ -3,6 +3,13 @@ import { connectToUserDB } from '../config/db.js';
 import { ObjectId } from 'mongodb';
 
 
+export const findAllUsers = async () => {
+  const db = await connectToUserDB();
+  return db.collection(process.env.USER_COLLECTION_NAME)
+    .find({}, { projection: { _id: 1, email: 1, role: 1 } })
+    .toArray();
+};
+
 export const verifyUserCredentials = async (email, password) => {
   const db = await connectToUserDB();
 

@@ -1,6 +1,6 @@
 import * as itemModel from '../models/itemModel.js';
 
-const showDashboard = async (req, res, next, model = itemModel) => {
+export const showDashboard = async (req, res, next, model = itemModel) => {
   try {
     const items = await model.getAllItems();
     res.render('index', { title: 'Shopping List', items });
@@ -10,4 +10,7 @@ const showDashboard = async (req, res, next, model = itemModel) => {
   }
 };
 
-export default { showDashboard };
+export const showAdminPanel = (req, res, next) => {
+  res.render('admin');
+};
+
