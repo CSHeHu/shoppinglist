@@ -1,4 +1,5 @@
-import { verifyUserCredentials } from '../models/userModel.js';
+import { verifyUserCredentials, findUserById } from '../models/userModel.js';
+
 
 export const showLoginPage = async (req, res, next) => {
   try {
@@ -31,13 +32,18 @@ export const logoutUser = async (req, res, next) => {
 
 export const getUser = async (req, res, next) => {
   try {
-    // TODO: enhance with more user info from DB 
-    return res.json({ userId: req.session.userId, role: req.session.role });
+    const user = await findUserById(req.session.userId);
+    if (!user) {
+      return res.status(404).json({ error: { code: 404, message: 'User not found' } });
+    }
+    const { _id, email, role } = user;
+    return res.json({ _id, email, role });
   } catch (err) {
     err.status = err.status || 500;
     next(err);
   }
 }
+
 
 // TODO: add input validation middleware
 export const loginUser = async (req, res, next) => {
