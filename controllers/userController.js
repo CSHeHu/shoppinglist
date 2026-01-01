@@ -36,8 +36,8 @@ export const getUser = async (req, res, next) => {
     if (!user) {
       return res.status(404).json({ error: { code: 404, message: 'User not found' } });
     }
-    const { _id, email, role } = user;
-    return res.json({ _id, email, role });
+      const { _id, email, role } = user;
+      return res.render('user_me', { _id, email, role });
   } catch (err) {
     err.status = err.status || 500;
     next(err);
