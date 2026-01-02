@@ -69,7 +69,9 @@ services:
       - backend
 
   shoppinglist:
-    build: .
+    build:
+      context: .
+      dockerfile: Dockerfile.shoppinglistapp
     container_name: shoppinglist-app
     depends_on:
       mongo:
@@ -88,6 +90,7 @@ services:
       ROOT_PASSWORD: ${ROOT_PASSWORD}
     networks:
       - backend
+
 
 
   nginx:

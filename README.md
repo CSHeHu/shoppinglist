@@ -162,4 +162,36 @@ docker compose up --build
 
 ### Note about nginx configuration
 
-- This repo expects a local `nginx` config at `docker/nginx/conf.d/default.conf` (not committed). 
+- This repo expects a local `nginx` config at `docker/nginx/conf.d/default.conf` (not committed).
+
+### Example nginx configuration
+
+The following sample config proxies HTTPS requests to the Node.js app running in Docker. It expects certificate files at `/etc/nginx/certs/cert.pem` and `/etc/nginx/certs/key.pem`, and forwards traffic from `localhost` or `shoppinglist.local` to the backend service. HTTP requests are redirected to HTTPS.
+
+See `docker/nginx/conf.d/default.conf` for your local setup.
+
+```nginx
+server {
+    listen 443 ssl;
+    server_name localhost shoppinglist.local;
+
+    ssl_certificate     /etc/nginx/certs/cert.pem;
+    ssl_certificate_key /etc/nginx/certs/key.pem;
+
+    location / {
+        proxy_pass         http://shoppinglist-app:3000;
+        proxy_set_header   Host $host;
+        proxy_set_header   X-Real-IP $remote_addr;
+        proxy_set_header   X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header   X-Forwarded-Proto $scheme;
+    }
+}
+
+# Optionally redirect HTTP to HTTPS
+server {
+    listen 80;
+    server_name localhost shoppinglist.local;
+    return 301 https://$host$request_uri;
+}
+```
+
