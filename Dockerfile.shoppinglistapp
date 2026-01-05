@@ -11,9 +11,16 @@ RUN npm install
 # Copy the rest of the source
 COPY . .
 
+# Build TypeScript (requires typescript as a dev dependency)
+RUN npx tsc
+
+# Copy compiled files from /dist over the root, recursively, overwriting existing files
+RUN if [ -d ./dist ]; then cp -rT ./dist ./ ; fi
+
 # Expose the port your app listens on
 EXPOSE 3000
 
 # Start the app
 CMD ["npm", "start"]
+
 
