@@ -6,12 +6,18 @@ import { fileURLToPath } from 'url';
 import logger from 'morgan';
 import rateLimit from 'express-rate-limit';
 
+// TODO: Migrate all imports below to TypeScript modules and remove ts-ignore
+// @ts-ignore
 import dashboardRouter from './routes/dashboardRoutes.js';
+// @ts-ignore
 import userRouter from './routes/userRoutes.js';
+// @ts-ignore
 import itemRouter from './routes/itemRoutes.js';
+// @ts-ignore
 import errorHandler from './middleware/errorHandler.js';
 import session from 'express-session';
 import MongoStore from 'connect-mongo';
+// @ts-ignore
 import { getUserDBClient } from './config/db.js';
 
 
@@ -36,8 +42,14 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 const userDBClient = getUserDBClient();
 app.set('trust proxy', 1);
+
+const sessionSecret = process.env.SESSION_SECRET;
+if (!sessionSecret) {
+  throw new Error("SESSION_SECRET environment variable must be set");
+}
+
 app.use(session({
-  secret: process.env.SESSION_SECRET,
+  secret: sessionSecret,
   resave: false,
   saveUninitialized: false,
   store: MongoStore.create({ client: userDBClient }),
@@ -48,8 +60,6 @@ app.use(session({
     sameSite: 'strict'
   }
 }));
-
-
 
 // routes
 app.use('/', dashboardRouter);

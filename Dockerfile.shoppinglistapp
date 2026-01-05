@@ -11,11 +11,16 @@ RUN npm install
 # Copy the rest of the source
 COPY . .
 
+# Quick fix: Remove dist before building to avoid stale/incomplete files
+RUN rm -rf ./dist
+
 # Build TypeScript (requires typescript as a dev dependency)
 RUN npx tsc
 
 # Copy compiled files from /dist over the root, recursively, overwriting existing files
 RUN if [ -d ./dist ]; then cp -rT ./dist ./ ; fi
+
+# TODO: Cleanup with .dockerignore to avoid copying unnecessary files
 
 # Expose the port your app listens on
 EXPOSE 3000
@@ -23,4 +28,5 @@ EXPOSE 3000
 # Start the app
 CMD ["npm", "start"]
 
+#CMD ["sleep", "infinity"]
 
