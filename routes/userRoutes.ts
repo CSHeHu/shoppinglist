@@ -1,16 +1,19 @@
 import express from 'express';
 const router = express.Router();
-import { showLogoutPage 
-	, logoutUser
-	, getUser
-	, loginUser,
-    showLoginPage,
-    listUsers,
-    registerUser,
-    getUserById,
-    getUserByEmail,
+import {
+  showLogoutPage,
+  logoutUser,
+  getUser,
+  loginUser,
+  showLoginPage,
+  listUsers,
+  registerUser,
+  getUserById,
+  getUserByEmail,
 } from '../controllers/userController.js';
+// @ts-ignore
 import { requireAuth, requireAdmin } from '../middleware/requireAuth.js';
+// @ts-ignore
 import { validateUser, userFields, loginFields, idParam, emailParam } from '../middleware/validateUser.js';
 
 // Render login/logout pages
@@ -31,7 +34,6 @@ router.get('/users/id/:id', requireAdmin, validateUser(idParam), getUserById);
 // Get user by email (admin only)
 router.get('/users/email/:email', requireAdmin, validateUser(emailParam), getUserByEmail);
 
-
 // Update user by id (admin only)
 router.put('/users/:id', requireAdmin, validateUser([...idParam, ...userFields]), (req, res) => {
   // TODO: Implement updateUser controller
@@ -50,6 +52,4 @@ router.post('/users/login', validateUser(loginFields), loginUser);
 // Logout
 router.post('/users/logout', requireAuth, logoutUser);
 
-
 export default router;
-

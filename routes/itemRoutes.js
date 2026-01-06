@@ -17,7 +17,8 @@ router.get('/items', getAllItems);
 // Create a new item
 router.post('/items', requireAuth, validateItem(itemFields), createItem);
 // Get item by id
-router.get('/items/:id', requireAuth, validateItem(idParam), getAllItems); // TODO: implement getItemById in controller
+// TODO: Implement getItemById controller
+router.get('/items/:id', requireAuth, validateItem(idParam), getAllItems);
 // Update item by id
 router.patch('/items/:id', requireAuth, validateItem([...idParam, ...itemFields]), updateItem);
 // Delete item by id

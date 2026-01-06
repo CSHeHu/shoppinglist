@@ -8,7 +8,6 @@ import rateLimit from 'express-rate-limit';
 
 // TODO: Migrate all imports below to TypeScript modules and remove ts-ignore
 import dashboardRouter from './routes/dashboardRoutes.js';
-// @ts-ignore
 import userRouter from './routes/userRoutes.js';
 // @ts-ignore
 import itemRouter from './routes/itemRoutes.js';
