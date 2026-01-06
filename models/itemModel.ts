@@ -25,7 +25,7 @@ export async function getAllItems(): Promise<WithId<Document>[]> {
 export async function getItemById(_id: string): Promise<WithId<Document> | null> {
   if (!ObjectId.isValid(_id)) {
     const error = new Error('Invalid ObjectId') as StatusError;
-    (error as StatusError).status = 400;
+    error.status = 400;
     throw error;
   }
   const objectId = ObjectId.createFromHexString(_id);
@@ -42,7 +42,7 @@ export async function createItem(item: Document): Promise<InsertOneResult<Docume
 export async function updateItem(_id: string, updateData: Partial<Document>): Promise<UpdateResult> {
   if (!ObjectId.isValid(_id)) {
     const error = new Error('Invalid ObjectId') as StatusError;
-    (error as StatusError).status = 400;
+    error.status = 400;
     throw error;
   }
   const objectId = ObjectId.createFromHexString(_id);

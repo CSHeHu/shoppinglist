@@ -12,13 +12,9 @@ export const shoppingListPanel = async (
     const items = await model.getAllItems();
     res.render('index', { title: 'Shopping List', items });
   } catch (err) {
-    if (err instanceof Error) {
-      const error = err as StatusError;
-      error.status = error.status || 500;
-      next(error);
-    } else {
-      next(err);
-    }
+    const error = err as StatusError;
+    error.status = error.status ?? 500;
+    next(error);
   }
 };
 

@@ -1,5 +1,6 @@
 import { MongoClient, Db } from "mongodb";
 import dotenv from "dotenv";
+import type { StatusError } from '../types/StatusError.js';
 dotenv.config();
 
 const buildItemDBUri = (): string => {
@@ -8,9 +9,9 @@ const buildItemDBUri = (): string => {
   const host = process.env.MONGODB_HOST;
   const db = process.env.MONGODB_DB;
   if (!user || !pass || !host || !db) {
-    throw new Error(
-      "MONGODB_URI or MONGO_APP_USER/MONGO_APP_PASSWORD must be set",
-    );
+    const error = new Error("MONGODB_URI or MONGO_APP_USER/MONGO_APP_PASSWORD must be set") as StatusError;
+    error.status = 500;
+    throw error;
   }
   return `mongodb://${encodeURIComponent(user)}:${encodeURIComponent(pass)}@${host}:27017/${db}?authSource=${db}`;
 };
@@ -27,14 +28,14 @@ export const connectToItemDB = async (): Promise<Db> => {
     await itemDBClient.connect();
     const dbName = process.env.MONGODB_DB;
     if (!dbName) {
-      throw new Error('MONGODB_DB environment variable must be set');
+      const error = new Error('MONGODB_DB environment variable must be set') as StatusError;
+      error.status = 500;
+      throw error;
     }
     itemDBInstance = itemDBClient.db(dbName);
     return itemDBInstance;
   } catch (err) {
-    const error = new Error("Failed to connect to MongoDB") as Error & {
-      status?: number;
-    };
+    const error = new Error("Failed to connect to MongoDB") as StatusError;
     error.status = 500;
     throw error;
   }
@@ -47,9 +48,9 @@ const buildUserDBUri = (): string => {
   const host = process.env.MONGODB_HOST;
   const db = process.env.USER_DB_NAME;
   if (!user || !pass || !host || !db) {
-    throw new Error(
-      "USER_DB_USER/USER_DB_PASSWORD/USER_DB_NAME/MONGODB_HOST must be set",
-    );
+    const error = new Error("USER_DB_USER/USER_DB_PASSWORD/USER_DB_NAME/MONGODB_HOST must be set") as StatusError;
+    error.status = 500;
+    throw error;
   }
   return `mongodb://${encodeURIComponent(user)}:${encodeURIComponent(pass)}@${host}:27017/${db}?authSource=${db}`;
 };
@@ -73,14 +74,14 @@ export const connectToUserDB = async (): Promise<Db> => {
     await client.connect();
     const dbName = process.env.USER_DB_NAME;
     if (!dbName) {
-      throw new Error('USER_DB_NAME environment variable must be set');
+      const error = new Error('USER_DB_NAME environment variable must be set') as StatusError;
+      error.status = 500;
+      throw error;
     }
     userDBInstance = client.db(dbName);
     return userDBInstance;
   } catch (err) {
-    const error = new Error("Failed to connect to User MongoDB") as Error & {
-      status?: number;
-    };
+    const error = new Error("Failed to connect to User MongoDB") as StatusError;
     error.status = 500;
     throw error;
   }
