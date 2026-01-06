@@ -1,5 +1,4 @@
 import type { Request, Response, NextFunction } from 'express';
-// @ts-ignore
 import * as itemModel from '../models/itemModel.js';
 import type { StatusError } from '../types/StatusError.js';
 
