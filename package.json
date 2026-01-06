@@ -5,7 +5,7 @@
   "private": true,
   "main": "app.js",
   "scripts": {
-    "start": "node ./bin/www",
+    "start": "node server.js",
     "test": "mocha --timeout 10000 \"tests/**/*.test.js\"",
     "coverage": "c8 --reporter=lcov --all --include=\"**/*.js\" --exclude=public/** --exclude=tests/** mocha --timeout 10000 \"tests/**/*.test.js\""
   },
@@ -28,6 +28,7 @@
   },
   "license": "MIT",
   "devDependencies": {
+    "@types/debug": "^4.1.12",
     "@types/express": "^5.0.6",
     "@types/express-session": "^1.18.2",
     "@types/http-errors": "^2.0.5",
