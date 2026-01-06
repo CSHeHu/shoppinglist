@@ -9,7 +9,6 @@ import rateLimit from 'express-rate-limit';
 // TODO: Migrate all imports below to TypeScript modules and remove ts-ignore
 import dashboardRouter from './routes/dashboardRoutes.js';
 import userRouter from './routes/userRoutes.js';
-// @ts-ignore
 import itemRouter from './routes/itemRoutes.js';
 // @ts-ignore
 import errorHandler from './middleware/errorHandler.js';
@@ -53,7 +52,7 @@ app.use(session({
   store: MongoStore.create({ client: userDBClient }),
   cookie: {
     httpOnly: true,
-    secure: process.env.NODE_ENV === 'production',
+    secure: true,
     maxAge: 24 * 60 * 60 * 1000, // 1 day
     sameSite: 'strict'
   }

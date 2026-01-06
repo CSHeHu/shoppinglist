@@ -6,8 +6,8 @@ import {
   deleteItem,
   deleteAllItems,
 } from '../controllers/itemController.js';
+// @ts-ignore
 import { validateItem, itemFields, idParam } from '../middleware/validateItem.js';
-
 import { requireAuth } from '../middleware/requireAuth.js';
 
 const router = express.Router();
@@ -26,6 +26,4 @@ router.delete('/items/:id', requireAuth, validateItem(idParam), deleteItem);
 // Delete all items
 router.delete('/items', requireAuth, deleteAllItems);
 
-
 export default router;
-

@@ -1,22 +1,25 @@
 import * as itemModel from '../models/itemModel.js';
+import type { Request, Response, NextFunction } from 'express';
+import type { StatusError } from '../types/StatusError.js';
 
-export const getAllItems = async (req, res, next) => {
+export const getAllItems = async (req: Request, res: Response, next: NextFunction) => {
   try {
     const data = await itemModel.getAllItems();
     return res.status(200).json(data);
   } catch (err) {
-    err.status = err.status || 500;
-    next(err);
+    const error = err as StatusError;
+    error.status = error.status ?? 500;
+    next(error);
   }
 };
 
-export const createItem = async (req, res, next) => {
+export const createItem = async (req: Request, res: Response, next: NextFunction) => {
   try {
     const { name, amount, finished } = req.body;
     const result = await itemModel.createItem({ name, amount, finished });
 
     if (!result.acknowledged) {
-      const error = new Error("Failed to add Item");
+      const error: any = new Error("Failed to add Item");
       error.status = 500;
       throw error;
     }
@@ -26,35 +29,43 @@ export const createItem = async (req, res, next) => {
       _id: result.insertedId.toString(),
     });
   } catch (err) {
-    err.status = err.status || 500;
-    next(err);
+    const error = err as StatusError;
+    error.status = error.status ?? 500;
+    next(error);
   }
 };
 
-export const getItemById = async (req, res, next) => {
+export const getItemById = async (req: Request, res: Response, next: NextFunction) => {
   try {
     const { id } = req.params;
+    if (!id) {
+      return res.status(400).json({ message: 'Missing item id' });
+    }
     const item = await itemModel.getItemById(id);
     if (!item) {
-      const error = new Error("Item not found");
+      const error: any = new Error("Item not found");
       error.status = 404;
       throw error;
     }
     return res.status(200).json(item);
   } catch (err) {
-    err.status = err.status || 500;
-    next(err);
+    const error = err as StatusError;
+    error.status = error.status ?? 500;
+    next(error);
   }
 };
 
-export const updateItem = async (req, res, next) => {
+export const updateItem = async (req: Request, res: Response, next: NextFunction) => {
   try {
     const { id } = req.params;
+    if (!id) {
+      return res.status(400).json({ message: 'Missing item id' });
+    }
     const { name, amount, finished } = req.body;
     const result = await itemModel.updateItem(id, { name, amount, finished });
 
     if (result.matchedCount === 0) {
-      const error = new Error("Item not found");
+      const error: any = new Error("Item not found");
       error.status = 404;
       throw error;
     }
@@ -65,36 +76,41 @@ export const updateItem = async (req, res, next) => {
       return res.status(200).json({ message: 'No changes were made' });
     }
   } catch (err) {
-    err.status = err.status || 500;
-    next(err);
+    const error = err as StatusError;
+    error.status = error.status ?? 500;
+    next(error);
   }
 };
 
-export const deleteItem = async (req, res, next) => {
+export const deleteItem = async (req: Request, res: Response, next: NextFunction) => {
   try {
     const { id } = req.params;
+    if (!id) {
+      return res.status(400).json({ message: 'Missing item id' });
+    }
     const result = await itemModel.deleteItem(id);
 
     if (result.deletedCount === 0) {
-      const error = new Error("Item not found");
+      const error: any = new Error("Item not found");
       error.status = 404;
       throw error;
     }
 
     return res.status(200).json({ message: 'Item deleted successfully' });
   } catch (err) {
-    err.status = err.status || 500;
-    next(err);
+    const error = err as StatusError;
+    error.status = error.status ?? 500;
+    next(error);
   }
 };
 
-export const deleteAllItems = async (req, res, next) => {
+export const deleteAllItems = async (req: Request, res: Response, next: NextFunction) => {
   try {
     const result = await itemModel.deleteItem();
     return res.status(200).json({ message: 'All items deleted', deletedCount: result.deletedCount });
   } catch (err) {
-    err.status = err.status || 500;
-    next(err);
+    const error = err as StatusError;
+    error.status = error.status ?? 500;
+    next(error);
   }
 };
-

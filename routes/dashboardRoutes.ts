@@ -1,6 +1,5 @@
 import express from 'express';
 import { shoppingListPanel, showAdminPanel } from '../controllers/dashboardController.js';
-// @ts-ignore
 import { requireAdmin } from '../middleware/requireAuth.js';
 
 const router = express.Router();
