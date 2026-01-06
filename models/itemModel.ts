@@ -5,12 +5,15 @@ import { ObjectId, Collection } from 'mongodb';
 import type { Document, WithId, InsertOneResult, UpdateResult, DeleteResult } from 'mongodb';
 import type { StatusError } from '../types/StatusError.js';
 
-let collection: Collection<Document>;
+let collection: Collection<Document> | null = null;
 
 async function getCollection(): Promise<Collection<Document>> {
   if (!collection) {
     const db = await connectToItemDB();
-    collection = db.collection(process.env.ITEM_COLLECTION_NAME);
+    collection = db.collection(process.env.ITEM_COLLECTION_NAME!);
+  }
+  if (!collection) {
+    throw new Error('Failed to initialize MongoDB collection');
   }
   return collection;
 }
