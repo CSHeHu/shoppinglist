@@ -1,10 +1,11 @@
-export function requireAuth(req, res, next) {
+import type { Request, Response, NextFunction } from 'express';
+
+export function requireAuth(req: Request, res: Response, next: NextFunction) {
   if (req.session && req.session.userId) return next();
   return res.redirect('/login');
 }
 
-// Middleware to require admin role
-export function requireAdmin(req, res, next) {
+export function requireAdmin(req: Request, res: Response, next: NextFunction) {
   if (
     req.session &&
     req.session.userId &&
@@ -14,4 +15,3 @@ export function requireAdmin(req, res, next) {
   }
   return res.status(403).send('Forbidden: Admins only');
 }
-

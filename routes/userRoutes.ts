@@ -1,4 +1,5 @@
 import express from 'express';
+import type { Request, Response } from 'express';
 const router = express.Router();
 import {
   showLogoutPage,
@@ -11,9 +12,7 @@ import {
   getUserById,
   getUserByEmail,
 } from '../controllers/userController.js';
-// @ts-ignore
 import { requireAuth, requireAdmin } from '../middleware/requireAuth.js';
-// @ts-ignore
 import { validateUser, userFields, loginFields, idParam, emailParam } from '../middleware/validateUser.js';
 
 // Render login/logout pages
@@ -35,13 +34,13 @@ router.get('/users/id/:id', requireAdmin, validateUser(idParam), getUserById);
 router.get('/users/email/:email', requireAdmin, validateUser(emailParam), getUserByEmail);
 
 // Update user by id (admin only)
-router.put('/users/:id', requireAdmin, validateUser([...idParam, ...userFields]), (req, res) => {
+router.put('/users/:id', requireAdmin, validateUser([...idParam, ...userFields]), (req: Request, res: Response) => {
   // TODO: Implement updateUser controller
   res.status(501).json({ message: 'Not implemented: update user' });
 });
 
 // Delete user by id (admin only)
-router.delete('/users/:id', requireAdmin, validateUser(idParam), (req, res) => {
+router.delete('/users/:id', requireAdmin, validateUser(idParam), (req: Request, res: Response) => {
   // TODO: Implement deleteUser controller
   res.status(501).json({ message: 'Not implemented: delete user' });
 });
