@@ -1,5 +1,4 @@
 
-// @ts-ignore
 import { connectToItemDB } from '../config/db.js';
 import { ObjectId, Collection } from 'mongodb';
 import type { Document, WithId, InsertOneResult, UpdateResult, DeleteResult } from 'mongodb';
