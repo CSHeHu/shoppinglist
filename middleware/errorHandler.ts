@@ -1,6 +1,9 @@
 import winston from 'winston';
 import path from 'path';
 import { fileURLToPath } from 'url';
+import type { Request, Response, NextFunction } from 'express';
+import type { StatusError } from '../types/StatusError.js';
+
 
 // __dirname replacement for ESM
 const __filename = fileURLToPath(import.meta.url);
@@ -17,7 +20,12 @@ const errorLogger = winston.createLogger({
     ],
 });
 
-export default function errorHandler(err, req, res, next) {
+export default function errorHandler(
+  err: StatusError,
+  req: Request,
+  res: Response,
+  next: NextFunction
+) {
     const status = err.status || 500;
 
     // Always log error details

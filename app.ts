@@ -10,11 +10,9 @@ import rateLimit from 'express-rate-limit';
 import dashboardRouter from './routes/dashboardRoutes.js';
 import userRouter from './routes/userRoutes.js';
 import itemRouter from './routes/itemRoutes.js';
-// @ts-ignore
 import errorHandler from './middleware/errorHandler.js';
 import session from 'express-session';
 import MongoStore from 'connect-mongo';
-// @ts-ignore
 import { getUserDBClient } from './config/db.js';
 
 
