@@ -6,7 +6,6 @@ import {
   deleteItem,
   deleteAllItems,
 } from '../controllers/itemController.js';
-// @ts-ignore
 import { validateItem, itemFields, idParam } from '../middleware/validateItem.js';
 import { requireAuth } from '../middleware/requireAuth.js';
 
