@@ -1,49 +1,52 @@
-document.getElementById("addToListForm").addEventListener("submit", event => {
+import type { StatusError } from "../types/StatusError.js";
+
+document.getElementById("addToListForm")!.addEventListener("submit", event => {
   event.preventDefault();
   submitForm();
 });
 
-document.getElementById("addToListReset").addEventListener("click", event => {
+document.getElementById("addToListReset")!.addEventListener("click", event => {
   event.preventDefault();
   resetForm();
 })
 
-document.getElementById("SLContainer").addEventListener("click", event => {
-  if (event.target.tagName === 'BUTTON' && event.target.id === 'collected') {
+document.getElementById("SLContainer")!.addEventListener("click", event => {
+  const target = event.target as HTMLElement;
+  if (target.tagName === 'BUTTON' && target.id === 'collected') {
     toggleItem(event);
   }
-  if (event.target.tagName === 'BUTTON' && event.target.id === 'delete') {
-    const listItem = event.target.closest('li');
-    const _id = listItem.getAttribute("id");
-    deleteOneElement(_id);
+  if (target.tagName === 'BUTTON' && target.id === 'delete') {
+    const listItem = target.closest('li');
+    const _id = listItem?.getAttribute("id");
+    if (_id) deleteOneElement(_id);
   }
 });
 
-const listInputFields = document.querySelectorAll("#SLContainer input");
+const listInputFields = document.querySelectorAll<HTMLInputElement>("#SLContainer input");
 
-document.getElementById("SLContainer").addEventListener("focusout", event => {
-  if (event.target.tagName === "INPUT") {
+document.getElementById("SLContainer")!.addEventListener("focusout", event => {
+  const target = event.target as HTMLElement;
+  if (target.tagName === "INPUT") {
     updateOneElement(event);
   }
 });
 
-
-function showError(message) {
-  const errorDiv = document.getElementById('errorMessage');
+function showError(message: string) {
+  const errorDiv = document.getElementById('errorMessage')!;
   errorDiv.textContent = message;
   errorDiv.style.display = '';
 }
 
 function hideError() {
-  const errorDiv = document.getElementById('errorMessage');
+  const errorDiv = document.getElementById('errorMessage')!;
   errorDiv.textContent = '';
   errorDiv.style.display = 'none';
 }
 
 async function submitForm() {
   hideError();
-  const name = document.getElementById('addToListInput').value;
-  const amount = document.getElementById('addAmountToListInput').value;
+  const name = (document.getElementById('addToListInput') as HTMLInputElement).value;
+  const amount = (document.getElementById('addAmountToListInput') as HTMLInputElement).value;
   const finished = false;
   try {
     const response = await fetch('/items', {
@@ -56,9 +59,9 @@ async function submitForm() {
     await handleResponse(response);
     updateList();
   }
-
-  catch (err) {
-    showError(err.message);
+  catch (err: unknown) {
+    const error = err as StatusError;
+    showError(error.message);
   }
 }
 
@@ -74,79 +77,66 @@ async function resetForm() {
     await handleResponse(response);
     updateList();
   }
-
-  catch (err) {
-    showError(err.message);
+  catch (err: unknown) {
+    const error = err as StatusError;
+    showError(error.message);
   }
-
 }
 
 async function updateList() {
   hideError();
   try {
-      const response = await fetch('/items');
-      await handleResponse(response);
-      const data = await response.json();
-
-
+    const response = await fetch('/items');
+    await handleResponse(response);
+    const data: Array<{ _id: string, name: string, amount: number, finished: boolean }> = await response.json();
     // Clear the old list
-    const SLContainer = document.getElementById("SLContainer");
+    const SLContainer = document.getElementById("SLContainer")!;
     SLContainer.innerHTML = '';
     // Update the list with new items
     if (data && data.length > 0) {
       data.forEach(item => {
         const listItem = document.createElement('LI');
         listItem.setAttribute("id", item._id);
-
         // finished
         if (item.finished) {
           listItem.className = "finished"
         }
-
         // name
         const nameInput = document.createElement("input");
         nameInput.type = "text";
         nameInput.className = "name";
         nameInput.value = item.name;
         listItem.appendChild(nameInput);
-
         // amount
         const amountInput = document.createElement("input");
         amountInput.type = "number";
         amountInput.className = "amount";
-        amountInput.value = item.amount;
+        amountInput.value = String(item.amount);
         listItem.appendChild(amountInput);
-
         // collected button
         const collectedButton = document.createElement("button");
         collectedButton.type = "button";
         collectedButton.id = "collected";
         collectedButton.textContent = "Collected";
         listItem.appendChild(collectedButton);
-
         // delete button
         const deleteButton = document.createElement("button");
         deleteButton.type = "button";
         deleteButton.id = "delete";
         deleteButton.textContent = "Delete";
         listItem.appendChild(deleteButton);
-
         SLContainer.appendChild(listItem);
-
       })
     }
-
-  } catch (err) {
+  } catch (err: any) {
     showError(err.message);
   }
-
-
 }
 
-async function toggleItem(event) {
-  const listItem = event.target.parentElement;
+async function toggleItem(event: Event) {
+  const target = event.target as HTMLElement;
+  const listItem = target.parentElement as HTMLElement;
   if (!listItem) return;
-
   // Toggle the "finished" class on the <li> element
   if (!listItem.classList.contains("finished")) {
     listItem.classList.add("finished");
@@ -156,14 +146,14 @@ async function toggleItem(event) {
   updateOneElement(event);
 }
 
-async function updateOneElement(event) {
+async function updateOneElement(event: Event) {
   hideError();
-  const listItem = event.target.parentElement;
+  const target = event.target as HTMLElement;
+  const listItem = target.parentElement as HTMLElement;
   const _id = listItem.getAttribute("id");
-  const name = listItem.children[0].value;
-  const amount = listItem.children[1].value;
+  const name = (listItem.children[0] as HTMLInputElement).value;
+  const amount = (listItem.children[1] as HTMLInputElement).value;
   const finished = listItem.classList.contains("finished");
-
   try {
     const response = await fetch(`/items/${_id}`, {
       method: 'PATCH',
@@ -174,15 +164,13 @@ async function updateOneElement(event) {
     });
     await handleResponse(response);
   }
-
-  catch (err) {
-    showError(err.message);
+  catch (err: unknown) {
+    const error = err as StatusError;
+    showError(error.message);
   }
-
 }
 
-
-async function deleteOneElement(_id) {
+async function deleteOneElement(_id: string) {
   hideError();
   try {
     const response = await fetch(`/items/${_id}`, {
@@ -191,15 +179,13 @@ async function deleteOneElement(_id) {
     await handleResponse(response);
     updateList();
   }
-
-  catch (err) {
-    showError(err.message);
+  catch (err: unknown) {
+    const error = err as StatusError;
+    showError(error.message);
   }
-
 }
 
-
-async function handleResponse(response) {
+async function handleResponse(response: Response) {
   if (response.redirected) {
     window.location.href = response.url;
     return;
