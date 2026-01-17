@@ -11,22 +11,20 @@ RUN npm install
 # Copy the rest of the source
 COPY . .
 
-# Quick fix: Remove dist before building to avoid stale/incomplete files
-RUN rm -rf ./dist
-
-# Build TypeScript (requires typescript as a dev dependency)
+# Build TypeScript inside the image (requires typescript as a dev dependency)
 RUN npx tsc
 
-# Copy compiled files from /dist over the root, recursively, overwriting existing files
-RUN if [ -d ./dist ]; then cp -rT ./dist ./ ; fi
+# Copy runtime assets into `dist` so the compiled app can find them at runtime.
+# These include EJS views and the public static folder.
+RUN mkdir -p dist/views && cp -r views/* dist/views/ || true
+RUN mkdir -p dist/public/stylesheets && cp -r public/stylesheets/* dist/public/stylesheets/ || true
 
-# TODO: Cleanup with .dockerignore to avoid copying unnecessary files
 
 # Expose the port your app listens on
 EXPOSE 3000
 
-# Start the app
-CMD ["npm", "start"]
+# Start the app from compiled JS in `dist/`
+CMD ["node", "dist/server.js"]
 
 #CMD ["sleep", "infinity"]
 
