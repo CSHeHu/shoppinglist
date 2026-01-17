@@ -1,51 +1,53 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Admin Control Panel</title>
     <link rel="stylesheet" href="/stylesheets/style.css" />
-</head>
-<body>
+  </head>
+  <body>
     <header>
-        <h1>Admin Control Panel</h1>
+      <h1>Admin Control Panel</h1>
     </header>
     <main>
-        <div id="userCreateContainer">
-            <h2>Create New User</h2>
-            <form id="createUserForm">
-                <label for="newUserEmail">Email:</label>
-                <input id="newUserEmail" name="email" type="email" required>
-                <label for="newUserPassword">Password:</label>
-                <input id="newUserPassword" name="password" type="password" required>
-                <label for="newUserRole">Role:</label>
-                <select id="newUserRole" name="role" required>
-                    <option value="user">User</option>
-                    <option value="root">Root</option>
-                </select>
-                <button type="submit">Create User</button>
-            </form>
-            <div id="createUserMsg"></div>
-        </div>
-        <div id="userSearchContainer">
-            <h2>Search User</h2>
-            <form id="searchUserForm">
-                <label for="searchType">Search by:</label>
-                <select id="searchType" name="searchType">
-                    <option value="id">ID</option>
-                    <option value="email">Email</option>
-                </select>
-                <input id="searchUserInput" name="searchValue" type="text" required>
-                <button type="submit">Search</button>
-            </form>
-            <div id="searchUserMsg"></div>
-            <div id="searchUserResult"></div>
-        </div>
-        <button id="listUsersBtn">List All Users</button>
-        <div id="usersList"></div>
+      <div id="userCreateContainer">
+        <h2>Create New User</h2>
+        <form id="createUserForm">
+          <label for="newUserEmail">Email:</label>
+          <input id="newUserEmail" name="email" type="email" required />
+          <label for="newUserPassword">Password:</label>
+          <input
+            id="newUserPassword"
+            name="password"
+            type="password"
+            required
+          />
+          <label for="newUserRole">Role:</label>
+          <select id="newUserRole" name="role" required>
+            <option value="user">User</option>
+            <option value="root">Root</option>
+          </select>
+          <button type="submit">Create User</button>
+        </form>
+        <div id="adminMsg"></div>
+      </div>
+      <div id="userSearchContainer">
+        <h2>Search User</h2>
+        <form id="searchUserForm">
+          <label for="searchType">Search by:</label>
+          <select id="searchType" name="searchType">
+            <option value="id">ID</option>
+            <option value="email">Email</option>
+          </select>
+          <input id="searchUserInput" name="searchValue" type="text" required />
+          <button type="submit">Search</button>
+        </form>
+        <!-- Messages appear in #adminMsg; results appear in #usersList -->
+      </div>
+      <button id="listUsersBtn">List All Users</button>
+      <div id="usersList"></div>
     </main>
-    <script src="/adminpanel.js"></script>
-</body>
+    <script type="module" src="/adminpanel.js"></script>
+  </body>
 </html>
-
-
