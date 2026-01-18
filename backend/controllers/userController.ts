@@ -7,6 +7,22 @@ import {
   createUser,
   findUserByEmail,
 } from "../models/userModel.js";
+import jwt from "jsonwebtoken";
+import {
+  saveRefreshToken,
+  findRefreshToken,
+  deleteRefreshToken,
+} from "../models/tokenModel.js";
+
+const accessSecretEnv = process.env.JWT_ACCESS_SECRET;
+const refreshSecretEnv = process.env.JWT_REFRESH_SECRET;
+if (!accessSecretEnv || !refreshSecretEnv) {
+  throw new Error("JWT_ACCESS_SECRET and JWT_REFRESH_SECRET must be set");
+}
+const ACCESS_SECRET: string = accessSecretEnv;
+const REFRESH_SECRET: string = refreshSecretEnv;
+const ACCESS_EXPIRES = process.env.JWT_ACCESS_EXPIRES ?? "15m";
+const REFRESH_EXPIRES = process.env.JWT_REFRESH_EXPIRES ?? "7d";
 
 export const listUsers = async (
   req: Request,
@@ -156,9 +172,16 @@ export const logoutUser = async (
   next: NextFunction,
 ) => {
   try {
-    req.session.destroy(() => {
-      return res.json({ message: "You have been logged out" });
-    });
+    // revoke refresh token if provided in cookie
+    const token = req.cookies?.refreshToken as string | undefined;
+    if (token) {
+      await deleteRefreshToken(token);
+    }
+    // TODO: This clears the refresh-token cookie; previously logout would
+    // also destroy an express-session. Ensure no leftover session cleanup is
+    // required elsewhere and remove session-related code.
+    res.clearCookie("refreshToken");
+    return res.json({ message: "You have been logged out" });
   } catch (err) {
     const error = err as StatusError;
     error.status = error.status ?? 500;
@@ -172,7 +195,11 @@ export const getUser = async (
   next: NextFunction,
 ) => {
   try {
-    const userId = req.session.userId;
+    // TODO: `req.user` must be populated by JWT middleware. Previously
+    // sessions populated user data on `req.session`/`req.user`. Ensure all
+    // callers use the JWT middleware adapter and remove any session-based
+    // assumptions.
+    const userId = (req as any).user?.userId as string | undefined;
     if (!userId) {
       return res
         .status(401)
@@ -215,13 +242,88 @@ export const loginUser = async (
         .status(500)
         .json({ error: { code: 500, message: "User data incomplete" } });
     }
-    req.session.userId = String(user._id);
-    req.session.role = user.role;
+    const payload = { userId: String(user._id), role: user.role };
+    const accessToken = jwt.sign(
+      payload,
+      ACCESS_SECRET as jwt.Secret,
+      { expiresIn: ACCESS_EXPIRES } as jwt.SignOptions,
+    );
+    const refreshToken = jwt.sign(
+      payload,
+      REFRESH_SECRET as jwt.Secret,
+      { expiresIn: REFRESH_EXPIRES } as jwt.SignOptions,
+    );
+    // save refresh token to DB
+    const expiresAt = new Date(Date.now() + msToMs(REFRESH_EXPIRES));
+    await saveRefreshToken(refreshToken, String(user._id), expiresAt);
+    // set HttpOnly cookie for refresh token
+    res.cookie("refreshToken", refreshToken, {
+      httpOnly: true,
+      secure: true,
+      sameSite: "strict",
+      maxAge: msToMs(REFRESH_EXPIRES),
+    });
     return res.json({
       message: "Logged in",
+      accessToken,
+      expiresIn: ACCESS_EXPIRES,
       userId: String(user._id),
       role: user.role,
     });
+  } catch (err) {
+    const error = err as StatusError;
+    error.status = error.status ?? 500;
+    next(error);
+  }
+};
+
+function msToMs(exp: string): number {
+  // accepts formats like '15m', '7d'
+  const match = /^([0-9]+)([smhd])$/.exec(exp);
+  if (!match) return 24 * 60 * 60 * 1000;
+  const val = Number(match[1]);
+  const unit = match[2];
+  switch (unit) {
+    case "s":
+      return val * 1000;
+    case "m":
+      return val * 60 * 1000;
+    case "h":
+      return val * 60 * 60 * 1000;
+    case "d":
+      return val * 24 * 60 * 60 * 1000;
+    default:
+      return val * 1000;
+  }
+}
+
+export const refreshAccessToken = async (
+  req: Request,
+  res: Response,
+  next: NextFunction,
+) => {
+  try {
+    const token = req.cookies?.refreshToken as string | undefined;
+    if (!token) return res.status(401).json({ message: "No refresh token" });
+    const stored = await findRefreshToken(token);
+    if (!stored)
+      return res.status(401).json({ message: "Refresh token not recognized" });
+    // verify token
+    let payload: any;
+    try {
+      payload = jwt.verify(token, REFRESH_SECRET as jwt.Secret) as any;
+    } catch (e) {
+      await deleteRefreshToken(token);
+      res.clearCookie("refreshToken");
+      return res.status(401).json({ message: "Invalid refresh token" });
+    }
+    const newPayload = { userId: payload.userId, role: payload.role };
+    const accessToken = jwt.sign(
+      newPayload,
+      ACCESS_SECRET as jwt.Secret,
+      { expiresIn: ACCESS_EXPIRES } as jwt.SignOptions,
+    );
+    return res.json({ accessToken, expiresIn: ACCESS_EXPIRES });
   } catch (err) {
     const error = err as StatusError;
     error.status = error.status ?? 500;

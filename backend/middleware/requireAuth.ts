@@ -1,17 +1,9 @@
-import type { Request, Response, NextFunction } from 'express';
-
-export function requireAuth(req: Request, res: Response, next: NextFunction) {
-  if (req.session && req.session.userId) return next();
-  return res.redirect('/login');
-}
-
-export function requireAdmin(req: Request, res: Response, next: NextFunction) {
-  if (
-    req.session &&
-    req.session.userId &&
-    req.session.role === 'root'
-  ) {
-    return next();
-  }
-  return res.status(403).send('Forbidden: Admins only');
-}
+// Deprecated adapter: this file exists to preserve the previous `requireAuth`
+// API used by routes. It's a small compatibility shim that re-exports the
+// JWT-based middleware. TODO: remove this adapter and update imports to
+// `./jwtAuth.js` directly once all code references are migrated.
+import {
+  requireAuth as jwtRequireAuth,
+  requireAdmin as jwtRequireAdmin,
+} from "./jwtAuth.js";
+export { jwtRequireAuth as requireAuth, jwtRequireAdmin as requireAdmin };
