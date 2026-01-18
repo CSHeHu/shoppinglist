@@ -76,8 +76,6 @@ services:
     depends_on:
       mongo:
         condition: service_healthy
-    ports:
-      - "3000:3000"
     environment:
       NODE_ENV: ${NODE_ENV}
       MONGO_APP_USER: ${MONGO_APP_USER}
@@ -108,7 +106,15 @@ services:
       - ./docker/nginx/conf.d:/etc/nginx/conf.d:ro
       - ./certs:/etc/nginx/certs:ro
     networks:
-      - default
+      - backend
+      - public
+
+  frontend:
+    build:
+      context: .
+      dockerfile: Dockerfile.frontend
+    container_name: frontend-app
+    networks:
       - backend
 
   admin_user-populate:
@@ -137,5 +143,5 @@ volumes:
 networks:
   backend:
     internal: true
-  default:
-    driver: bridge
+  public:
+    internal: false
