@@ -1,16 +1,17 @@
-import type { Request, Response, NextFunction } from 'express';
-import * as itemModel from '../models/itemModel.js';
-import type { StatusError } from '../types/StatusError.js';
+import type { Request, Response, NextFunction } from "express";
+import * as itemModel from "../models/itemModel.js";
+import type { StatusError } from "../types/StatusError.js";
 
 export const shoppingListPanel = async (
   req: Request,
   res: Response,
   next: NextFunction,
-  model = itemModel
+  model = itemModel,
 ) => {
   try {
     const items = await model.getAllItems();
-    res.render('index', { title: 'Shopping List', items });
+    // API is namespaced under /api/v1 — return JSON
+    return res.json(items);
   } catch (err) {
     const error = err as StatusError;
     error.status = error.status ?? 500;
@@ -21,9 +22,9 @@ export const shoppingListPanel = async (
 export const showAdminPanel = (
   req: Request,
   res: Response,
-  next: NextFunction
+  next: NextFunction,
 ) => {
-  res.render('admin');
+  return res.json({
+    message: "Admin panel endpoint (use /api/v1/users to manage users)",
+  });
 };
-
-

@@ -24,7 +24,7 @@ if (form) {
     const password = passwordInput.value;
     const role = roleInput.value;
 
-    const res = await fetch("/users", {
+    const res = await fetch("/api/v1/users", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ email, password, role }),
@@ -54,7 +54,7 @@ const listUsersBtn: HTMLButtonElement | null = document.getElementById(
 ) as HTMLButtonElement | null;
 if (listUsersBtn) {
   listUsersBtn.addEventListener("click", async () => {
-    const res = await fetch("/users", { credentials: "same-origin" });
+    const res = await fetch("/api/v1/users", { credentials: "same-origin" });
     const adminMsg: HTMLDivElement | null = document.getElementById(
       "adminMsg",
     ) as HTMLDivElement | null;
@@ -113,7 +113,7 @@ if (searchUserForm) {
     } else if (type === "email") {
       url = `/users/email/${encodeURIComponent(value)}`;
     }
-    const res = await fetch(url, { credentials: "same-origin" });
+    const res = await fetch(`/api/v1${url}`, { credentials: "same-origin" });
     if (res.ok) {
       const user = await res.json();
       usersList.innerText = JSON.stringify(user, null, 2);
