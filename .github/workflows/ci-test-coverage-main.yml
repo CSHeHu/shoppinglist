@@ -34,11 +34,11 @@ jobs:
           docker compose up --build -d
       - name: Run tests with coverage in app container
         run: |
-          docker exec shoppinglist-app npm run coverage
+          docker exec backend-app npm run coverage
         continue-on-error: true
       - name: Copy coverage from container
         run: |
-          docker cp shoppinglist-app:/shoppinglist/coverage ./coverage
+          docker cp backend-app:/backend/coverage ./coverage
       - name: Upload coverage to Coveralls
         uses: coverallsapp/github-action@v2
         with:

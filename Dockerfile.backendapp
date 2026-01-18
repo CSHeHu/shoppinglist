@@ -1,8 +1,6 @@
 # Use Node LTS
 FROM node:20
 
-# Set working directory
-
 # Set working directory inside the container to the backend folder
 WORKDIR /backend
 
@@ -29,4 +27,3 @@ EXPOSE 3000
 CMD ["node", "dist/server.js"]
 
 #CMD ["sleep", "infinity"]
-

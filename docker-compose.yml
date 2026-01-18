@@ -1,7 +1,7 @@
 services:
   mongo:
     image: mongo:6
-    container_name: shoppinglist-mongo
+    container_name: backend-mongo
     volumes:
       - mongo-data:/data/db
     environment:
@@ -20,7 +20,7 @@ services:
 
   mongo-init:
     image: mongo:6
-    container_name: shoppinglist-mongo-init
+    container_name: backend-mongo-init
     depends_on:
       mongo:
         condition: service_healthy
@@ -36,7 +36,7 @@ services:
     entrypoint:
       - mongosh
       - --host
-      - shoppinglist-mongo
+      - backend-mongo
       - -u
       - "${MONGO_INITDB_ROOT_USERNAME}"
       - -p
@@ -68,11 +68,11 @@ services:
     networks:
       - backend
 
-  shoppinglist:
+  backend:
     build:
       context: .
-      dockerfile: Dockerfile.shoppinglistapp
-    container_name: shoppinglist-app
+      dockerfile: Dockerfile.backendapp
+    container_name: backend-app
     depends_on:
       mongo:
         condition: service_healthy
@@ -98,12 +98,12 @@ services:
 
   nginx:
     image: nginx:stable
-    container_name: shoppinglist-nginx
+    container_name: backend-nginx
     ports:
       - "80:80"
       - "443:443"
     depends_on:
-      - shoppinglist
+      - backend
     volumes:
       - ./docker/nginx/conf.d:/etc/nginx/conf.d:ro
       - ./certs:/etc/nginx/certs:ro
@@ -115,12 +115,12 @@ services:
     build:
       context: .
       dockerfile: Dockerfile.populate
-    container_name: shoppinglist-mongo-populate_admin_user
+    container_name: backend-mongo-populate_admin_user
     depends_on:
       mongo-init:
         condition: service_completed_successfully
     environment:
-      MONGO_HOST: shoppinglist-mongo
+      MONGODB_HOST: ${MONGODB_HOST}
       MONGO_PORT: 27017
       USER_DB_NAME: ${USER_DB_NAME}
       USER_DB_USER: ${USER_DB_USER}
