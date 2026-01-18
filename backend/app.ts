@@ -61,6 +61,11 @@ app.use('/', dashboardRouter);
 app.use('/', userRouter);
 app.use('/', itemRouter);
 
+// Also expose API endpoints under /api/v1 for SPA clients
+app.use('/api/v1', dashboardRouter);
+app.use('/api/v1', userRouter);
+app.use('/api/v1', itemRouter);
+
 // catch 404
 app.use((req, res, next) => {
     next(createError(404, 'Not Found'));

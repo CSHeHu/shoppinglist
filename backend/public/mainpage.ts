@@ -49,11 +49,12 @@ async function submitForm() {
   const amount = (document.getElementById('addAmountToListInput') as HTMLInputElement).value;
   const finished = false;
   try {
-    const response = await fetch('/items', {
+    const response = await fetch('/api/v1/items', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
       },
+      credentials: 'same-origin',
       body: JSON.stringify({ name, amount, finished }),
     });
     await handleResponse(response);
@@ -68,7 +69,7 @@ async function submitForm() {
 async function resetForm() {
   hideError();
   try {
-    const response = await fetch('/items', {
+    const response = await fetch('/api/v1/items', {
       method: 'DELETE',
       headers: {
         'Content-Type': 'application/json'
@@ -86,7 +87,7 @@ async function resetForm() {
 async function updateList() {
   hideError();
   try {
-    const response = await fetch('/items');
+    const response = await fetch('/api/v1/items', { credentials: 'same-origin' });
     await handleResponse(response);
     const data: Array<{ _id: string, name: string, amount: number, finished: boolean }> = await response.json();
     // Clear the old list
@@ -133,6 +134,11 @@ async function updateList() {
   }
 }
 
+// Load initial list when page is ready
+window.addEventListener('DOMContentLoaded', () => {
+  updateList();
+});
+
 async function toggleItem(event: Event) {
   const target = event.target as HTMLElement;
   const listItem = target.parentElement as HTMLElement;
@@ -155,11 +161,12 @@ async function updateOneElement(event: Event) {
   const amount = (listItem.children[1] as HTMLInputElement).value;
   const finished = listItem.classList.contains("finished");
   try {
-    const response = await fetch(`/items/${_id}`, {
+    const response = await fetch(`/api/v1/items/${_id}`, {
       method: 'PATCH',
       headers: {
         'Content-Type': 'application/json',
       },
+      credentials: 'same-origin',
       body: JSON.stringify({ name, amount, finished }),
     });
     await handleResponse(response);
@@ -173,8 +180,9 @@ async function updateOneElement(event: Event) {
 async function deleteOneElement(_id: string) {
   hideError();
   try {
-    const response = await fetch(`/items/${_id}`, {
+    const response = await fetch(`/api/v1/items/${_id}`, {
       method: 'DELETE',
+      credentials: 'same-origin',
     });
     await handleResponse(response);
     updateList();
