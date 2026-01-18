@@ -2,14 +2,16 @@
 FROM node:20
 
 # Set working directory
-WORKDIR /shoppinglist
 
-# Copy package files and install dependencies
-COPY package*.json ./
-RUN npm install 
+# Set working directory inside the container to the backend folder
+WORKDIR /shoppinglist/backend
 
-# Copy the rest of the source
-COPY . .
+# Copy backend package files and install dependencies
+COPY backend/package*.json ./
+RUN npm install
+
+# Copy the backend source into the image
+COPY backend/ ./
 
 # Build TypeScript inside the image (requires typescript as a dev dependency)
 RUN npx tsc

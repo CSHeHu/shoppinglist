@@ -34,17 +34,17 @@ services:
       USER_DB_USER: ${USER_DB_USER}
       USER_DB_PASSWORD: ${USER_DB_PASSWORD}
     entrypoint:
-    - mongosh
-    - --host
-    - shoppinglist-mongo
-    - -u
-    - "${MONGO_INITDB_ROOT_USERNAME}"
-    - -p
-    - "${MONGO_INITDB_ROOT_PASSWORD}"
-    - --authenticationDatabase
-    - admin
-    - --eval
-    - |
+      - mongosh
+      - --host
+      - shoppinglist-mongo
+      - -u
+      - "${MONGO_INITDB_ROOT_USERNAME}"
+      - -p
+      - "${MONGO_INITDB_ROOT_PASSWORD}"
+      - --authenticationDatabase
+      - admin
+      - --eval
+      - |
         print("Creating app DB user");
         let appDb = db.getSiblingDB('${MONGODB_DB}');
         if (!appDb.getUser('${MONGO_APP_USER}')) {
@@ -64,7 +64,7 @@ services:
             roles: [{ role: 'readWrite', db: '${USER_DB_NAME}' }]
           });
         }
-    restart: 'no'
+    restart: "no"
     networks:
       - backend
 
@@ -83,15 +83,18 @@ services:
       MONGO_APP_USER: ${MONGO_APP_USER}
       MONGO_APP_PASSWORD: ${MONGO_APP_PASSWORD}
       MONGODB_DB: ${MONGODB_DB}
-      MONGODB_HOST: ${MONGODB_HOST} 
+      MONGODB_HOST: ${MONGODB_HOST}
+      ITEM_COLLECTION_NAME: ${ITEM_COLLECTION_NAME}
+      USER_COLLECTION_NAME: ${USER_COLLECTION_NAME}
+      USER_DB_NAME: ${USER_DB_NAME}
+      USER_DB_USER: ${USER_DB_USER}
+      USER_DB_PASSWORD: ${USER_DB_PASSWORD}
       API_SERVER: ${API_SERVER}
       SESSION_SECRET: ${SESSION_SECRET}
       ROOT_EMAIL: ${ROOT_EMAIL}
       ROOT_PASSWORD: ${ROOT_PASSWORD}
     networks:
       - backend
-
-
 
   nginx:
     image: nginx:stable
@@ -130,12 +133,9 @@ services:
 
 volumes:
   mongo-data:
-  
+
 networks:
   backend:
     internal: true
   default:
     driver: bridge
-
-
-
